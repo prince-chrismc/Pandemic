@@ -140,6 +140,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Pandemic.cpp" />
+    <ClCompile Include="Sources\Cards.cpp" />
+    <ClCompile Include="Sources\Map.cpp" />
+    <ClCompile Include="Sources\Player.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Sources\Cards.h" />
+    <ClInclude Include="Sources\Map.h" />
+    <ClInclude Include="Sources\Pandemic.h" />
+    <ClInclude Include="Sources\Player.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\Notes\ObjectList.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
