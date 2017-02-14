@@ -10,7 +10,6 @@
 
 class Cure
 {
-
 protected:
 	enum State { UNDISCOVERED, KNOWN, ERADICATED };
 
@@ -38,7 +37,7 @@ public:
 };
 
 
-class City
+class City final
 {
 private:
 	Color m_color;
@@ -54,8 +53,34 @@ public:
 };
 
 
-class WorldMap
+class InfectionRate final
+{
+private:
+	uint8_t m_position;
+	uint8_t m_array[7] = { 2, 2, 2, 3, 3, 4, 4 };
+
+public:
+	InfectionRate() : m_position(0) {}
+	uint8_t getRate() { return m_array[m_position]; }
+	void increaseRate() { m_position += 1; }
+};
+
+class OutbreakMarker final
+{
+private:
+	uint8_t m_position;
+	uint8_t m_array[8] = { 1, 2, 3, 4, 5, 6, 7, 8 };
+
+public:
+	OutbreakMarker() : m_position(0) {}
+	uint8_t getMarker() { return m_array[m_position]; }
+	void increaseRate() { m_position += 1; }
+};
+
+class WorldMap final
 {
 private:
 	City m_cities[48];
+	InfectionRate m_infect;
+	OutbreakMarker m_outbreeak;
 };
