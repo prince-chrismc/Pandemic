@@ -1,0 +1,82 @@
+Pandemic Board game
+
+win:
+    cure 4 disease
+Lose:
+    Outbreak mark reachs 8
+    No disease cubes left
+    No player cards left to draw
+
+
+Game Setup:
+
+*Vials on matching icons
+[b]outbreak marker[\b] goes to zero space
+[b]infection rate[\b] {2,2,2,3,3,4,4} is set to 2 pos 0
+reserach station on 'Atlanta' with player pawns
+infect 9 cities:
+    first 3 cards 3 disease cudes on each city (of corresponding color)
+    mid 3 get 2 cubes each
+    last 3 get 1 sub each
+each player gets a role card and a reference card, and four player cards (in 2 player mode)
+*****
+players start position is based off the role card they were given
+******
+Player deck divided into 4 equal stacks. 1 epidemic card per stack .. suffeled .. deck = 4 files...
+
+
+Player turn: four actions
+    since coopertive, share thoughts
+    
+    1. Do 4 Actions
+        Movement:
+            A. drive/ferry - move to connected city 
+            B. flight - requires a city card - discard city card and move directly to that city
+            C. Charter flight - city card you are in - move to any city on the map
+            D. Shuttle flight - requires two research centers - from 1 RC to another
+
+        Build research center:
+            you need the card of that city to build a RC - discard the card
+
+        Treat Disease:
+            remove 1 disease cube from that city
+
+        Share Knowledge:
+            with another pawn in your city you can, but the card must match your city.
+
+        Find A Cure:
+            while in a city with a research center, turn in 5 cards of the same color to discover the corresponding cure ... move the vial up.
+            
+        Role Card:
+            Each has a special move
+            
+        Event Card: (doesnt cost an action)
+            each has a spacial move
+
+    2. Draw Two more Cards from the player deck.
+        max of 7 cards are allowed .. discard
+        
+        Epedemic card is drawn:
+            A. Increase infection rate
+            B. Infect last card of infection deck with 3 cubes
+            C. Suffle discarded infection cards and readded to the top of the deck
+            --throw away that epidemic card for the duration of the game --
+        
+    3. Infect Cities
+        Base on infection rate...
+        Draw N cards from infection deck and add a cube to that city.
+        
+        Infect city with 3 cubes: 
+            Outbreak situation!
+            Add 1 cube of that cities color to each of its surrounding cities 
+            Increase outbreak marker by 1
+
+
+
+
+
+
+
+
+
+        

@@ -1,0 +1,71 @@
+WorldMap
+    48 cities
+    vector<player pawn>
+    
+city
+    Name
+    Color
+    vector<connected cities>
+    vector<DiseaseCube>
+    
+InfectionRate
+    [2,2,2,3,3,4,4]
+    Value
+    
+OutbreakMarker
+    [0,1,2,3,4,5,6,7,8]
+    Value
+    
+Cure
+    State
+    Color
+x4 for each color
+
+DiseaseCude
+    Color
+x4 for each color
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+    
+Player
+    Name
+    Role
+    Pawn
+    ReferenceCard
+    
+Role : 'some base class which had all default options'
+    Special Action!!!!
+    override any functions of add more.
+    
+Pawn
+    City
+    Color
+    
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+Card
+    ID //random hex code
+    Name
+    Description
+    
+PlayerCard : Card
+
+CityCard : PlayerCard
+    City
+
+EventCard : PlayerCard
+    Event
+
+Epedemic : PlayerCard
+
+ReferenceCard : Card
+
+InfectionCard : Card
+    City
+    Color
+
+---------------------------------------------------------------------------------------------------
+
+Deck
+    cards[]
