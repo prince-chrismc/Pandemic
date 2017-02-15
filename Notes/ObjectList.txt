@@ -51,6 +51,9 @@ Card
     
 PlayerCard : Card
 
+RoleCard : PlayerCard
+	vector<strings> abilities
+
 CityCard : PlayerCard
     City
 
