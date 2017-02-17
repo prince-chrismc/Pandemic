@@ -4,8 +4,6 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-#include <string>
-#include <vector>
 #include "Pandemic.h"
 
 class Cure abstract
@@ -13,6 +11,7 @@ class Cure abstract
 protected:
 	enum State { UNDISCOVERED, KNOWN, ERADICATED };
 
+private:
 	Color m_color;
 	State m_state;
 

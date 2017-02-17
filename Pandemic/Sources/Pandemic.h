@@ -4,6 +4,9 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
+#include <string>
+#include <vector>
+
 enum Color
 {
 	RED,
@@ -17,68 +20,74 @@ class CityList
 public:
 	enum CityID
 	{
-		CITYID_MIN = 0xC000000UL, //Invalid
+		CITYID_MIN = 0x00000UL, //Invalid
 
-		BLUE_MIN = 0xC100000UL, //Invalid
-		ATLANTA = 0xC100123UL, //Atlanta
-		CHICAGO = 0xC100246UL, //Chicago
-		ESSEN = 0xC100369UL, //Essen
-		LONDON = 0xC10048CUL, //London
-		MADRID = 0xC1005AFUL, //Madrid
-		MILAN = 0xC1006D2UL, //Milan
-		NEWYORK = 0xC1007F5UL, //New York
-		PARIS = 0xC100918UL, //Paris
-		SANFRAN = 0xC100A3BUL, //San Francisco
-		STPETER = 0xC100B5EUL, //St Petersburg
-		MONTREAL = 0xC100C81UL, //Montreal
-		WASHINGTON = 0xC100D04UL, //Washington
-		BLUE_MAX = 0xC1FFFFFUL, //Invalid
+		BLUE_MIN = 0x10000UL, //Invalid
+		ATLANTA = 0x10123UL, //Atlanta
+		CHICAGO = 0x10246UL, //Chicago
+		ESSEN = 0x10369UL, //Essen
+		LONDON = 0x1048CUL, //London
+		MADRID = 0x105AFUL, //Madrid
+		MILAN = 0x106D2UL, //Milan
+		NEWYORK = 0x107F5UL, //New York
+		PARIS = 0x10918UL, //Paris
+		SANFRAN = 0x10A3BUL, //San Francisco
+		STPETER = 0x10B5EUL, //St Petersburg
+		MONTREAL = 0x10C81UL, //Montreal
+		WASHINGTON = 0x10D04UL, //Washington
+		BLUE_MAX = 0x1FFFFUL, //Invalid
 
-		YELLOW_MIN = 0xC200000UL, //Invalid
-		BOGOTA = 0xC200123UL, //Bogota
-		BUENOSAIRES = 0xC200246UL, //Buenos Aires
-		JOHANNESBURG = 0xC200369UL, //Johannesburg
-		KHARTOUM = 0xC20048CUL, //Khartoum
-		KINSHASA = 0xC2005AFUL, //Kinshasa
-		LAGOS = 0xC2006D2UL, //Lagos
-		LIMA = 0xC2007F5UL, //Lima
-		LOSANGELES = 0xC200918UL, //Los Angeles
-		MEXICO = 0xC200A3BUL, //Mexico City
-		MIAMI = 0xC200B5EUL, //Miami
-		SANTIAGO = 0xC200C81UL, //Santiago
-		SAOPAULO = 0xC200D04UL, //Sao Paulo
-		YELLOW_MAX = 0xC2FFFFFUL, //Invalid
+		YELLOW_MIN = 0x20000UL, //Invalid
+		BOGOTA = 0x20123UL, //Bogota
+		BUENOSAIRES = 0x20246UL, //Buenos Aires
+		JOHANNESBURG = 0x20369UL, //Johannesburg
+		KHARTOUM = 0x2048CUL, //Khartoum
+		KINSHASA = 0x205AFUL, //Kinshasa
+		LAGOS = 0x206D2UL, //Lagos
+		LIMA = 0x207F5UL, //Lima
+		LOSANGELES = 0x20918UL, //Los Angeles
+		MEXICO = 0x20A3BUL, //Mexico City
+		MIAMI = 0x20B5EUL, //Miami
+		SANTIAGO = 0x20C81UL, //Santiago
+		SAOPAULO = 0x20D04UL, //Sao Paulo
+		YELLOW_MAX = 0x2FFFFUL, //Invalid
 
-		BLACK_MIN = 0xC300000UL, //Invalid
-		ALGIERS = 0xC300123UL, //Algiers
-		BAGHDAD = 0xC300246UL, //Baghdad
-		CAIRO = 0xC300369UL, //Cairo
-		CHENNAI = 0xC30048CUL, //Chennai
-		DELHI = 0xC3005AFUL, //Delhi
-		ISTANBUL = 0xC3006D2UL, //Istanbul
-		KARACHI = 0xC3007F5UL, //Karachi
-		KOLKATA = 0xC300918UL, //Kolkata
-		MOSCOW = 0xC300A3BUL, //Moscow
-		MUMBAI = 0xC300B5EUL, //Mumbai
-		RIYADH = 0xC300C81UL, //Riyadh
-		TEHRAN = 0xC300D04UL, //Tehran
-		BLACK_MAX = 0xC3FFFFFUL, //Invalid
+		BLACK_MIN = 0x30000UL, //Invalid
+		ALGIERS = 0x30123UL, //Algiers
+		BAGHDAD = 0x30246UL, //Baghdad
+		CAIRO = 0x30369UL, //Cairo
+		CHENNAI = 0x3048CUL, //Chennai
+		DELHI = 0x305AFUL, //Delhi
+		ISTANBUL = 0x306D2UL, //Istanbul
+		KARACHI = 0x307F5UL, //Karachi
+		KOLKATA = 0x30918UL, //Kolkata
+		MOSCOW = 0x30A3BUL, //Moscow
+		MUMBAI = 0x30B5EUL, //Mumbai
+		RIYADH = 0x30C81UL, //Riyadh
+		TEHRAN = 0x30D04UL, //Tehran
+		BLACK_MAX = 0x3FFFFUL, //Invalid
 
-		RED_MIN = 0xC400000UL, //Invalid
-		BANGKOK = 0xC400123UL, //Bangkok
-		BEIJING = 0xC400246UL, //Beijing
-		HOCHIMINH = 0xC400369UL, //Ho Chi Minh City
-		HONGKONG = 0xC40048CUL, //Hong Kong
-		JAKARTA = 0xC4005AFUL, //Jakarta
-		MANILA = 0xC4006D2UL, //Manila
-		OSAKA = 0xC4007F5UL, //Osaka
-		SEOUL = 0xC400918UL, //Seoul
-		SHANGHAI = 0xC400A3BUL, //Shanghai
-		SYDNEY = 0xC400B5EUL, //Sydney
-		TAIPEI = 0xC400C81UL, //Taipei
-		TOKYO = 0xC400D04UL, //Tokyo
-		RED_MAX = 0xC4FFFFFUL, //Invalid
+		RED_MIN = 0x40000UL, //Invalid
+		BANGKOK = 0x40123UL, //Bangkok
+		BEIJING = 0x40246UL, //Beijing
+		HOCHIMINH = 0x40369UL, //Ho Chi Minh City
+		HONGKONG = 0x4048CUL, //Hong Kong
+		JAKARTA = 0x405AFUL, //Jakarta
+		MANILA = 0x406D2UL, //Manila
+		OSAKA = 0x407F5UL, //Osaka
+		SEOUL = 0x40918UL, //Seoul
+		SHANGHAI = 0x40A3BUL, //Shanghai
+		SYDNEY = 0x40B5EUL, //Sydney
+		TAIPEI = 0x40C81UL, //Taipei
+		TOKYO = 0x40D04UL, //Tokyo
+		RED_MAX = 0x4FFFFUL, //Invalid
 
-		CITYID_MAX = 0xCFFFFFFUL, //Invalid
+		CITYID_MAX = 0xFFFFFUL, //Invalid
 	};
+
+	static bool IsRedCity(const CityID& id) { return (id > RED_MIN) && (id < RED_MAX); }
+	static bool IsYellowCity(const CityID& id) { return (id > YELLOW_MIN) && (id < YELLOW_MAX); }
+	static bool IsBlueCity(const CityID& id) { return (id > BLUE_MIN) && (id < BLUE_MAX); }
+	static bool IsBlackCity(const CityID& id) { return (id > BLACK_MIN) && (id < BLACK_MAX); }
+
 };

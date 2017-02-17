@@ -25,6 +25,9 @@
     <ClCompile Include="Sources\Player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Deck.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\Cards.h">
@@ -39,9 +42,15 @@
     <ClInclude Include="Sources\Player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Deck.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\Notes\ObjectList.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="..\Notes\Sequence.txt">
       <Filter>Resource Files</Filter>
     </Text>
   </ItemGroup>
