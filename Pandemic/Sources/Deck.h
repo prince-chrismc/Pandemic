@@ -4,15 +4,39 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-#include <queue>
+#pragma once
 #include <deque>
 #include "Cards.h"
 
-class InfectionDeck final
+class Deck abstract
+{
+protected:
+	const uint8_t m_size;
+	Deck(const uint8_t& size) : m_size(size) {}
+};
+
+class InfectionDeck final : Deck
 {
 private:
-	InfectionCard m_cards[48];
+	std::deque<InfectionCard*> m_deck;
+	std::deque<InfectionCard*> m_discard;
 
 public:
 	InfectionDeck();
+	~InfectionDeck();
+
+	InfectionCard* DrawCard();
+};
+
+class PlayerDeck final : Deck
+{
+private:
+	std::deque<PlayerCard*> m_deck;
+	std::deque<PlayerCard*> m_discard;
+
+public:
+	PlayerDeck();
+	~PlayerDeck();
+
+	PlayerCard* DrawCard();
 };

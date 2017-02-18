@@ -4,6 +4,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
+#pragma once
 #include "Pandemic.h"
 
 namespace std { typedef string hexadecimal; } //typedef for easier reading of my code  -- should always be a string containing a hex
@@ -130,7 +131,7 @@ public:
 	{
 		EVENTCARD_MIN = 0x2800000UL,  //"Invalid"
 
-		RESILLIENTPOP = 0x2800123UL,
+		RESILLIENT = 0x2800123UL,
 		AIRLIFT = 0x2800246UL,
 		FORECAST = 0x2800369UL,
 		QUIETNIGHT = 0x280048C,
@@ -163,27 +164,12 @@ public:
 };
 
 
-class RoleCard final : public PlayerCard
+class RoleCard final : public PlayerCard, public RoleList
 {
 private:
 	std::vector<std::string> m_abilities;
 
-public:
-	//EXAMPLE = 0x0A89CFCUL
-	enum CardsList
-	{
-		ROLECARD_MIN = 0x2E00000UL,    //"Invalid"
-
-		CONTIGENCY = 0x2E01234UL,
-		DISPATCHER = 0x2E02468UL,
-		MEDIC = 0x2E0369CUL,
-		OPERATIONS = 0x2E048D0UL,
-		QUARANTINE = 0x2E05B04UL,
-		RESEARCHER = 0x2E06D38UL,
-		SCIENTIST = 0x2E07F6CUL,
-
-		ROLECARD_MAX = 0x2EFFFFFUL,    //"Invalid"
-	};
+public:	
 	const char* getCardDesc(const uint64_t& id);
 };
 
@@ -207,6 +193,12 @@ class InfectionCard final : public Card
 private:
 	std::hexadecimal m_cityID;
 	Color m_color;
+
+	Color getCityColor(const uint64_t& id);
+	bool IsRedCity(const uint64_t& id) { return (id > RED_MIN) && (id < RED_MAX); }
+	bool IsYellowCity(const uint64_t& id) { return (id > YELLOW_MIN) && (id < YELLOW_MAX); }
+	bool IsBlueCity(const uint64_t& id) { return (id > BLUE_MIN) && (id < BLUE_MAX); }
+	bool IsBlackCity(const uint64_t& id) { return (id > BLACK_MIN) && (id < BLACK_MAX); }
 
 public:
 	//EXAMPLE = 0x0A89CFCUL

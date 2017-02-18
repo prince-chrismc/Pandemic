@@ -4,6 +4,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
+#pragma once
 #include <string>
 #include <vector>
 
@@ -90,4 +91,26 @@ public:
 	static bool IsBlueCity(const CityID& id) { return (id > BLUE_MIN) && (id < BLUE_MAX); }
 	static bool IsBlackCity(const CityID& id) { return (id > BLACK_MIN) && (id < BLACK_MAX); }
 
+};
+
+
+
+class RoleList
+{
+public:
+	//EXAMPLE = 0x0A89CFCUL
+	enum Roles
+	{
+		ROLECARD_MIN = 0x2E00000UL,    //"Invalid"
+
+		CONTIGENCY = 0x2E01234UL,
+		DISPATCHER = 0x2E02468UL,
+		MEDIC = 0x2E0369CUL,
+		OPERATIONS = 0x2E048D0UL,
+		QUARANTINE = 0x2E05B04UL,
+		RESEARCHER = 0x2E06D38UL,
+		SCIENTIST = 0x2E07F6CUL,
+
+		ROLECARD_MAX = 0x2EFFFFFUL,    //"Invalid"
+	};
 };
