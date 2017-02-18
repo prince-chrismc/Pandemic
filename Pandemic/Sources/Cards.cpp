@@ -31,7 +31,7 @@ const char* Card::getCardName(const uint64_t id)
 		
 	switch (id)
 	{
-	case Card::INVALID:
+	case Card::CARD_INVALID:
 	case PlayerCard::PLAYERCARD_MIN:
 	case CityCard::CITYCARD_MIN:
 	case CityCard::RED_MIN:
@@ -50,8 +50,8 @@ const char* Card::getCardName(const uint64_t id)
 	case RoleCard::ROLECARD_MIN:
 	case RoleCard::ROLECARD_MAX:
 	case PlayerCard::PLAYERCARD_MAX:
-	case ReferenceCards::REFERENCECARD_MIN:
-	case ReferenceCards::REFERENCECARD_MAX:
+	case ReferenceCard::REFERENCECARD_MIN:
+	case ReferenceCard::REFERENCECARD_MAX:
 	case InfectionCard::INFECTIONCARD_MIN:
 	case InfectionCard::RED_MIN:
 	case InfectionCard::RED_MAX:
@@ -62,7 +62,7 @@ const char* Card::getCardName(const uint64_t id)
 	case InfectionCard::YELLOW_MIN:
 	case InfectionCard::YELLOW_MAX:
 	case InfectionCard::INFECTIONCARD_MAX:
-	case Card::MAX:
+	case Card::CARD_MAX:
 		name = "Invalid"; break;
 
 	case CityCard::ALGIERS: name = "Algiers"; break;
@@ -193,6 +193,7 @@ Color CityCard::getCityColor(const uint64_t & id)
 	else if (IsYellowCity(id)) return YELLOW;
 	else if (IsBlueCity(id)) return BLUE;
 	else if (IsBlackCity(id)) return BLACK;
+	else return INVALID;
 }
 
 const char* EventCard::getCardDesc(const uint64_t& id)
@@ -215,6 +216,7 @@ Color InfectionCard::getCityColor(const uint64_t & id)
 	else if (IsYellowCity(id)) return YELLOW;
 	else if (IsBlueCity(id)) return BLUE;
 	else if (IsBlackCity(id)) return BLACK;
+	else return INVALID;
 }
 
 InfectionCard::InfectionCard(const CardsList& id) : Card( id, getCardName(id), getCardName(id)), m_color(getCityColor(id))
@@ -251,4 +253,9 @@ const char * RoleCard::getCardDesc(const uint64_t & id)
 	case RoleCard::SCIENTIST: desc = "The Scientist needs only 4 (not 5) City cards of the same disease color to Discover a Cure for that disease."; break;
 	}
 	return desc;
+}
+
+const char * ReferenceCard::getCardDesc()
+{
+	return " --Movement Actions --\n  Drive / Ferry: Move to a city connected by a white line to the one you are in.\n Direct Flight: Discard a City card to move to the city named on the card.\n Charter Flight: Discard the City card that matches the city you are in to move to any city.\n Shuttle Flight:	Move from a city with a research station to any other city that has a research station.\n\n -- Player Actions --\n Build a Research Station: Discard the City card that matches the city you are in to place a research station there.Take the research station from the pile next to the board.If all 6 research stations have been built, take a research station from anywhere on the board.\n Treat Disease: Remove 1 disease cube from the city you are in, placing it in the cube supply next to the board.If this disease color has been cured(see Discover a Cure below), remove all cubes of that color from the city you are in. NOTE: If the last cube of a cured disease is removed from the board, this disease	is eradicated.Flip its cure marker from its “vial” side to its 'ERADICATED' side.\n Share Knowledge: You can do this action in two ways A. give the City card that matches the city you are in to another player, or B. take the City card that matches the city you are in from another player. The other player must also be in the city with you. Both of you need to agree to do this. If the player who gets the card now has more than 7 cards, that player must immediately discard a card or play an Event card\n Discover a Cure: At any research station, discard 5 City cards of the same color from your hand to cure the disease of that color. Move the disease’s cure marker to its Cure Indicator. If no cubes of this color are on the board, this disease is now eradicated. Flip its cure marker from its “vial” side to its 'ERADICATED' side.";
 }

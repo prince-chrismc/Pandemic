@@ -44,6 +44,13 @@ void Player::printHand()
 	}
 }
 
+void Player::printRefCard()
+{
+	printf("Reference Card:\n--------------------------------------------------\n");
+	m_refcard.PrintInformation();
+	printf("--------------------------------------------------\n\n"); 
+}
+
 Role::Role(const uint64_t & id) : m_name(Card::getCardName(id)), m_pawn(new Pawn(id))
 {
 	std::stringstream ss;

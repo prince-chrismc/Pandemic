@@ -55,9 +55,10 @@ private:
 	std::string m_name;
 	std::vector<PlayerCard*> m_hand;
 	Role* m_role;
+	ReferenceCard m_refcard;
 
 public:
-	Player(const std::string& name, RoleCard* card) : m_name(name), m_role(new Role(card)) {}
+	Player(const std::string& name, RoleCard* card) : m_name(name), m_role(new Role(card)), m_refcard() {}
 	~Player();
 
 	void addCard(PlayerCard* card) { m_hand.emplace_back(card); }
@@ -66,4 +67,5 @@ public:
 	void printName();
 	void printInfo();
 	void printHand();
+	void printRefCard();
 };

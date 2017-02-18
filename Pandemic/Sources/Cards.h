@@ -23,8 +23,8 @@ public:
 	//EXAMPLE = 0x0A89CFCUL
 	enum CardsList
 	{
-		INVALID = 0x0000000UL, //"Invalid"
-		MAX = 0xFFFFFFFUL      //"Max"
+		CARD_INVALID = 0x0000000UL, //"Invalid"
+		CARD_MAX = 0xFFFFFFFUL      //"Max"
 	};
 
 	Card(const CardsList& id, const char* name) : Card( (uint64_t)id, name, name) {}
@@ -177,18 +177,19 @@ public:
 };
 
 
-class ReferenceCards final : public Card
+class ReferenceCard final : public Card
 {
-private:
-	std::vector<std::string> m_rules;
-
 public:
 	//EXAMPLE = 0x0A89CFCUL
 	enum CardsList
 	{
 		REFERENCECARD_MIN = 0xA000000UL, //"Invalid"
+		REFERENCECARD = 0xAABCDEFUL,
 		REFERENCECARD_MAX = 0xAFFFFFFUL, //"Invalid"
 	};
+
+	ReferenceCard() : Card(REFERENCECARD, "Reference Card", getCardDesc()) {}
+	const char* getCardDesc();
 };
 
 class InfectionCard final : public Card, private CityList

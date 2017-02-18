@@ -10,6 +10,7 @@
 
 enum Color
 {
+	INVALID = -1,
 	RED,
 	BLUE,
 	YELLOW,

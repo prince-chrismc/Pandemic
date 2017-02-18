@@ -6,7 +6,7 @@
 
 int main()
 {
-	InfectionDeck deck;
+	InfectionDeck id;
 	PlayerDeck pd;
 	RoleDeck rd;
 
@@ -18,7 +18,7 @@ int main()
 	jouer.addCard(pd.DrawCard());
 	
 	pd.DiscardCard(jouer.rmCard(2));
-	pd.DiscardCard(jouer.rmCard(5));
+	pd.DiscardCard(jouer.rmCard(4));
 
     return 0;
 }
