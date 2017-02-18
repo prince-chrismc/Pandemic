@@ -9,7 +9,6 @@
 
 namespace std { typedef string hexadecimal; } //typedef for easier reading of my code  -- should always be a string containing a hex
 
-
 class Card
 {
 private:
@@ -25,11 +24,11 @@ public:
 	enum CardsList
 	{
 		INVALID = 0x0000000UL, //"Invalid"
-		MAX = 0xFFFFFFFUL   //"Max"
+		MAX = 0xFFFFFFFUL      //"Max"
 	};
 
-	Card(const CardsList& id, const char* name);
-	Card(const CardsList& id, const char* name, const char* desc);
+	Card(const CardsList& id, const char* name) : Card( (uint64_t)id, name, name) {}
+	Card(const CardsList& id, const char* name, const char* desc) : Card((uint64_t)id, name, desc) {}
 
 	static const char* getCardName(const uint64_t id);
 	uint64_t getNumID();
@@ -47,11 +46,11 @@ public:
 	};
 
 protected:
-	PlayerCard(const uint64_t& id, const char* name, const char* desc);
+	PlayerCard(const uint64_t& id, const char* name, const char* desc) : Card(id, name, desc) {}
 };
 
 
-class CityCard final : public PlayerCard
+class CityCard final : public PlayerCard, private CityList
 {
 public:
 	//EXAMPLE = 0x0A89CFCUL
@@ -119,7 +118,13 @@ public:
 		CITYCARD_MAX = 0x24FFFFFUL,   //"Invalid"
 	};
 
-	CityCard(const CardsList& id);
+	CityCard(const CardsList& id) : PlayerCard(id, getCardName(id), getCardName(id)) {}
+
+	Color getCityColor(const uint64_t& id);
+	bool IsRedCity(const uint64_t& id) { return (id > RED_MIN) && (id < RED_MAX); }
+	bool IsYellowCity(const uint64_t& id) { return (id > YELLOW_MIN) && (id < YELLOW_MAX); }
+	bool IsBlueCity(const uint64_t& id) { return (id > BLUE_MIN) && (id < BLUE_MAX); }
+	bool IsBlackCity(const uint64_t& id) { return (id > BLACK_MIN) && (id < BLACK_MAX); }
 };
 
 
@@ -140,7 +145,7 @@ public:
 		EVENTCARD_MAX = 0x28FFFFFUL,  //"Invalid"
 	};
 
-	EventCard(const CardsList& id);
+	EventCard(const CardsList& id) : PlayerCard(id, getCardName(id), getCardDesc(id)) {}
 	const char* getCardDesc(const uint64_t& id);
 };
 
@@ -159,17 +164,15 @@ public:
 		EPIDEMICCARD_MAX = 0x2BFFFFFUL,  //"Invalid"
 	};
 
-	EpidemicCard(const CardsList& id);
+	EpidemicCard(const CardsList& id) : PlayerCard(id, getCardName(id), getCardDesc(id)) {}
 	const char* getCardDesc(const uint64_t& id);
 };
 
 
 class RoleCard final : public PlayerCard, public RoleList
 {
-private:
-	std::vector<std::string> m_abilities;
-
 public:	
+	RoleCard(const Roles& id) : PlayerCard(id, getCardName(id), getCardDesc(id)) {}
 	const char* getCardDesc(const uint64_t& id);
 };
 
@@ -188,17 +191,11 @@ public:
 	};
 };
 
-class InfectionCard final : public Card
+class InfectionCard final : public Card, private CityList
 {
 private:
 	std::hexadecimal m_cityID;
 	Color m_color;
-
-	Color getCityColor(const uint64_t& id);
-	bool IsRedCity(const uint64_t& id) { return (id > RED_MIN) && (id < RED_MAX); }
-	bool IsYellowCity(const uint64_t& id) { return (id > YELLOW_MIN) && (id < YELLOW_MAX); }
-	bool IsBlueCity(const uint64_t& id) { return (id > BLUE_MIN) && (id < BLUE_MAX); }
-	bool IsBlackCity(const uint64_t& id) { return (id > BLACK_MIN) && (id < BLACK_MAX); }
 
 public:
 	//EXAMPLE = 0x0A89CFCUL
@@ -265,4 +262,10 @@ public:
 	};
 
 	InfectionCard(const CardsList& id);
+
+	Color getCityColor(const uint64_t& id);
+	bool IsRedCity(const uint64_t& id) { return (id > RED_MIN) && (id < RED_MAX); }
+	bool IsYellowCity(const uint64_t& id) { return (id > YELLOW_MIN) && (id < YELLOW_MAX); }
+	bool IsBlueCity(const uint64_t& id) { return (id > BLUE_MIN) && (id < BLUE_MAX); }
+	bool IsBlackCity(const uint64_t& id) { return (id > BLACK_MIN) && (id < BLACK_MAX); }
 };

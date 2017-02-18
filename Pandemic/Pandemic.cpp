@@ -7,15 +7,19 @@
 int main()
 {
 	InfectionDeck deck;
-	PlayerDeck player;
+	PlayerDeck pd;
+	RoleDeck rd;
 
-	Player jouer("chris", new Role(RoleList::MEDIC), new Pawn());
-	jouer.addCard(player.DrawCard());
-	jouer.addCard(player.DrawCard());
-	jouer.addCard(player.DrawCard());
-	jouer.addCard(player.DrawCard());
-	jouer.addCard(player.DrawCard());
+	Player jouer("chris", rd.DrawCard());
+	jouer.addCard(pd.DrawCard());
+	jouer.addCard(pd.DrawCard());
+	jouer.addCard(pd.DrawCard());
+	jouer.addCard(pd.DrawCard());
+	jouer.addCard(pd.DrawCard());
 	
+	pd.DiscardCard(jouer.rmCard(2));
+	pd.DiscardCard(jouer.rmCard(5));
+
     return 0;
 }
 

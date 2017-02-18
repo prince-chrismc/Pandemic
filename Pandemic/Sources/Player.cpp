@@ -1,7 +1,10 @@
 #include "Player.h"
+#include <sstream> //std::stringstream
 
 Player::~Player()
 {
+	delete m_role;
+
 	for (size_t pos = 0; pos < m_hand.size(); pos += 1)
 	{
 		if (m_hand.at(pos) != NULL)
@@ -41,7 +44,27 @@ void Player::printHand()
 	}
 }
 
-Role::Role(const uint64_t & id)
+Role::Role(const uint64_t & id) : m_name(Card::getCardName(id)), m_pawn(new Pawn(id))
 {
-	m_name = Card::getCardName(id);
+	std::stringstream ss;
+	ss << std::hex << id;
+	m_roleID = ss.str();
+}
+
+Role::Role(RoleCard* card) : Role(card->getNumID())
+{
+	m_card = card;
+}
+
+Role::~Role()
+{
+	delete m_pawn;
+	delete m_card;
+}
+
+Pawn::Pawn(const uint64_t& color) : m_color( (PawnColor)color )
+{
+	std::stringstream ss;
+	ss << std::hex << CityCard::ATLANTA;
+	m_CityID = ss.str();
 }

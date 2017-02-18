@@ -193,3 +193,47 @@ PlayerCard* PlayerDeck::DrawCard()
 	m_deck.pop_front();
 	return draw;
 }
+
+void PlayerDeck::DiscardCard(PlayerCard* pc)
+{
+	m_discard.emplace_front(pc);
+}
+
+RoleDeck::RoleDeck() : Deck(7)
+{
+	m_deck.emplace_back(new RoleCard(RoleCard::CONTIGENCY));
+	m_deck.emplace_back(new RoleCard(RoleCard::DISPATCHER)); 
+	m_deck.emplace_back(new RoleCard(RoleCard::MEDIC));
+	m_deck.emplace_back(new RoleCard(RoleCard::OPERATIONS));
+	m_deck.emplace_back(new RoleCard(RoleCard::QUARANTINE));
+	m_deck.emplace_back(new RoleCard(RoleCard::RESEARCHER));
+	m_deck.emplace_back(new RoleCard(RoleCard::SCIENTIST));
+
+	//make sure its the right size
+	m_deck.shrink_to_fit();
+
+	//random shuffle =)
+	std::random_device rd;
+	std::mt19937 g(rd());
+	std::shuffle(m_deck.begin(), m_deck.end(), g);
+}
+
+RoleDeck::~RoleDeck()
+{
+	for (size_t pos = 0; pos < m_deck.size(); pos += 1)
+	{
+		if (m_deck.at(pos) != NULL)
+		{
+			delete m_deck.at(pos);
+			m_deck.at(pos) = NULL;
+		}
+	}
+	m_deck.clear();
+}
+
+RoleCard* RoleDeck::DrawCard()
+{
+	RoleCard* draw = m_deck.front();
+	m_deck.pop_front();
+	return draw;
+}

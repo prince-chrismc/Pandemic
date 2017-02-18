@@ -19,14 +19,6 @@ Card::Card(const uint64_t & id, const char* name, const char* desc) : m_name(nam
 	m_id = ss.str();
 }
 
-Card::Card(const CardsList& id, const char* name) : Card( (uint64_t)id, name, name)
-{
-}
-
-Card::Card(const CardsList& id, const char* name, const char* desc) : Card( (uint64_t)id, name, desc)
-{
-}
-
 void Card::PrintInformation()
 {
 	printf("ID: %s \t Name: %s \t Desc: %s\n", m_id.c_str(), m_name.c_str(), m_description.c_str());
@@ -141,7 +133,6 @@ const char* Card::getCardName(const uint64_t id)
 	case RoleCard::RESEARCHER: name = "Reseacher"; break;
 	case RoleCard::SCIENTIST: name = "Scientist"; break;
 
-
 	case InfectionCard::ALGIERS: name = "Algiers"; break;
 	case InfectionCard::ATLANTA: name = "Atlanta"; break;
 	case InfectionCard::BAGHDAD: name = "Baghdad"; break;
@@ -196,16 +187,12 @@ const char* Card::getCardName(const uint64_t id)
 	return name;
 }
 
-PlayerCard::PlayerCard(const uint64_t& id, const char * name, const char * desc) : Card(id, getCardName(id), desc)
+Color CityCard::getCityColor(const uint64_t & id)
 {
-}
-
-CityCard::CityCard(const CardsList & id) : PlayerCard(id, getCardName(id), getCardName(id))
-{
-}
-
-EventCard::EventCard(const CardsList & id) : PlayerCard(id, getCardName(id), getCardDesc(id))
-{
+	if (IsRedCity(id)) return RED;
+	else if (IsYellowCity(id)) return YELLOW;
+	else if (IsBlueCity(id)) return BLUE;
+	else if (IsBlackCity(id)) return BLACK;
 }
 
 const char* EventCard::getCardDesc(const uint64_t& id)
@@ -222,7 +209,6 @@ const char* EventCard::getCardDesc(const uint64_t& id)
 	return desc;
 }
 
-
 Color InfectionCard::getCityColor(const uint64_t & id)
 {
 	if (IsRedCity(id)) return RED;
@@ -236,10 +222,6 @@ InfectionCard::InfectionCard(const CardsList& id) : Card( id, getCardName(id), g
 	std::stringstream ss;
 	ss << std::hex << id;
 	m_cityID = ss.str();
-}
-
-EpidemicCard::EpidemicCard(const CardsList & id) : PlayerCard(id, getCardName(id), getCardDesc(id))
-{
 }
 
 const char* EpidemicCard::getCardDesc(const uint64_t& id)

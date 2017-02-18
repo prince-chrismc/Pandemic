@@ -18,7 +18,7 @@ enum Color
 
 class CityList
 {
-public:
+protected:
 	enum CityID
 	{
 		CITYID_MIN = 0x00000UL, //Invalid
@@ -85,12 +85,6 @@ public:
 
 		CITYID_MAX = 0xFFFFFUL, //Invalid
 	};
-
-	static bool IsRedCity(const CityID& id) { return (id > RED_MIN) && (id < RED_MAX); }
-	static bool IsYellowCity(const CityID& id) { return (id > YELLOW_MIN) && (id < YELLOW_MAX); }
-	static bool IsBlueCity(const CityID& id) { return (id > BLUE_MIN) && (id < BLUE_MAX); }
-	static bool IsBlackCity(const CityID& id) { return (id > BLACK_MIN) && (id < BLACK_MAX); }
-
 };
 
 

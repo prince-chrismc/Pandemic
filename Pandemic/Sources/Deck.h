@@ -39,4 +39,17 @@ public:
 	~PlayerDeck();
 
 	PlayerCard* DrawCard();
+	void DiscardCard(PlayerCard* pc);
+};
+
+class RoleDeck final : public Deck
+{
+private:
+	std::deque<RoleCard*> m_deck;
+
+public:
+	RoleDeck();
+	~RoleDeck();
+
+	RoleCard* DrawCard();
 };
