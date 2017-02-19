@@ -35,6 +35,7 @@ public:
 	virtual void PrintInformation();
 };
 
+
 class PlayerCard abstract : public Card
 {
 public:
@@ -191,6 +192,7 @@ public:
 	ReferenceCard() : Card(REFERENCECARD, "Reference Card", getCardDesc()) {}
 	const char* getCardDesc();
 };
+
 
 class InfectionCard final : public Card, private CityList
 {

@@ -19,7 +19,7 @@ enum Color
 
 class CityList
 {
-protected:
+public:
 	enum CityID
 	{
 		CITYID_MIN = 0x00000UL, //Invalid

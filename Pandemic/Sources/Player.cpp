@@ -39,7 +39,7 @@ void Player::printHand()
 	printName();
 	for (size_t s = 0; s < m_hand.size(); s += 1)
 	{
-		printf("Card %d: ", s);
+		printf("Card %d: ", (int)s);
 		m_hand.at(s)->PrintInformation();
 	}
 }
