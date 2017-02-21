@@ -126,6 +126,8 @@ public:
 	bool IsYellowCity(const uint64_t& id) { return (id > YELLOW_MIN) && (id < YELLOW_MAX); }
 	bool IsBlueCity(const uint64_t& id) { return (id > BLUE_MIN) && (id < BLUE_MAX); }
 	bool IsBlackCity(const uint64_t& id) { return (id > BLACK_MIN) && (id < BLACK_MAX); }
+
+	static bool IsaCityCard(PlayerCard* card) { return (card->getNumID() > CITYCARD_MIN) && (card->getNumID() < CITYCARD_MAX); }
 };
 
 

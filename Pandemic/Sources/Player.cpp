@@ -1,5 +1,6 @@
-#include "Player.h"
 #include <sstream> //std::stringstream
+#include "Player.h"
+#include "Token.h"
 
 Player::~Player()
 {
@@ -13,6 +14,7 @@ Player::~Player()
 			m_hand.at(pos) = NULL;
 		}
 	}
+	m_hand.resize(0);
 	m_hand.clear();
 }
 
@@ -23,6 +25,39 @@ PlayerCard* Player::rmCard(uint8_t pos)
 	return pc;
 }
 
+CityList::CityID Player::getCityID()
+{
+	std::stringstream ss;
+	ss << std::hex << m_role->getCityID();
+	uint64_t num = 0;
+	ss >> std::hex >> num;
+
+	return (CityList::CityID)num;
+}
+
+std::vector<CityList::CityID> Player::getDirectFlightCities()
+{
+	std::vector<CityList::CityID> result;
+	for (size_t pos = 0; pos < m_hand.size(); pos += 1)
+	{
+		if (CityCard::IsaCityCard(m_hand.at(pos)))
+		{
+			result.emplace_back((CityList::CityID)(m_hand.at(pos)->getNumID() - CityCard::CITYCARD_MIN));
+		}
+	}
+	return result;
+}
+
+bool Player::hasCurrentCityCard()
+{
+	for (size_t pos = 0; pos < m_hand.size(); pos += 1)
+	{
+		if (m_hand.at(pos)->getNumID() == (uint64_t)(getCityID() + CityCard::CITYCARD_MIN))
+			return true;
+	}
+	return false;
+}
+
 void Player::printName()
 {
 	printf("Player %s: \n", m_name.c_str());
@@ -31,12 +66,23 @@ void Player::printName()
 
 void Player::printInfo()
 {
-	printf("Player %s - %s: \n", m_name.c_str(), m_role->getName());
+	std::stringstream ss;
+	ss << std::hex << m_role->getCityID();
+	uint64_t num = 0;
+	ss >> std::hex >> num;
+
+	printf("Player %s - %s: is in %s\n", m_name.c_str(), m_role->getName(), Card::getCardName(num + CityCard::CITYCARD_MIN) );
 }
 
 void Player::printHand()
 {
 	printName();
+	if (m_hand.size() == 0)
+	{
+		printf(" Hand is empty\n");
+		return;
+	}
+
 	for (size_t s = 0; s < m_hand.size(); s += 1)
 	{
 		printf("Card %d: ", (int)s);
@@ -72,6 +118,6 @@ Role::~Role()
 Pawn::Pawn(const uint64_t& color) : m_color( (PawnColor)color )
 {
 	std::stringstream ss;
-	ss << std::hex << CityCard::ATLANTA;
+	ss << std::hex << City::ATLANTA;
 	m_CityID = ss.str();
 }

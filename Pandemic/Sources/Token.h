@@ -20,7 +20,7 @@ private:
 public:
 	Cure(const Color& color) : m_color(color), m_state(UNDISCOVERED) {}
 
-	void DiscoverCure() { m_state = KNOWN; }
+	void CureDiscover() { m_state = KNOWN; }
 	void EradicateDisease() { m_state = ERADICATED; }
 
 	bool IsCured() { return (m_state == KNOWN); }
@@ -30,6 +30,22 @@ class RedCure final : public Cure { public: RedCure() : Cure(RED) {} };
 class YellowCure final : public Cure { public: YellowCure() : Cure(YELLOW) {} };
 class BlueCure final : public Cure { public: BlueCure() : Cure(BLUE) {} };
 class BlackCure final : public Cure { public: BlackCure() : Cure(BLACK) {} };
+
+class CureMakers final
+{
+private:
+	RedCure m_red;
+	YellowCure m_yellow;
+	BlueCure m_blue;
+	BlackCure m_black;
+
+public:
+	CureMakers() : m_red(), m_yellow(), m_blue(), m_black() {}
+
+	void CureDiscover(const Color& color);
+	void EradicateDisease(const Color& color);
+	bool IsCured(const Color& color);
+};
 
 // Cubes ------------------------------------------------------------------------------------------
 class DiseaseCube abstract
@@ -53,7 +69,8 @@ protected:
 	std::vector<DiseaseCube*> m_pile;
 
 public:
-	CubePile() {}
+	CubePile() : m_pile() {}
+	virtual ~CubePile();
 
 	bool isEmpty() { return (m_pile.size() == 0); }
 	DiseaseCube* takeCube() { DiseaseCube* dc = m_pile.back(); m_pile.pop_back(); return dc; }
@@ -61,10 +78,10 @@ public:
 
 }; 
 
-class RedDiseaseCubePile final : public CubePile { public: RedDiseaseCubePile(); };
-class YellowDiseaseCubePile final : public CubePile { public: YellowDiseaseCubePile(); };
-class BlueDiseaseCubePile final : public CubePile { public: BlueDiseaseCubePile(); };
-class BlackDiseaseCubePile final : public CubePile { public: BlackDiseaseCubePile(); };
+class RedDiseaseCubePile final : public CubePile { public: RedDiseaseCubePile(); ~RedDiseaseCubePile() {} };
+class YellowDiseaseCubePile final : public CubePile { public: YellowDiseaseCubePile(); ~YellowDiseaseCubePile() {} };
+class BlueDiseaseCubePile final : public CubePile { public: BlueDiseaseCubePile(); ~BlueDiseaseCubePile() {} };
+class BlackDiseaseCubePile final : public CubePile { public: BlackDiseaseCubePile(); ~BlackDiseaseCubePile() {} };
 
 class DiseaseCubePile final
 {
@@ -76,6 +93,7 @@ private:
 
 public:
 	DiseaseCubePile() {}
+	~DiseaseCubePile() {}
 
 	bool isAnyEmpty();
 	DiseaseCube* takeCube(const Color& color);
@@ -93,15 +111,31 @@ private:
 	std::vector<DiseaseCube*> m_DiseasCubes;
 
 public:
-	City(const CityID& id, const char* name) : m_cityID(id), m_color(getCityColor(id)), m_name(name) {}
+	City(const CityID& id, const char* name) : m_cityID(id), m_color(getCityColor()), m_name(name), m_NearByCities(), m_DiseasCubes() {}
 
 	void addNearByCity(City* nearby) { m_NearByCities.emplace_back(nearby); }
 	void addCube(DiseaseCube* cube) { m_DiseasCubes.emplace_back(cube); }
-	Color getCityColor(const uint64_t& id);
-	bool IsRedCity(const uint64_t& id) { return (id > RED_MIN) && (id < RED_MAX); }
-	bool IsYellowCity(const uint64_t& id) { return (id > YELLOW_MIN) && (id < YELLOW_MAX); }
-	bool IsBlueCity(const uint64_t& id) { return (id > BLUE_MIN) && (id < BLUE_MAX); }
-	bool IsBlackCity(const uint64_t& id) { return (id > BLACK_MIN) && (id < BLACK_MAX); }
+
+	Color getCityColor();
+	bool IsRedCity() { return (m_cityID > RED_MIN) && (m_cityID < RED_MAX); }
+	bool IsYellowCity() { return (m_cityID > YELLOW_MIN) && (m_cityID < YELLOW_MAX); }
+	bool IsBlueCity() { return (m_cityID > BLUE_MIN) && (m_cityID < BLUE_MAX); }
+	bool IsBlackCity() { return (m_cityID > BLACK_MIN) && (m_cityID < BLACK_MAX); }
+
+	bool compareCityID(const uint64_t& id) { return (m_cityID == (CityID)id); }
+	std::vector<City*> getNearByCities() { return m_NearByCities; }
+
+	void PrintInformation();
+};
+
+// Research Centers -------------------------------------------------------------------------------
+class ResearchCenter final
+{
+private:
+	City* m_city;
+
+public:
+	ResearchCenter(City* city) : m_city(city) {}
 };
 
 // Markers ----------------------------------------------------------------------------------------

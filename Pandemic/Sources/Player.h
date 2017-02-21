@@ -24,35 +24,40 @@ public:
 		WHITE = RoleList::SCIENTIST,
 	};
 
-	Pawn(const uint64_t& color);
-
-protected:
+private:
 	std::hexadecimal m_CityID; 
 	PawnColor m_color;
+
+public:
+	Pawn(const uint64_t& color);
+	void changeCity(const std::hexadecimal& id) { m_CityID = id; }
 
 };
 
 class Role
 {
+	friend class Player;
 private:
-	std::string m_name;
+	const std::string m_name;
 	std::hexadecimal m_roleID;
 	Pawn* m_pawn;
 	RoleCard* m_card;
+
 	Role(const uint64_t& id);
 
 public:
-	virtual const uint8_t getHandLimit() { return 7; }
-	const char* getName() { return m_name.c_str(); }
-
 	Role(RoleCard* card);
 	~Role();
+
+	virtual const uint8_t getHandLimit() { return 7; }
+	const char* getName() { return m_name.c_str(); }
+	std::hexadecimal getCityID() { return m_pawn->m_CityID; }
 };
 
 class Player final
 {
 private:
-	std::string m_name;
+	const std::string m_name;
 	std::vector<PlayerCard*> m_hand;
 	Role* m_role;
 	ReferenceCard m_refcard;
@@ -63,6 +68,13 @@ public:
 
 	void addCard(PlayerCard* card) { m_hand.emplace_back(card); }
 	PlayerCard* rmCard(uint8_t pos);
+	void ChangeCity(const std::hexadecimal& id) { m_role->m_pawn->changeCity(id); }
+	CityList::CityID getCityID();
+	std::vector<CityList::CityID> getDirectFlightCities();
+	bool hasCurrentCityCard();
+	/* TODO: HAVENT BEEN IMPLEMENTED */
+	bool canBuildResearchCenter() { return false; }
+	bool canDiscoverCure() { return false; }
 
 	void printName();
 	void printInfo();
