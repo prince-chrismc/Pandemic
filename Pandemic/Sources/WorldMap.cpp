@@ -357,6 +357,7 @@ void WorldMap::InfectCity(const uint8_t& cubesToAdd)
 {
 	InfectionCard* ic = m_infecdeck.DrawCard();
 	City::CityID cid = (City::CityID)(ic->getNumID() - InfectionCard::INFECTIONCARD_MIN);
+	delete ic; ic = NULL;
 
 	for (int i = 0; i < 48; i += 1)
 	{
@@ -403,8 +404,7 @@ City* WorldMap::getCityWithID(const City::CityID & id)
 void WorldMap::printCitiesStatus()
 {
 	printf("\n");
-	for (int i = 0; i < 6; i += 1)
-	//for (int i = 0; i < 48; i += 1)
+	for (int i = 0; i < 48; i += 1)
 	{
 		m_cities[i]->PrintInformation();
 	}

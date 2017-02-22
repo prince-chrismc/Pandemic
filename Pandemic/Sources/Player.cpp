@@ -40,7 +40,7 @@ std::vector<CityList::CityID> Player::getDirectFlightCities()
 	std::vector<CityList::CityID> result;
 	for (size_t pos = 0; pos < m_hand.size(); pos += 1)
 	{
-		if (CityCard::IsaCityCard(m_hand.at(pos)))
+		if (PlayerCardFactory::IsaCityCard(m_hand.at(pos)->getNumID()))
 		{
 			result.emplace_back((CityList::CityID)(m_hand.at(pos)->getNumID() - CityCard::CITYCARD_MIN));
 		}

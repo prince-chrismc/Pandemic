@@ -14,8 +14,7 @@ int main()
 
 	WorldMap wm;
 	wm.RegisterPlayer("Chris");
-	Player* Chris = wm.GetPlayer(0);
-	
+	Player* Chris = wm.GetPlayer(0); 
 	wm.RegisterPlayer("Barclay");
 	Player* Barclay = wm.GetPlayer(1);
 	
@@ -28,7 +27,6 @@ int main()
 	wm.DrawPlayerCardFor(Chris);
 	wm.DrawPlayerCardFor(Chris);
 	wm.DrawPlayerCardFor(Chris);
-
 	wm.DrawPlayerCardFor(Barclay);
 	wm.DrawPlayerCardFor(Barclay);
 	wm.DrawPlayerCardFor(Barclay);
@@ -36,10 +34,7 @@ int main()
 	wm.DrawPlayerCardFor(Barclay);
 
 	Chris->printHand();
-	PrintPlayerOptions(Chris, wm);
-
 	Barclay->printHand();
-	PrintPlayerOptions(Barclay, wm);
 
 	wm.printCitiesStatus();
 	wm.InfectCity(3);
@@ -52,6 +47,8 @@ int main()
 	wm.InfectCity(1);
 	wm.InfectCity(1);
 	wm.printCitiesStatus();
+
+	//PrintPlayerOptions(Chris, wm);
 
     return 0;
 }
