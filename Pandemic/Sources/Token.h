@@ -22,7 +22,6 @@ public:
 
 	void CureDiscover() { m_state = KNOWN; }
 	void EradicateDisease() { m_state = ERADICATED; }
-
 	bool IsCured() { return (m_state == KNOWN); }
 };
 
@@ -66,22 +65,42 @@ class BlackDiseaseCube final : public DiseaseCube { public: BlackDiseaseCube() :
 class CubePile abstract
 {
 protected:
-	std::vector<DiseaseCube*> m_pile;
+	uint8_t m_cubes;
 
 public:
-	CubePile() : m_pile() {}
-	virtual ~CubePile();
+	CubePile() : m_cubes(24) {}
 
-	bool isEmpty() { return (m_pile.size() == 0); }
-	DiseaseCube* takeCube() { DiseaseCube* dc = m_pile.back(); m_pile.pop_back(); return dc; }
-	void placeCube(DiseaseCube* dc) { m_pile.emplace_back(dc); }
-
+	bool isEmpty() { return (m_cubes == 0); }
+	virtual DiseaseCube* takeCube() = 0;
+	void placeCube(DiseaseCube* dc) { delete dc; m_cubes += 1; }
 }; 
 
-class RedDiseaseCubePile final : public CubePile { public: RedDiseaseCubePile(); ~RedDiseaseCubePile() {} };
-class YellowDiseaseCubePile final : public CubePile { public: YellowDiseaseCubePile(); ~YellowDiseaseCubePile() {} };
-class BlueDiseaseCubePile final : public CubePile { public: BlueDiseaseCubePile(); ~BlueDiseaseCubePile() {} };
-class BlackDiseaseCubePile final : public CubePile { public: BlackDiseaseCubePile(); ~BlackDiseaseCubePile() {} };
+class RedDiseaseCubePile final : public CubePile 
+{ 
+public: 
+	RedDiseaseCubePile() {}
+	DiseaseCube* takeCube() { m_cubes -= 1; return new RedDiseaseCube(); }
+};
+
+class YellowDiseaseCubePile final : public CubePile 
+{
+public: 
+	YellowDiseaseCubePile() {}
+	DiseaseCube* takeCube() { m_cubes -= 1; return new YellowDiseaseCube(); }
+};
+
+class BlueDiseaseCubePile final : public CubePile 
+{
+public: 
+	BlueDiseaseCubePile() {}
+	DiseaseCube* takeCube() { m_cubes -= 1; return new BlueDiseaseCube(); }
+};
+
+class BlackDiseaseCubePile final : public CubePile 
+{ public: 
+	BlackDiseaseCubePile() {}
+	DiseaseCube* takeCube() { m_cubes -= 1; return new BlackDiseaseCube(); }
+};
 
 class DiseaseCubePile final
 {
@@ -93,7 +112,6 @@ private:
 
 public:
 	DiseaseCubePile() {}
-	~DiseaseCubePile() {}
 
 	bool isAnyEmpty();
 	DiseaseCube* takeCube(const Color& color);
