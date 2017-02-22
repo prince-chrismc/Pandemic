@@ -13,6 +13,7 @@ TODO:
 
 redesign of decks ! cards pile wil be vector ofstring IDs and on card draw a new 
 will be returned and added to discard or hand ... reducing heap allocation
+same thing to be applied to cube piles 
 
 */
 
@@ -26,12 +27,11 @@ protected:
 class InfectionDeck final : Deck
 {
 private:
-	std::deque<InfectionCard*> m_deck;
-	std::deque<InfectionCard*> m_discard;
+	std::deque<InfectionCard::CardsList> m_deck;
+	std::deque<InfectionCard::CardsList> m_discard;
 
 public:
 	InfectionDeck();
-	~InfectionDeck();
 
 	InfectionCard* DrawCard();
 };
@@ -39,12 +39,11 @@ public:
 class PlayerDeck final : Deck
 {
 private:
-	std::deque<PlayerCard*> m_deck;
-	std::deque<PlayerCard*> m_discard;
+	std::deque<PlayerCard::CardsList> m_deck;
+	std::deque<PlayerCard::CardsList> m_discard;
 
 public:
 	PlayerDeck();
-	~PlayerDeck();
 
 	PlayerCard* DrawCard();
 	void DiscardCard(PlayerCard* pc);
@@ -53,11 +52,10 @@ public:
 class RoleDeck final : public Deck
 {
 private:
-	std::deque<RoleCard*> m_deck;
+	std::deque<RoleCard::Roles> m_deck;
 
 public:
 	RoleDeck();
-	~RoleDeck();
 
 	RoleCard* DrawCard();
 };
