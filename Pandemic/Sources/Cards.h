@@ -27,9 +27,6 @@ public:
 		CARD_MAX = 0xFFFFFFFUL      //"Max"
 	};
 
-	Card(const CardsList& id, const char* name) : Card( (uint64_t)id, name, name) {}
-	Card(const CardsList& id, const char* name, const char* desc) : Card((uint64_t)id, name, desc) {}
-
 	static const char* getCardName(const uint64_t id);
 	uint64_t getNumID();
 	virtual void PrintInformation();
@@ -38,6 +35,9 @@ public:
 
 class PlayerCard abstract : public Card
 {
+protected:
+	PlayerCard(const uint64_t& id, const char* name, const char* desc) : Card(id, name, desc) {}
+
 public:
 	//EXAMPLE = 0x0A89CFCUL
 	enum CardsList
@@ -45,14 +45,28 @@ public:
 		PLAYERCARD_MIN = 0x2000000UL, //"Invalid"
 		PLAYERCARD_MAX = 0x2FFFFFFUL, //"Invalid"
 	};
+};
 
-protected:
-	PlayerCard(const uint64_t& id, const char* name, const char* desc) : Card(id, name, desc) {}
+
+class PlayerCardFactory abstract
+{
+public:
+	static PlayerCard* makeCard(const uint64_t& id);
+
+	static bool IsaCityCard(const uint64_t& id);
+	static bool IsaEventCard(const uint64_t& id);
+	static bool IsaEpidemicCard(const uint64_t& id);
 };
 
 
 class CityCard final : public PlayerCard, private CityList
 {
+private:
+	bool IsRedCity(const uint64_t& id) { return (id > RED_MIN) && (id < RED_MAX); }
+	bool IsYellowCity(const uint64_t& id) { return (id > YELLOW_MIN) && (id < YELLOW_MAX); }
+	bool IsBlueCity(const uint64_t& id) { return (id > BLUE_MIN) && (id < BLUE_MAX); }
+	bool IsBlackCity(const uint64_t& id) { return (id > BLACK_MIN) && (id < BLACK_MAX); }
+
 public:
 	//EXAMPLE = 0x0A89CFCUL
 	enum CardsList
@@ -120,19 +134,17 @@ public:
 	};
 
 	CityCard(const CardsList& id) : PlayerCard(id, getCardName(id), getCardName(id)) {}
+	
+	Color getCityColor();
 
-	Color getCityColor(const uint64_t& id);
-	bool IsRedCity(const uint64_t& id) { return (id > RED_MIN) && (id < RED_MAX); }
-	bool IsYellowCity(const uint64_t& id) { return (id > YELLOW_MIN) && (id < YELLOW_MAX); }
-	bool IsBlueCity(const uint64_t& id) { return (id > BLUE_MIN) && (id < BLUE_MAX); }
-	bool IsBlackCity(const uint64_t& id) { return (id > BLACK_MIN) && (id < BLACK_MAX); }
-
-	static bool IsaCityCard(PlayerCard* card) { return (card->getNumID() > CITYCARD_MIN) && (card->getNumID() < CITYCARD_MAX); }
 };
 
 
 class EventCard final : public PlayerCard
 {
+private:
+	static const char* getCardDesc(const uint64_t & id);
+
 public:
 	//EXAMPLE = 0x0A89CFCUL
 	enum CardsList
@@ -149,12 +161,14 @@ public:
 	};
 
 	EventCard(const CardsList& id) : PlayerCard(id, getCardName(id), getCardDesc(id)) {}
-	const char* getCardDesc(const uint64_t& id);
 };
 
 
 class EpidemicCard final : public PlayerCard
 {
+private:
+	static const char * getCardDesc(const uint64_t & id);
+
 public:
 	//EXAMPLE = 0x0A89CFCUL
 	enum CardsList
@@ -168,20 +182,24 @@ public:
 	};
 
 	EpidemicCard(const CardsList& id) : PlayerCard(id, getCardName(id), getCardDesc(id)) {}
-	const char* getCardDesc(const uint64_t& id);
 };
 
 
-class RoleCard final : public PlayerCard, public RoleList
+class RoleCard final : public Card, public RoleList
 {
+private:
+	static const char* getCardDesc(const uint64_t& id);
+
 public:	
-	RoleCard(const Roles& id) : PlayerCard(id, getCardName(id), getCardDesc(id)) {}
-	const char* getCardDesc(const uint64_t& id);
+	RoleCard(const Roles& id) : Card(id, getCardName(id), getCardDesc(id)) {}
 };
 
 
 class ReferenceCard final : public Card
 {
+private:
+	static const char* getCardDesc();
+
 public:
 	//EXAMPLE = 0x0A89CFCUL
 	enum CardsList
@@ -192,15 +210,20 @@ public:
 	};
 
 	ReferenceCard() : Card(REFERENCECARD, "Reference Card", getCardDesc()) {}
-	const char* getCardDesc();
 };
 
 
 class InfectionCard final : public Card, private CityList
 {
 private:
-	std::hexadecimal m_cityID;
+	CityID m_cityID;
 	Color m_color;
+
+	static const char* getCardDesc(const uint64_t& id);
+	static bool IsRedCity(const uint64_t& id) { return (id > RED_MIN) && (id < RED_MAX); }
+	static bool IsYellowCity(const uint64_t& id) { return (id > YELLOW_MIN) && (id < YELLOW_MAX); }
+	static bool IsBlueCity(const uint64_t& id) { return (id > BLUE_MIN) && (id < BLUE_MAX); }
+	static bool IsBlackCity(const uint64_t& id) { return (id > BLACK_MIN) && (id < BLACK_MAX); }
 
 public:
 	//EXAMPLE = 0x0A89CFCUL
@@ -266,11 +289,7 @@ public:
 		INFECTIONCARD_MAX = 0xCFFFFFFUL, //"Invalid"
 	};
 
-	InfectionCard(const CardsList& id);
+	InfectionCard(const CardsList& id) : Card(id, getCardName(id), getCardDesc(id)), m_color(getCityColor()), m_cityID((CityID)(id - INFECTIONCARD_MIN)) {}
 
-	Color getCityColor(const uint64_t& id);
-	bool IsRedCity(const uint64_t& id) { return (id > RED_MIN) && (id < RED_MAX); }
-	bool IsYellowCity(const uint64_t& id) { return (id > YELLOW_MIN) && (id < YELLOW_MAX); }
-	bool IsBlueCity(const uint64_t& id) { return (id > BLUE_MIN) && (id < BLUE_MAX); }
-	bool IsBlackCity(const uint64_t& id) { return (id > BLACK_MIN) && (id < BLACK_MAX); }
+	Color getCityColor();
 };
