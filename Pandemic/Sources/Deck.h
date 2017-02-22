@@ -8,6 +8,14 @@
 #include <deque>
 #include "Cards.h"
 
+/*
+TODO:
+
+redesign of decks ! cards pile wil be vector ofstring IDs and on card draw a new 
+will be returned and added to discard or hand ... reducing heap allocation
+
+*/
+
 class Deck abstract
 {
 protected:

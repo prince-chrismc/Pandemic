@@ -155,5 +155,7 @@ bool CureMakers::IsCured(const Color & color)
 		return m_blue.IsCured();
 	case BLACK:
 		return m_black.IsCured();
+	default:
+		return false;
 	}
 }
