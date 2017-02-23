@@ -9,7 +9,7 @@
 #include "Player.h"
 #include "Token.h"
 
-class WorldMap final
+class WorldMap final //The Board
 {
 private:
 	InfectionRate m_infectrate;
@@ -28,6 +28,7 @@ public:
 	WorldMap();
 	~WorldMap();
 
+	/* TODO: HAVENT BEEN IMPLEMENTED */
 	void SaveGame();
 	void LoadGame();
 	

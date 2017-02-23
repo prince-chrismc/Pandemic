@@ -8,23 +8,14 @@
 #include <deque>
 #include "Cards.h"
 
-/*
-TODO:
-
-redesign of decks ! cards pile wil be vector ofstring IDs and on card draw a new 
-will be returned and added to discard or hand ... reducing heap allocation
-same thing to be applied to cube piles 
-
-*/
-
-class Deck abstract
+class Deck abstract //Primative Definition
 {
 protected:
 	const uint8_t m_size;
 	Deck(const uint8_t& size) : m_size(size) {}
 };
 
-class InfectionDeck final : Deck
+class InfectionDeck final : public Deck //InfectionCard Factory
 {
 private:
 	std::deque<InfectionCard::CardsList> m_deck;
@@ -36,7 +27,7 @@ public:
 	InfectionCard* DrawCard();
 };
 
-class PlayerDeck final : Deck
+class PlayerDeck final : public Deck, private PlayerCardFactory //PlayerCards Factory
 {
 private:
 	std::deque<PlayerCard::CardsList> m_deck;
@@ -49,7 +40,7 @@ public:
 	void DiscardCard(PlayerCard* pc);
 };
 
-class RoleDeck final : public Deck
+class RoleDeck final : public Deck //RoleCard Factory
 {
 private:
 	std::deque<RoleCard::Roles> m_deck;

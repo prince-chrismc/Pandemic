@@ -8,10 +8,9 @@
 #include "Pandemic.h"
 #include "Cards.h"
 
-
-class Pawn final
+class Pawn final //Object on board to represent player
 {
-	friend class Role;
+	friend class Player;
 public:
 	enum PawnColor
 	{
@@ -31,10 +30,9 @@ private:
 public:
 	Pawn(const uint64_t& color);
 	void changeCity(const std::hexadecimal& id) { m_CityID = id; }
-
 };
 
-class Role
+class Role //Defines Role Attributes held by a player
 {
 	friend class Player;
 private:
@@ -51,10 +49,9 @@ public:
 
 	virtual const uint8_t getHandLimit() { return 7; }
 	const char* getName() { return m_name.c_str(); }
-	std::hexadecimal getCityID() { return m_pawn->m_CityID; }
 };
 
-class Player final
+class Player final //The Almighty Player
 {
 private:
 	const std::string m_name;
@@ -66,10 +63,16 @@ public:
 	Player(const std::string& name, RoleCard* card) : m_name(name), m_role(new Role(card)), m_refcard() {}
 	~Player();
 
+	//Manipulate Hand
 	void addCard(PlayerCard* card) { m_hand.emplace_back(card); }
 	PlayerCard* rmCard(uint8_t pos);
-	void ChangeCity(const std::hexadecimal& id) { m_role->m_pawn->changeCity(id); }
+
+	//Get/Set City
+	std::hexadecimal getCityHexID() { return m_role->m_pawn->m_CityID; }
 	CityList::CityID getCityID();
+	void ChangeCity(const std::hexadecimal& id) { m_role->m_pawn->changeCity(id); }
+
+	//For game play
 	std::vector<CityList::CityID> getDirectFlightCities();
 	bool hasCurrentCityCard();
 	/* TODO: HAVENT BEEN IMPLEMENTED */

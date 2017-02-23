@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-enum Color
+enum Color //Four base colors
 {
 	INVALID = -1,
 	RED,
@@ -17,7 +17,7 @@ enum Color
 	BLACK
 };
 
-class CityList
+class CityList // Defines basic city IDs (without card type offset)
 {
 public:
 	enum CityID
@@ -88,9 +88,7 @@ public:
 	};
 };
 
-
-
-class RoleList
+class RoleList //Defines RoleIDs (with card offset)
 {
 public:
 	//EXAMPLE = 0x0A89CFCUL

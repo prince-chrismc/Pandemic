@@ -147,7 +147,7 @@ public:
 };
 
 // Research Centers -------------------------------------------------------------------------------
-class ResearchCenter final
+class ResearchCenter final /* TODO: Develop object */
 {
 private:
 	City* m_city;

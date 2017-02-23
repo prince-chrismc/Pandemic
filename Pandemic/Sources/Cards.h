@@ -7,9 +7,10 @@
 #pragma once
 #include "Pandemic.h"
 
-namespace std { typedef string hexadecimal; } //typedef for easier reading of my code  -- should always be a string containing a hex
+namespace std { typedef string hexadecimal; } //hex value (stored as a string) done for easier code reading
 
-class Card
+
+class Card abstract //Basic Object hold primary definition
 {
 private:
 	std::hexadecimal m_id;
@@ -21,19 +22,19 @@ protected:
 
 public:
 	//EXAMPLE = 0x0A89CFCUL
-	enum CardsList
+	enum CardsList	//Important definition to define ranges for types and the IDs themselves
 	{
 		CARD_INVALID = 0x0000000UL, //"Invalid"
-		CARD_MAX = 0xFFFFFFFUL      //"Max"
+		CARD_MAX = 0xFFFFFFFUL      //"Invalid"
 	};
 
 	static const char* getCardName(const uint64_t id);
 	uint64_t getNumID();
-	virtual void PrintInformation();
+	void PrintInformation();
 };
 
 
-class PlayerCard abstract : public Card
+class PlayerCard abstract : public Card //One of three basic card types
 {
 protected:
 	PlayerCard(const uint64_t& id, const char* name, const char* desc) : Card(id, name, desc) {}
@@ -48,10 +49,12 @@ public:
 };
 
 
-class PlayerCardFactory abstract
+class PlayerCardFactory abstract //Generates the various player cards with various support functions
 {
-public:
+private:
 	static PlayerCard* makeCard(const uint64_t& id);
+
+public:
 
 	static bool IsaCityCard(const uint64_t& id);
 	static bool IsaEventCard(const uint64_t& id);
@@ -59,7 +62,7 @@ public:
 };
 
 
-class CityCard final : public PlayerCard, private CityList
+class CityCard final : public PlayerCard, private CityList //One of three player card types
 {
 private:
 	bool IsRedCity(const uint64_t& id) { return (id > RED_MIN) && (id < RED_MAX); }
@@ -140,7 +143,7 @@ public:
 };
 
 
-class EventCard final : public PlayerCard
+class EventCard final : public PlayerCard //Two of three player card types
 {
 private:
 	static const char* getCardDesc(const uint64_t & id);
@@ -164,7 +167,7 @@ public:
 };
 
 
-class EpidemicCard final : public PlayerCard
+class EpidemicCard final : public PlayerCard //Three of three player card types
 {
 private:
 	static const char * getCardDesc(const uint64_t & id);
@@ -185,7 +188,7 @@ public:
 };
 
 
-class RoleCard final : public Card, public RoleList
+class RoleCard final : public Card, public RoleList //Two of three basic card types
 {
 private:
 	static const char* getCardDesc(const uint64_t& id);
@@ -195,7 +198,7 @@ public:
 };
 
 
-class ReferenceCard final : public Card
+class ReferenceCard final : public Card //The card explaining the base actions
 {
 private:
 	static const char* getCardDesc();
@@ -213,7 +216,7 @@ public:
 };
 
 
-class InfectionCard final : public Card, private CityList
+class InfectionCard final : public Card, private CityList //Three of three basic card types
 {
 private:
 	CityID m_cityID;
