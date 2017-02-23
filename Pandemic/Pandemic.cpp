@@ -6,50 +6,51 @@
 #include "Sources\WorldMap.h"
 
 void PrintOpening();
-void PrintPlayerOptions(Player* joeur, WorldMap map);
+void PrintPlayerOptions(Player* joeur, WorldMap* map);
 
 int main()
 {
 	PrintOpening();
 
-	WorldMap wm;
-	wm.RegisterPlayer("Chris");
-	Player* Chris = wm.GetPlayer(0); 
-	wm.RegisterPlayer("Barclay");
-	Player* Barclay = wm.GetPlayer(1);
+	WorldMap* wm = new WorldMap();
+	wm->RegisterPlayer("Chris");
+	Player* Chris = wm->GetPlayer(0); 
+	wm->RegisterPlayer("Barclay");
+	Player* Barclay = wm->GetPlayer(1);
 	
 	Chris->printInfo();
 	Barclay->printInfo();
 	Barclay->printRefCard();
 
-	wm.DrawPlayerCardFor(Chris);
-	wm.DrawPlayerCardFor(Chris);
-	wm.DrawPlayerCardFor(Chris);
-	wm.DrawPlayerCardFor(Chris);
-	wm.DrawPlayerCardFor(Chris);
-	wm.DrawPlayerCardFor(Barclay);
-	wm.DrawPlayerCardFor(Barclay);
-	wm.DrawPlayerCardFor(Barclay);
-	wm.DrawPlayerCardFor(Barclay);
-	wm.DrawPlayerCardFor(Barclay);
+	wm->DrawPlayerCardFor(Chris);
+	wm->DrawPlayerCardFor(Chris);
+	wm->DrawPlayerCardFor(Chris);
+	wm->DrawPlayerCardFor(Chris);
+	wm->DrawPlayerCardFor(Chris);
+	wm->DrawPlayerCardFor(Barclay);
+	wm->DrawPlayerCardFor(Barclay);
+	wm->DrawPlayerCardFor(Barclay);
+	wm->DrawPlayerCardFor(Barclay);
+	wm->DrawPlayerCardFor(Barclay);
 
 	Chris->printHand();
 	Barclay->printHand();
 
-	wm.printCitiesStatus();
-	wm.InfectCity(3);
-	wm.InfectCity(3);
-	wm.InfectCity(3);
-	wm.InfectCity(2);
-	wm.InfectCity(2);
-	wm.InfectCity(2);
-	wm.InfectCity(1);
-	wm.InfectCity(1);
-	wm.InfectCity(1);
-	wm.printCitiesStatus();
+	wm->printCitiesStatus();
+	wm->InfectCity(3);
+	wm->InfectCity(3);
+	wm->InfectCity(3);
+	wm->InfectCity(2);
+	wm->InfectCity(2);
+	wm->InfectCity(2);
+	wm->InfectCity(1);
+	wm->InfectCity(1);
+	wm->InfectCity(1);
+	wm->printCitiesStatus();
 
-	//PrintPlayerOptions(Chris, wm);
+	PrintPlayerOptions(Chris, wm);
 
+	delete wm;
     return 0;
 }
 
@@ -61,12 +62,13 @@ void PrintOpening()
 }
 
 // Sample test for outputting player options to move...
-void PrintPlayerOptions(Player* joeur, WorldMap map)
+void PrintPlayerOptions(Player* joeur, WorldMap* map)
 {
+	printf("\n\n");
 	joeur->printInfo();
 	int i = 1;
 	printf("  A. Drive/Ferry Options\n");
-	const std::vector<City*> nbc = map.getCitiesConnectedTo(joeur->getCityID());
+	const std::vector<City*> nbc = map->getCitiesConnectedTo(joeur->getCityID());
 	for (size_t s = 0; s < nbc.size(); s += 1)
 	{
 		printf("    %d: ", i++);
@@ -80,8 +82,8 @@ void PrintPlayerOptions(Player* joeur, WorldMap map)
 		for (size_t s = 0; s < dfcID.size(); s += 1)
 		{
 			printf("    %d: ", i++);
-			if (map.getCityWithID(dfcID.at(s)) != NULL)
-				map.getCityWithID(dfcID.at(s))->PrintInformation();
+			if (map->getCityWithID(dfcID.at(s)) != NULL)
+				map->getCityWithID(dfcID.at(s))->PrintInformation();
 			else
 				break;
 		}
@@ -92,7 +94,7 @@ void PrintPlayerOptions(Player* joeur, WorldMap map)
 		printf("  C. Charter Flight.\n    %d: Pick Any City!\n", i++);
 	}
 
-	if (map.multipleResearchCentersExist())
+	if (map->multipleResearchCentersExist())
 	{
 		printf("  D. Shuttle Flight.\n    %d: NOT IMPLEMENTED !\n", i++);
 	}
