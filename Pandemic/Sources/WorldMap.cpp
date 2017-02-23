@@ -353,6 +353,11 @@ WorldMap::~WorldMap()
 	m_players.clear();
 }
 
+void WorldMap::SaveGame()
+{
+
+}
+
 void WorldMap::InfectCity(const uint8_t& cubesToAdd)
 {
 	InfectionCard* ic = m_infecdeck.DrawCard();
