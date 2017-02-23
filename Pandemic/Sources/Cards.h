@@ -51,7 +51,7 @@ public:
 
 class PlayerCardFactory abstract //Generates the various player cards with various support functions
 {
-private:
+protected:
 	static PlayerCard* makeCard(const uint64_t& id);
 
 public:

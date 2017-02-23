@@ -28,7 +28,7 @@ PlayerCard* Player::rmCard(uint8_t pos)
 CityList::CityID Player::getCityID()
 {
 	std::stringstream ss;
-	ss << std::hex << m_role->getCityID();
+	ss << std::hex << getCityHexID();
 	uint64_t num = 0;
 	ss >> std::hex >> num;
 
@@ -67,7 +67,7 @@ void Player::printName()
 void Player::printInfo()
 {
 	std::stringstream ss;
-	ss << std::hex << m_role->getCityID();
+	ss << std::hex << getCityHexID();
 	uint64_t num = 0;
 	ss >> std::hex >> num;
 
