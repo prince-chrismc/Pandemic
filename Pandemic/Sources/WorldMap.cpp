@@ -355,11 +355,12 @@ WorldMap::~WorldMap()
 
 void WorldMap::SaveGame()
 {
-
+	/* TODO: Implement */
 }
 
 void WorldMap::LoadGame()
 {
+	/* TODO: Implement */
 }
 
 void WorldMap::InfectCity(const uint8_t& cubesToAdd)

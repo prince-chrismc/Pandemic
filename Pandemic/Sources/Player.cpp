@@ -1,6 +1,5 @@
 #include <sstream> //std::stringstream
 #include "Player.h"
-#include "Token.h"
 
 Player::~Player()
 {
@@ -118,6 +117,6 @@ Role::~Role()
 Pawn::Pawn(const uint64_t& color) : m_color( (PawnColor)color )
 {
 	std::stringstream ss;
-	ss << std::hex << City::ATLANTA;
+	ss << std::hex << CityList::ATLANTA;
 	m_CityID = ss.str();
 }

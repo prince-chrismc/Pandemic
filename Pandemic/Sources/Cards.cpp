@@ -211,7 +211,6 @@ const char* EventCard::getCardDesc(const uint64_t& id)
 	return desc;
 }
 
-
 const char* EpidemicCard::getCardDesc(const uint64_t& id)
 {
 	const char* desc = "";
@@ -225,7 +224,7 @@ const char* EpidemicCard::getCardDesc(const uint64_t& id)
 	return desc;
 }
 
-const char * RoleCard::getCardDesc(const uint64_t & id)
+const char* RoleCard::getCardDesc(const uint64_t & id)
 {
 	const char* desc = "";
 	switch (id)
@@ -235,7 +234,7 @@ const char * RoleCard::getCardDesc(const uint64_t & id)
 	case RoleCard::MEDIC: desc = "The Medic removes all cubes, not 1, of the same color when doing the Treat Disease action. If a disease has been cured, he automatically removes all cubes of that color from a city, simply by entering it or being there.This does not take an action. NOTE: The Medic’s automatic removal of cubes can occur on other players’ turns, if he is moved by the Dispatcher or the Airlift Event. The Medic also prevents placing disease cubes (and outbreaks) of cured diseases in his location."; break;
 	case RoleCard::OPERATIONS: desc = "The Operations Expert may, as an action, either: A. build a research station in his current city without discarding(or using) a City card, or B. once per turn, move from a research station to any city by discarding any City card. NOTE: The Dispatcher may not use the Operations Expert’s special move ability when moving the Operation Expert’s pawn"; break;
 	case RoleCard::QUARANTINE: desc = "The Quarantine Specialist prevents both outbreaks and the placement of disease cubes in the city she is in and all cities connected to that city.She does not affect cubes placed during setup."; break;
-	case RoleCard::RESEARCHER: desc = "As an action, the Researcher may give any City card from her hand to another player in the same city as her, without this card having to match her city.The transfer must be from her hand to the other player’s hand, but it can occur on either player’s turn."; break; 
+	case RoleCard::RESEARCHER: desc = "As an action, the Researcher may give any City card from her hand to another player in the same city as her, without this card having to match her city.The transfer must be from her hand to the other player’s hand, but it can occur on either player’s turn."; break;
 	case RoleCard::SCIENTIST: desc = "The Scientist needs only 4 (not 5) City cards of the same disease color to Discover a Cure for that disease."; break;
 	}
 	return desc;

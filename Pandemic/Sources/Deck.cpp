@@ -1,5 +1,5 @@
-#include <algorithm>
-#include <random>
+#include <algorithm> //std::shuffle
+#include <random> //std::mt19937
 #include "Deck.h"
 
 InfectionDeck::InfectionDeck() : Deck(48)
@@ -62,29 +62,6 @@ InfectionDeck::InfectionDeck() : Deck(48)
 	std::shuffle(m_deck.begin(), m_deck.end(), g);
 }
 
-//InfectionDeck::~InfectionDeck()
-//{
-//	for (size_t pos = 0; pos < m_deck.size(); pos += 1)
-//	{
-//		if (m_deck.at(pos) != NULL)
-//		{
-//			delete m_deck.at(pos);
-//			m_deck.at(pos) = NULL;
-//		}
-//	}
-//	m_deck.clear();
-//
-//	for (size_t pos = 0; pos < m_discard.size(); pos += 1)
-//	{
-//		if (m_discard.at(pos) != NULL)
-//		{
-//			delete m_discard.at(pos);
-//			m_discard.at(pos) = NULL;
-//		}
-//	}
-//	m_discard.clear();
-//}
-
 InfectionCard* InfectionDeck::DrawCard()
 {
 	InfectionCard::CardsList nextID = m_deck.front();
@@ -93,6 +70,7 @@ InfectionCard* InfectionDeck::DrawCard()
 	return new InfectionCard(nextID);
 }
 
+// Player Deck ------------------------------------------------------------------------------------
 PlayerDeck::PlayerDeck() : Deck(57)
 {
 	m_deck.emplace_back((PlayerCard::CardsList)CityCard::ALGIERS);
@@ -164,29 +142,6 @@ PlayerDeck::PlayerDeck() : Deck(57)
 	std::shuffle(m_deck.begin(), m_deck.end(), g);
 }
 
-//PlayerDeck::~PlayerDeck()
-//{
-//	for (size_t pos = 0; pos < m_deck.size(); pos += 1)
-//	{
-//		if (m_deck.at(pos) != NULL)
-//		{
-//			delete m_deck.at(pos);
-//			m_deck.at(pos) = NULL;
-//		}
-//	}
-//	m_deck.clear();
-//
-//	for (size_t pos = 0; pos < m_discard.size(); pos += 1)
-//	{
-//		if (m_discard.at(pos) != NULL)
-//		{
-//			delete m_discard.at(pos);
-//			m_discard.at(pos) = NULL;
-//		}
-//	}
-//	m_discard.clear();
-//}
-
 PlayerCard* PlayerDeck::DrawCard()
 {
 	PlayerCard::CardsList nextID = m_deck.front();
@@ -201,6 +156,7 @@ void PlayerDeck::DiscardCard(PlayerCard* pc)
 	delete pc;
 }
 
+// Role Deck --------------------------------------------------------------------------------------
 RoleDeck::RoleDeck() : Deck(7)
 {
 	m_deck.emplace_back(RoleCard::CONTIGENCY);
@@ -219,19 +175,6 @@ RoleDeck::RoleDeck() : Deck(7)
 	std::mt19937 g(rd());
 	std::shuffle(m_deck.begin(), m_deck.end(), g);
 }
-
-//RoleDeck::~RoleDeck()
-//{
-//	for (size_t pos = 0; pos < m_deck.size(); pos += 1)
-//	{
-//		if (m_deck.at(pos) != NULL)
-//		{
-//			delete m_deck.at(pos);
-//			m_deck.at(pos) = NULL;
-//		}
-//	}
-//	m_deck.clear();
-//}
 
 RoleCard* RoleDeck::DrawCard()
 {

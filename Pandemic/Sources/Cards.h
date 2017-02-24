@@ -55,7 +55,6 @@ protected:
 	static PlayerCard* makeCard(const uint64_t& id);
 
 public:
-
 	static bool IsaCityCard(const uint64_t& id);
 	static bool IsaEventCard(const uint64_t& id);
 	static bool IsaEpidemicCard(const uint64_t& id);

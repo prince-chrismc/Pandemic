@@ -1,56 +1,11 @@
 #include "Token.h"
 
-//CubePile::~CubePile()
-//{
-//	for (size_t pos = 0; pos < m_pile.size(); pos += 1)
-//	{
-//		if (m_pile.at(pos) != NULL)
-//		{
-//			delete m_pile.at(pos);
-//			m_pile.at(pos) = NULL;
-//		}
-//	}
-//	m_pile.clear();
-//}
-//
-//RedDiseaseCubePile::RedDiseaseCubePile()
-//{
-//	for (size_t i = 0; i < 24; i++)
-//	{
-//		m_pile.emplace_back(new RedDiseaseCube());
-//	}
-//}
-//
-//YellowDiseaseCubePile::YellowDiseaseCubePile()
-//{
-//	for (size_t i = 0; i < 24; i++)
-//	{
-//		m_pile.emplace_back(new YellowDiseaseCube());
-//	}
-//}
-//
-//BlueDiseaseCubePile::BlueDiseaseCubePile()
-//{
-//	for (size_t i = 0; i < 24; i++)
-//	{
-//		m_pile.emplace_back(new BlueDiseaseCube());
-//	}
-//}
-//
-//BlackDiseaseCubePile::BlackDiseaseCubePile()
-//{
-//	for (size_t i = 0; i < 24; i++)
-//	{
-//		m_pile.emplace_back(new BlackDiseaseCube());
-//	}
-//}
-
 bool DiseaseCubePile::isAnyEmpty()
 {
 	return m_red.isEmpty() || m_yellow.isEmpty() || m_blue.isEmpty() || m_black.isEmpty();
 }
 
-DiseaseCube* DiseaseCubePile::takeCube(const Color & color)
+DiseaseCube* DiseaseCubePile::takeCube(const Color& color)
 {
 	DiseaseCube* dc = NULL;
 	switch (color)
@@ -68,11 +23,10 @@ DiseaseCube* DiseaseCubePile::takeCube(const Color & color)
 		dc = m_black.takeCube();
 		break;
 	}
-
 	return dc;
 }
 
-void DiseaseCubePile::placeCube(DiseaseCube * dc)
+void DiseaseCubePile::placeCube(DiseaseCube* dc)
 {
 	switch (dc->getColor())
 	{
@@ -124,7 +78,7 @@ void CureMakers::CureDiscover(const Color & color)
 	}
 }
 
-void CureMakers::EradicateDisease(const Color & color)
+void CureMakers::EradicateDisease(const Color& color)
 {
 	switch (color)
 	{
@@ -143,7 +97,7 @@ void CureMakers::EradicateDisease(const Color & color)
 	}
 }
 
-bool CureMakers::IsCured(const Color & color)
+bool CureMakers::IsCured(const Color& color)
 {
 	switch (color)
 	{

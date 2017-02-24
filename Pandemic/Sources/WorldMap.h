@@ -46,4 +46,3 @@ public:
 	/* TODO: HAVENT BEEN IMPLEMENTED */
 	bool multipleResearchCentersExist() { return false; }
 };
-
