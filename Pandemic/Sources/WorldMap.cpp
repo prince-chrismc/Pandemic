@@ -1,3 +1,5 @@
+#include <fstream> //file io
+#include <ctime> //time
 #include "WorldMap.h" 
 
 WorldMap::WorldMap() : m_infectrate(), m_outbreeak(), m_cubepiles(), m_infecdeck(), m_playerdeck(), m_roledeck(), m_players(), m_cures(), m_centers()
@@ -355,7 +357,33 @@ WorldMap::~WorldMap()
 
 void WorldMap::SaveGame()
 {
-	/* TODO: Implement */
+	time_t t = time(0);
+	struct tm* now = localtime(&t);
+	std::string filename = "bin\Pandemic-";
+	filename += (now->tm_year + 1900);
+	filename += (now->tm_mon + 1);
+	filename += now->tm_mday;
+	filename += "-";
+	filename += now->tm_hour;
+	filename += now->tm_min;
+	filename += now->tm_sec;
+	filename += ".txt";
+
+	std::ofstream myfile;
+	myfile.open(filename);
+	myfile << "Writing this to a file.\n";
+
+	InfectionCard* ic = m_infecdeck.DrawCard();
+	while ( ic != NULL)
+	{
+		myfile << std::hex << ic->getNumID();
+		myfile << "\n";
+
+		delete ic;
+		ic = m_infecdeck.DrawCard();
+	}
+
+	myfile.close();
 }
 
 void WorldMap::LoadGame()

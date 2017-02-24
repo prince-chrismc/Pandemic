@@ -64,6 +64,8 @@ InfectionDeck::InfectionDeck() : Deck(48)
 
 InfectionCard* InfectionDeck::DrawCard()
 {
+	if (m_deck.size() == 0) return NULL; //for when deck is empty
+
 	InfectionCard::CardsList nextID = m_deck.front();
 	m_deck.pop_front();
 	m_discard.emplace_front(nextID);

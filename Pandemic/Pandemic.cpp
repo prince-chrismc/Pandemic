@@ -13,6 +13,12 @@ int main()
 	PrintOpening();
 
 	WorldMap* wm = new WorldMap();
+	wm->SaveGame();
+	return 0;
+
+
+
+
 	wm->RegisterPlayer("Chris");
 	Player* Chris = wm->GetPlayer(0); 
 	wm->RegisterPlayer("Barclay");
