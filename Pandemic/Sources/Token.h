@@ -23,6 +23,7 @@ public:
 	void CureDiscover() { m_state = KNOWN; }
 	void EradicateDisease() { m_state = ERADICATED; }
 	bool IsCured() { return (m_state == KNOWN); }
+	std::string GetState() { return std::to_string(m_state); } //FilePrint
 };
 
 class RedCure final : public Cure { public: RedCure() : Cure(RED) {} };
@@ -44,6 +45,7 @@ public:
 	void CureDiscover(const Color& color);
 	void EradicateDisease(const Color& color);
 	bool IsCured(const Color& color);
+	std::string GetStates() { return (m_red.GetState() + m_blue.GetState() + m_yellow.GetState() + m_black.GetState()); } //FilePrint
 };
 
 // Cubes ------------------------------------------------------------------------------------------

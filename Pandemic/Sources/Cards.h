@@ -24,8 +24,8 @@ public:
 	//EXAMPLE = 0x0A89CFCUL
 	enum CardsList	//Important definition to define ranges for types and the IDs themselves
 	{
-		CARD_INVALID = 0x0000000UL, //"Invalid"
-		CARD_MAX = 0xFFFFFFFUL      //"Invalid"
+		CARD_INVALID = 0x0000000UL, //Invalid
+		CARD_MAX = 0xFFFFFFFUL      //Invalid
 	};
 
 	static const char* getCardName(const uint64_t id);

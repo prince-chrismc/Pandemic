@@ -24,6 +24,8 @@ private:
 	std::vector<ResearchCenter> m_centers;
 	std::vector<Player*> m_players;
 
+	std::string MakeFileName();
+
 public:
 	WorldMap();
 	~WorldMap();

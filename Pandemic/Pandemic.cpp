@@ -14,10 +14,9 @@ int main()
 
 	WorldMap* wm = new WorldMap();
 	wm->SaveGame();
+	delete wm;
 	return 0;
-
-
-
+	
 
 	wm->RegisterPlayer("Chris");
 	Player* Chris = wm->GetPlayer(0); 

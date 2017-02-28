@@ -1,5 +1,6 @@
 #include <fstream> //file io
 #include <ctime> //time
+#include "boost\filesystem.hpp"
 #include "WorldMap.h" 
 
 WorldMap::WorldMap() : m_infectrate(), m_outbreeak(), m_cubepiles(), m_infecdeck(), m_playerdeck(), m_roledeck(), m_players(), m_cures(), m_centers()
@@ -355,33 +356,60 @@ WorldMap::~WorldMap()
 	m_players.clear();
 }
 
-void WorldMap::SaveGame()
+std::string WorldMap::MakeFileName()
 {
 	time_t t = time(0);
 	struct tm* now = localtime(&t);
-	std::string filename = "bin\Pandemic-";
-	filename += (now->tm_year + 1900);
-	filename += (now->tm_mon + 1);
-	filename += now->tm_mday;
+	std::string filename = "bin/Pandemic-";
+	filename += std::to_string(now->tm_year + 1900);
+	filename += std::to_string(now->tm_mon + 1);
+	filename += std::to_string(now->tm_mday);
 	filename += "-";
-	filename += now->tm_hour;
-	filename += now->tm_min;
-	filename += now->tm_sec;
+	filename += std::to_string(now->tm_hour);
+	filename += std::to_string(now->tm_min);
+	filename += std::to_string(now->tm_sec);
 	filename += ".txt";
 
+	return filename;
+}
+
+void WorldMap::SaveGame()
+{
+	// Get Timestamp ------------------------------------------------------------------------------
+	std::string filename = MakeFileName();
+
+	// Create File --------------------------------------------------------------------------------
 	std::ofstream myfile;
 	myfile.open(filename);
-	myfile << "Writing this to a file.\n";
+	myfile << filename << "\n";
 
+	// Infection Cards ----------------------------------------------------------------------------
 	InfectionCard* ic = m_infecdeck.DrawCard();
 	while ( ic != NULL)
 	{
 		myfile << std::hex << ic->getNumID();
-		myfile << "\n";
+		myfile << " ";
 
 		delete ic;
 		ic = m_infecdeck.DrawCard();
 	}
+	myfile << "\n";
+
+	// Player Cards -------------------------------------------------------------------------------
+	PlayerCard* pc = m_playerdeck.DrawCard();
+	while (pc != NULL)
+	{
+		myfile << std::hex << pc->getNumID();
+		myfile << " ";
+
+		delete pc;
+		pc = m_playerdeck.DrawCard();
+	}
+	myfile << "\n";
+
+	// Cures --------------------------------------------------------------------------------------
+	myfile << m_cures.GetStates();
+	myfile << "\n";
 
 	myfile.close();
 }
