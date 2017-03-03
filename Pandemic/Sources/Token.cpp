@@ -7,7 +7,7 @@ bool DiseaseCubePile::isAnyEmpty()
 
 DiseaseCube* DiseaseCubePile::takeCube(const Color& color)
 {
-	DiseaseCube* dc = NULL;
+	DiseaseCube* dc = nullptr;
 	switch (color)
 	{
 	case RED:
@@ -57,6 +57,21 @@ Color City::getCityColor()
 void City::PrintInformation()
 {
 	printf("City: %s has %d DiseaseCubes.\n", m_name.c_str(), (int)m_DiseasCubes.size() );
+}
+
+std::string City::PrintDiseaseCubes()
+{
+	std::string result = "";
+
+	if (m_DiseasCubes.front() != nullptr)
+	{
+		for each (DiseaseCube* cube in m_DiseasCubes)
+		{
+			/* TODO: Implement Section */
+		}
+	}
+
+	return result;
 }
 
 void CureMakers::CureDiscover(const Color & color)

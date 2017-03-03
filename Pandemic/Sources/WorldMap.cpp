@@ -342,15 +342,15 @@ WorldMap::~WorldMap()
 	for (int i = 0; i < 48; i += 1)
 	{
 		delete m_cities[i];
-		m_cities[i] = NULL;
+		m_cities[i] = nullptr;
 	}
 
 	for (size_t pos = 0; pos < m_players.size(); pos += 1)
 	{
-		if (m_players.at(pos) != NULL)
+		if (m_players.at(pos) != nullptr)
 		{
 			delete m_players.at(pos);
-			m_players.at(pos) = NULL;
+			m_players.at(pos) = nullptr;
 		}
 	}
 	m_players.clear();
@@ -385,7 +385,7 @@ void WorldMap::SaveGame()
 
 	// Infection Cards ----------------------------------------------------------------------------
 	InfectionCard* ic = m_infecdeck.DrawCard();
-	while ( ic != NULL)
+	while ( ic != nullptr)
 	{
 		myfile << std::hex << ic->getNumID();
 		myfile << " ";
@@ -397,7 +397,7 @@ void WorldMap::SaveGame()
 
 	// Player Cards -------------------------------------------------------------------------------
 	PlayerCard* pc = m_playerdeck.DrawCard();
-	while (pc != NULL)
+	while (pc != nullptr)
 	{
 		myfile << std::hex << pc->getNumID();
 		myfile << " ";
@@ -407,8 +407,32 @@ void WorldMap::SaveGame()
 	}
 	myfile << "\n";
 
+	// Role Cards ---------------------------------------------------------------------------------
+	RoleCard* rc = m_roledeck.DrawCard();
+	while (pc != nullptr)
+	{
+		myfile << std::hex << rc->getNumID();
+		myfile << " ";
+
+		delete rc;
+		rc = m_roledeck.DrawCard();
+	}
+	myfile << "\n";
+
 	// Cures --------------------------------------------------------------------------------------
-	myfile << m_cures.GetStates();
+	myfile << m_cures.PrintStates();
+	myfile << "\n";
+
+	// Cubes --------------------------------------------------------------------------------------
+	myfile << m_cubepiles.PrintCubesLeft();
+	myfile << "\n";
+
+	// Infection Rate -----------------------------------------------------------------------------
+	myfile << m_infectrate.PrintMarker();
+	myfile << "\n";
+
+	// Outbreak Marker ----------------------------------------------------------------------------
+	myfile << m_outbreeak.PrintMarker();
 	myfile << "\n";
 
 	myfile.close();
@@ -423,7 +447,7 @@ void WorldMap::InfectCity(const uint8_t& cubesToAdd)
 {
 	InfectionCard* ic = m_infecdeck.DrawCard();
 	City::CityID cid = (City::CityID)(ic->getNumID() - InfectionCard::INFECTIONCARD_MIN);
-	delete ic; ic = NULL;
+	delete ic; ic = nullptr;
 
 	for (int i = 0; i < 48; i += 1)
 	{
@@ -464,7 +488,7 @@ City* WorldMap::getCityWithID(const City::CityID & id)
 			return m_cities[i];
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 void WorldMap::printCitiesStatus()
