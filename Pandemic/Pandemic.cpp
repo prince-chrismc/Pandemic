@@ -87,7 +87,7 @@ void PrintPlayerOptions(Player* joeur, WorldMap* map)
 		for (size_t s = 0; s < dfcID.size(); s += 1)
 		{
 			printf("    %d: ", i++);
-			if (map->getCityWithID(dfcID.at(s)) != NULL)
+			if (map->getCityWithID(dfcID.at(s)) != nullptr)
 				map->getCityWithID(dfcID.at(s))->PrintInformation();
 			else
 				break;

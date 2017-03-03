@@ -30,6 +30,10 @@ public:
 	WorldMap();
 	~WorldMap();
 
+	//Prevent Copy/Assignment
+	WorldMap(const WorldMap&) = delete;
+	void operator=(const WorldMap&) = delete;
+
 	/* TODO: HAVENT BEEN IMPLEMENTED */
 	void SaveGame();
 	void LoadGame();

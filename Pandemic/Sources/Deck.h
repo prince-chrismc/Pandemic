@@ -24,6 +24,10 @@ private:
 public:
 	InfectionDeck();
 
+	//Prevent Copy/Assignment
+	InfectionDeck(const InfectionDeck&) = delete;
+	void operator=(const InfectionDeck&) = delete;
+
 	InfectionCard* DrawCard();
 };
 
@@ -36,6 +40,10 @@ private:
 public:
 	PlayerDeck();
 
+	//Prevent Copy/Assignment
+	PlayerDeck(const PlayerDeck&) = delete;
+	void operator=(const PlayerDeck&) = delete;
+
 	PlayerCard* DrawCard();
 	void DiscardCard(PlayerCard* pc);
 };
@@ -47,6 +55,10 @@ private:
 
 public:
 	RoleDeck();
+
+	//Prevent Copy/Assignment
+	RoleDeck(const RoleDeck&) = delete;
+	void operator=(const RoleDeck&) = delete;
 
 	RoleCard* DrawCard();
 };

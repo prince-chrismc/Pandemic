@@ -269,7 +269,7 @@ PlayerCard* PlayerCardFactory::makeCard(const uint64_t & id)
 	if (IsaEpidemicCard(id))
 		return new EpidemicCard((EpidemicCard::CardsList)id);
 	else
-		return NULL;
+		return nullptr;
 }
 
 bool PlayerCardFactory::IsaCityCard(const uint64_t & id)

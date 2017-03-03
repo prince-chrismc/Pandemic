@@ -7,10 +7,10 @@ Player::~Player()
 
 	for (size_t pos = 0; pos < m_hand.size(); pos += 1)
 	{
-		if (m_hand.at(pos) != NULL)
+		if (m_hand.at(pos) != nullptr)
 		{
 			delete m_hand.at(pos);
-			m_hand.at(pos) = NULL;
+			m_hand.at(pos) = nullptr;
 		}
 	}
 	m_hand.resize(0);

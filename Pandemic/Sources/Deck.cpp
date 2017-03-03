@@ -64,7 +64,7 @@ InfectionDeck::InfectionDeck() : Deck(48)
 
 InfectionCard* InfectionDeck::DrawCard()
 {
-	if (m_deck.size() == 0) return NULL; //for when deck is empty
+	if (m_deck.size() == 0) return nullptr; //for when deck is empty
 
 	InfectionCard::CardsList nextID = m_deck.front();
 	m_deck.pop_front();
@@ -146,6 +146,8 @@ PlayerDeck::PlayerDeck() : Deck(57)
 
 PlayerCard* PlayerDeck::DrawCard()
 {
+	if (m_deck.size() == 0) return nullptr; //for when deck is empty
+
 	PlayerCard::CardsList nextID = m_deck.front();
 	m_deck.pop_front();
 	return PlayerCardFactory::makeCard(nextID);
@@ -180,6 +182,8 @@ RoleDeck::RoleDeck() : Deck(7)
 
 RoleCard* RoleDeck::DrawCard()
 {
+	if (m_deck.size() == 0) return nullptr; //for when deck is empty
+
 	RoleCard::Roles nextID = m_deck.front();
 	m_deck.pop_front();
 	return new RoleCard(nextID); //gets deleted by the player

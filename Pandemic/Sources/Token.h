@@ -42,10 +42,14 @@ private:
 public:
 	CureMakers() : m_red(), m_yellow(), m_blue(), m_black() {}
 
+	//Prevent Copy/Assignment
+	CureMakers(const CureMakers&) = delete;
+	void operator=(const CureMakers&) = delete;
+
 	void CureDiscover(const Color& color);
 	void EradicateDisease(const Color& color);
 	bool IsCured(const Color& color);
-	std::string GetStates() { return (m_red.GetState() + m_blue.GetState() + m_yellow.GetState() + m_black.GetState()); } //FilePrint
+	std::string PrintStates() { return (m_red.GetState() + m_blue.GetState() + m_yellow.GetState() + m_black.GetState()); } //FilePrint
 };
 
 // Cubes ------------------------------------------------------------------------------------------
@@ -72,6 +76,7 @@ protected:
 public:
 	CubePile() : m_cubes(24) {}
 
+	uint8_t cubesLeft() { return m_cubes; }
 	bool isEmpty() { return (m_cubes == 0); }
 	virtual DiseaseCube* takeCube() = 0;
 	void placeCube(DiseaseCube* dc) { delete dc; m_cubes += 1; }
@@ -115,9 +120,14 @@ private:
 public:
 	DiseaseCubePile() {}
 
+	//Prevent Copy/Assignment
+	DiseaseCubePile(const DiseaseCubePile&) = delete;
+	void operator=(const DiseaseCubePile&) = delete;
+
 	bool isAnyEmpty();
 	DiseaseCube* takeCube(const Color& color);
 	void placeCube(DiseaseCube* dc);
+	std::string PrintCubesLeft() { return std::to_string(m_red.cubesLeft()) + " " + std::to_string(m_yellow.cubesLeft()) + " " + std::to_string(m_blue.cubesLeft()) + " " + std::to_string(m_black.cubesLeft()); }
 };
 
 // Cities -----------------------------------------------------------------------------------------
@@ -133,6 +143,10 @@ private:
 public:
 	City(const CityID& id, const char* name) : m_cityID(id), m_color(getCityColor()), m_name(name), m_NearByCities(), m_DiseasCubes() {}
 
+	//Prevent Copy/Assignment
+	City(const City&) = delete;
+	void operator=(const City&) = delete;
+
 	void addNearByCity(City* nearby) { m_NearByCities.emplace_back(nearby); }
 	void addCube(DiseaseCube* cube) { m_DiseasCubes.emplace_back(cube); }
 
@@ -146,6 +160,7 @@ public:
 	std::vector<City*> getNearByCities() { return m_NearByCities; }
 
 	void PrintInformation();
+	std::string PrintDiseaseCubes();
 };
 
 // Research Centers -------------------------------------------------------------------------------
@@ -156,6 +171,10 @@ private:
 
 public:
 	ResearchCenter(City* city) : m_city(city) {}
+
+	//Prevent Copy/Assignment
+	ResearchCenter(const ResearchCenter&) = delete;
+	void operator=(const ResearchCenter&) = delete;
 };
 
 // Markers ----------------------------------------------------------------------------------------
@@ -167,8 +186,14 @@ private:
 
 public:
 	InfectionRate() : m_position(0) {}
+
+	//Prevent Copy/Assignment
+	InfectionRate(const InfectionRate&) = delete;
+	void operator=(const InfectionRate&) = delete;
+
 	uint8_t getRate() { return m_array[m_position]; }
 	void increaseRate() { m_position += 1; }
+	std::string PrintMarker() { return std::to_string(m_position); }
 };
 
 class OutbreakMarker final
@@ -179,6 +204,12 @@ private:
 
 public:
 	OutbreakMarker() : m_position(0) {}
+
+	//Prevent Copy/Assignment
+	OutbreakMarker(const OutbreakMarker&) = delete;
+	void operator=(const OutbreakMarker&) = delete;
+
 	uint8_t getMarker() { return m_array[m_position]; }
 	void increaseRate() { m_position += 1; }
+	std::string PrintMarker() { return std::to_string(m_position); }
 };

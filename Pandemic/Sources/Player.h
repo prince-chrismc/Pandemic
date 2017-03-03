@@ -29,6 +29,11 @@ private:
 
 public:
 	Pawn(const uint64_t& color);
+
+	//Prevent Copy/Assignment
+	Pawn(const Pawn&) = delete;
+	void operator=(const Pawn&) = delete;
+
 	void changeCity(const std::hexadecimal& id) { m_CityID = id; }
 };
 
@@ -47,6 +52,10 @@ public:
 	Role(RoleCard* card);
 	~Role();
 
+	//Prevent Copy/Assignment
+	Role(const Role&) = delete;
+	void operator=(const Role&) = delete;
+
 	virtual const uint8_t getHandLimit() { return 7; }
 	const char* getName() { return m_name.c_str(); }
 };
@@ -62,6 +71,10 @@ private:
 public:
 	Player(const std::string& name, RoleCard* card) : m_name(name), m_role(new Role(card)), m_refcard() {}
 	~Player();
+
+	//Prevent Copy/Assignment
+	Player(const Player&) = delete;
+	void operator=(const Player&) = delete;
 
 	//Manipulate Hand
 	void addCard(PlayerCard* card) { m_hand.emplace_back(card); }

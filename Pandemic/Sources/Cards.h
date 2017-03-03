@@ -70,6 +70,10 @@ private:
 	bool IsBlackCity(const uint64_t& id) { return (id > BLACK_MIN) && (id < BLACK_MAX); }
 
 public:
+	//Prevent Copy/Assignment
+	CityCard(const CityCard&) = delete;
+	void operator=(const CityCard&) = delete;
+
 	//EXAMPLE = 0x0A89CFCUL
 	enum CardsList
 	{
@@ -148,6 +152,10 @@ private:
 	static const char* getCardDesc(const uint64_t & id);
 
 public:
+	//Prevent Copy/Assignment
+	EventCard(const EventCard&) = delete;
+	void operator=(const EventCard&) = delete;
+
 	//EXAMPLE = 0x0A89CFCUL
 	enum CardsList
 	{
@@ -172,6 +180,10 @@ private:
 	static const char * getCardDesc(const uint64_t & id);
 
 public:
+	//Prevent Copy/Assignment
+	EpidemicCard(const EpidemicCard&) = delete;
+	void operator=(const EpidemicCard&) = delete;
+
 	//EXAMPLE = 0x0A89CFCUL
 	enum CardsList
 	{
@@ -192,7 +204,11 @@ class RoleCard final : public Card, public RoleList //Two of three basic card ty
 private:
 	static const char* getCardDesc(const uint64_t& id);
 
-public:	
+public:
+	//Prevent Copy/Assignment
+	RoleCard(const RoleCard&) = delete;
+	void operator=(const RoleCard&) = delete;
+
 	RoleCard(const Roles& id) : Card(id, getCardName(id), getCardDesc(id)) {}
 };
 
@@ -203,6 +219,10 @@ private:
 	static const char* getCardDesc();
 
 public:
+	//Prevent Copy/Assignment
+	ReferenceCard(const ReferenceCard&) = delete;
+	void operator=(const ReferenceCard&) = delete;
+
 	//EXAMPLE = 0x0A89CFCUL
 	enum CardsList
 	{
@@ -228,6 +248,10 @@ private:
 	static bool IsBlackCity(const uint64_t& id) { return (id > BLACK_MIN) && (id < BLACK_MAX); }
 
 public:
+	//Prevent Copy/Assignment
+	InfectionCard(const InfectionCard&) = delete;
+	void operator=(const InfectionCard&) = delete;
+
 	//EXAMPLE = 0x0A89CFCUL
 	enum CardsList
 	{
