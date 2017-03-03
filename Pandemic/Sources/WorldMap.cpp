@@ -360,9 +360,12 @@ std::string WorldMap::MakeFileName()
 {
 	time_t t = time(0);
 	struct tm* now = localtime(&t);
+
 	std::string filename = "bin/Pandemic-";
 	filename += std::to_string(now->tm_year + 1900);
+	if (now->tm_mon + 1 < 10) filename += "0";
 	filename += std::to_string(now->tm_mon + 1);
+	if (now->tm_mday < 10) filename += "0";
 	filename += std::to_string(now->tm_mday);
 	filename += "-";
 	filename += std::to_string(now->tm_hour);
@@ -409,13 +412,21 @@ void WorldMap::SaveGame()
 
 	// Role Cards ---------------------------------------------------------------------------------
 	RoleCard* rc = m_roledeck.DrawCard();
-	while (pc != nullptr)
+	while (rc != nullptr)
 	{
 		myfile << std::hex << rc->getNumID();
 		myfile << " ";
 
 		delete rc;
 		rc = m_roledeck.DrawCard();
+	}
+	myfile << "\n";
+
+	// Cities -------------------------------------------------------------------------------------
+	for each  (City* city in m_cities)
+	{
+		myfile << city->PrintDiseaseCubes();
+		myfile << "/ ";
 	}
 	myfile << "\n";
 

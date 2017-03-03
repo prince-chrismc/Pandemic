@@ -63,11 +63,11 @@ std::string City::PrintDiseaseCubes()
 {
 	std::string result = "";
 
-	if (m_DiseasCubes.front() != nullptr)
+	if (m_DiseasCubes.size() != 0)
 	{
-		for each (DiseaseCube* cube in m_DiseasCubes)
+		for each (DiseaseCube* cube in m_DiseasCubes) /* TODO: needs testing since ive never used it before */
 		{
-			/* TODO: Implement Section */
+			result += std::to_string(cube->getColor()) + " ";
 		}
 	}
 
