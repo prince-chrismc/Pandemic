@@ -29,6 +29,7 @@ public:
 	void operator=(const InfectionDeck&) = delete;
 
 	InfectionCard* DrawCard();
+	std::string GetSaveOutput();  //FilePrint
 };
 
 class PlayerDeck final : public Deck, private PlayerCardFactory //PlayerCards Factory
@@ -46,6 +47,7 @@ public:
 
 	PlayerCard* DrawCard();
 	void DiscardCard(PlayerCard* pc);
+	std::string GetSaveOutput();  //FilePrint
 };
 
 class RoleDeck final : public Deck //RoleCard Factory
@@ -61,4 +63,5 @@ public:
 	void operator=(const RoleDeck&) = delete;
 
 	RoleCard* DrawCard();
+	std::string GetSaveOutput();  //FilePrint
 };

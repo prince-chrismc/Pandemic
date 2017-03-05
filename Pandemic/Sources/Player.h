@@ -96,4 +96,6 @@ public:
 	void printInfo();
 	void printHand();
 	void printRefCard();
+
+	std::string GetSaveOutput();  //FilePrint
 };

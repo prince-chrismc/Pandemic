@@ -387,63 +387,46 @@ void WorldMap::SaveGame()
 	myfile << filename << "\n";
 
 	// Infection Cards ----------------------------------------------------------------------------
-	InfectionCard* ic = m_infecdeck.DrawCard();
-	while ( ic != nullptr)
-	{
-		myfile << std::hex << ic->getNumID();
-		myfile << " ";
-
-		delete ic;
-		ic = m_infecdeck.DrawCard();
-	}
+	myfile << m_infecdeck.GetSaveOutput();
 	myfile << "\n";
 
 	// Player Cards -------------------------------------------------------------------------------
-	PlayerCard* pc = m_playerdeck.DrawCard();
-	while (pc != nullptr)
-	{
-		myfile << std::hex << pc->getNumID();
-		myfile << " ";
-
-		delete pc;
-		pc = m_playerdeck.DrawCard();
-	}
+	myfile << m_playerdeck.GetSaveOutput();
 	myfile << "\n";
 
 	// Role Cards ---------------------------------------------------------------------------------
-	RoleCard* rc = m_roledeck.DrawCard();
-	while (rc != nullptr)
-	{
-		myfile << std::hex << rc->getNumID();
-		myfile << " ";
-
-		delete rc;
-		rc = m_roledeck.DrawCard();
-	}
+	myfile << m_roledeck.GetSaveOutput();
 	myfile << "\n";
 
 	// Cities -------------------------------------------------------------------------------------
 	for each  (City* city in m_cities)
 	{
-		myfile << city->PrintDiseaseCubes();
+		myfile << city->GetSaveOutput();
 		myfile << "/ ";
 	}
 	myfile << "\n";
 
+	// Players ------------------------------------------------------------------------------------
+	for each (Player* play in m_players)
+	{
+		myfile << play->GetSaveOutput();
+		myfile << " / ";
+	}
+
 	// Cures --------------------------------------------------------------------------------------
-	myfile << m_cures.PrintStates();
+	myfile << m_cures.GetSaveOutput();
 	myfile << "\n";
 
-	// Cubes --------------------------------------------------------------------------------------
-	myfile << m_cubepiles.PrintCubesLeft();
-	myfile << "\n";
+	// Cubes ---------------------------- Is done by adding them to cities -----------------------
+	//myfile << m_cubepiles.PrintCubesLeft();
+	//myfile << "\n";
 
 	// Infection Rate -----------------------------------------------------------------------------
-	myfile << m_infectrate.PrintMarker();
+	myfile << m_infectrate.GetSaveOutput();
 	myfile << "\n";
 
 	// Outbreak Marker ----------------------------------------------------------------------------
-	myfile << m_outbreeak.PrintMarker();
+	myfile << m_outbreeak.GetSaveOutput();
 	myfile << "\n";
 
 	myfile.close();

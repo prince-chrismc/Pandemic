@@ -10,19 +10,30 @@ void PrintPlayerOptions(Player* joeur, WorldMap* map);
 
 int main()
 {
-	PrintOpening();
+	PrintOpening(); //Generic Welcome Message
 
-	WorldMap* wm = new WorldMap();
-	wm->SaveGame();
-	delete wm;
-	return 0;
-	
+	WorldMap* wm = new WorldMap(); //New Game Board
+
+	//Initial Game Setup
+	//Infect Cities 3x3 3x2 3x1
+	wm->printCitiesStatus();
+	wm->InfectCity(3);
+	wm->InfectCity(3);
+	wm->InfectCity(3);
+	wm->InfectCity(2);
+	wm->InfectCity(2);
+	wm->InfectCity(2);
+	wm->InfectCity();
+	wm->InfectCity();
+	wm->InfectCity();
+	wm->printCitiesStatus();	
 
 	wm->RegisterPlayer("Chris");
 	Player* Chris = wm->GetPlayer(0); 
 	wm->RegisterPlayer("Barclay");
 	Player* Barclay = wm->GetPlayer(1);
 	
+	std::cout << "\n";
 	Chris->printInfo();
 	Barclay->printInfo();
 	Barclay->printRefCard();
@@ -40,22 +51,35 @@ int main()
 
 	Chris->printHand();
 	Barclay->printHand();
-
-	wm->printCitiesStatus();
-	wm->InfectCity(3);
-	wm->InfectCity(3);
-	wm->InfectCity(3);
-	wm->InfectCity(2);
-	wm->InfectCity(2);
-	wm->InfectCity(2);
-	wm->InfectCity(1);
-	wm->InfectCity(1);
-	wm->InfectCity(1);
-	wm->printCitiesStatus();
-
 	PrintPlayerOptions(Chris, wm);
+	PrintPlayerOptions(Barclay, wm);
+	
+	wm->DiscardPlayerCardFor(Chris, 1);
+	wm->DiscardPlayerCardFor(Barclay, 3);
+	wm->DiscardPlayerCardFor(Chris, 0);
+
+	Chris->printHand();
+	Barclay->printHand();
+	PrintPlayerOptions(Chris, wm);
+	PrintPlayerOptions(Barclay, wm);
+
+	wm->DrawPlayerCardFor(Chris);
+	wm->DrawPlayerCardFor(Chris);
+	wm->DrawPlayerCardFor(Barclay);
+	wm->DrawPlayerCardFor(Barclay);
+
+	Chris->printHand();
+	Barclay->printHand();
+	PrintPlayerOptions(Chris, wm);
+	PrintPlayerOptions(Barclay, wm);
+
+	wm->SaveGame();
 
 	delete wm;
+	wm = nullptr;
+
+	std::cout << "\n\nDemontration finished press any key to exit...";
+	std::cin.get();
     return 0;
 }
 

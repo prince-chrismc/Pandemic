@@ -75,6 +75,7 @@ void Player::printInfo()
 
 void Player::printHand()
 {
+	printf("\n");
 	printName();
 	if (m_hand.size() == 0)
 	{
@@ -94,6 +95,20 @@ void Player::printRefCard()
 	printf("Reference Card:\n--------------------------------------------------\n");
 	m_refcard.PrintInformation();
 	printf("--------------------------------------------------\n\n"); 
+}
+
+std::string Player::GetSaveOutput()
+{
+	std::string result = m_name + " " + m_role->m_roleID + " ";
+
+	for each (PlayerCard* pc in m_hand)
+	{
+		std::stringstream ss;
+		ss << std::hex << pc;
+		result += ss.str() + " ";
+	}
+
+	return result;
 }
 
 Role::Role(const uint64_t & id) : m_name(Card::getCardName(id)), m_pawn(new Pawn(id))

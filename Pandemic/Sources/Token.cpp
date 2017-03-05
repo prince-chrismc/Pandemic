@@ -59,7 +59,7 @@ void City::PrintInformation()
 	printf("City: %s has %d DiseaseCubes.\n", m_name.c_str(), (int)m_DiseasCubes.size() );
 }
 
-std::string City::PrintDiseaseCubes()
+std::string City::GetSaveOutput()
 {
 	std::string result = "";
 

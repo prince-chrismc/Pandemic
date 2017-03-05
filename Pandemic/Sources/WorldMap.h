@@ -40,7 +40,7 @@ public:
 	
 	// prototype game play functions
 	void RegisterPlayer(const std::string& newPlayerName) { m_players.emplace_back(new Player(newPlayerName, m_roledeck.DrawCard())); }
-	void InfectCity(const uint8_t& cubesToAdd = 1);
+	void InfectCity(const uint8_t& cubesToAdd = 1); // Draw infection card and infect city with X cubes of its color
 	void DrawPlayerCardFor(Player* joeur) { joeur->addCard(m_playerdeck.DrawCard()); }
 	void DiscardPlayerCardFor(Player* joeur, const uint8_t pos) { m_playerdeck.DiscardCard(joeur->rmCard(pos)); }
 

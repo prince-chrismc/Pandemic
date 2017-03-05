@@ -49,7 +49,7 @@ public:
 	void CureDiscover(const Color& color);
 	void EradicateDisease(const Color& color);
 	bool IsCured(const Color& color);
-	std::string PrintStates() { return (m_red.GetState() + m_blue.GetState() + m_yellow.GetState() + m_black.GetState()); } //FilePrint
+	std::string GetSaveOutput() { return (m_red.GetState() + m_blue.GetState() + m_yellow.GetState() + m_black.GetState()); } //FilePrint
 };
 
 // Cubes ------------------------------------------------------------------------------------------
@@ -160,7 +160,7 @@ public:
 	std::vector<City*> getNearByCities() { return m_NearByCities; }
 
 	void PrintInformation();
-	std::string PrintDiseaseCubes();
+	std::string GetSaveOutput();
 };
 
 // Research Centers -------------------------------------------------------------------------------
@@ -193,7 +193,7 @@ public:
 
 	uint8_t getRate() { return m_array[m_position]; }
 	void increaseRate() { m_position += 1; }
-	std::string PrintMarker() { return std::to_string(m_position); }
+	std::string GetSaveOutput() { return std::to_string(m_position); }
 };
 
 class OutbreakMarker final
@@ -211,5 +211,5 @@ public:
 
 	uint8_t getMarker() { return m_array[m_position]; }
 	void increaseRate() { m_position += 1; }
-	std::string PrintMarker() { return std::to_string(m_position); }
+	std::string GetSaveOutput() { return std::to_string(m_position); }
 };

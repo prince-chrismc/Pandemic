@@ -1,5 +1,7 @@
 #include <algorithm> //std::shuffle
 #include <random> //std::mt19937
+#include <ios> //std::hex
+#include <sstream> //std::stringstream
 #include "Deck.h"
 
 InfectionDeck::InfectionDeck() : Deck(48)
@@ -70,6 +72,27 @@ InfectionCard* InfectionDeck::DrawCard()
 	m_deck.pop_front();
 	m_discard.emplace_front(nextID);
 	return new InfectionCard(nextID);
+}
+
+std::string InfectionDeck::GetSaveOutput()
+{
+	std::string result;
+
+	for each(InfectionCard::CardsList ic in m_deck)
+	{
+		std::stringstream ss;
+		ss << std::hex << ic;
+		result += ss.str() + " ";
+	}
+	result += "/ ";
+	for each(InfectionCard::CardsList ic in m_discard)
+	{
+		std::stringstream ss;
+		ss << std::hex << ic;
+		result += ss.str() + " ";
+	}
+
+	return result;
 }
 
 // Player Deck ------------------------------------------------------------------------------------
@@ -160,6 +183,27 @@ void PlayerDeck::DiscardCard(PlayerCard* pc)
 	delete pc;
 }
 
+std::string PlayerDeck::GetSaveOutput()
+{
+	std::string result;
+
+	for each(PlayerCard::CardsList pc in m_deck)
+	{
+		std::stringstream ss;
+		ss << std::hex << pc;
+		result += ss.str() + " ";
+	}
+	result += "/ ";
+	for each(PlayerCard::CardsList pc in m_discard)
+	{
+		std::stringstream ss;
+		ss << std::hex << pc;
+		result += ss.str() + " ";
+	}
+
+	return result;
+}
+
 // Role Deck --------------------------------------------------------------------------------------
 RoleDeck::RoleDeck() : Deck(7)
 {
@@ -187,4 +231,18 @@ RoleCard* RoleDeck::DrawCard()
 	RoleCard::Roles nextID = m_deck.front();
 	m_deck.pop_front();
 	return new RoleCard(nextID); //gets deleted by the player
+}
+
+std::string RoleDeck::GetSaveOutput()
+{
+	std::string result;
+
+	for each(RoleCard::Roles rc in m_deck)
+	{
+		std::stringstream ss;
+		ss << std::hex << rc;
+		result += ss.str() + " ";
+	}
+
+	return result;
 }
