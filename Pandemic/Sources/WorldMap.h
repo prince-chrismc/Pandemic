@@ -34,8 +34,8 @@ public:
 	WorldMap(const WorldMap&) = delete;
 	void operator=(const WorldMap&) = delete;
 
-	/* TODO: HAVENT BEEN IMPLEMENTED */
 	void SaveGame();
+	/* TODO: HAVENT BEEN IMPLEMENTED */
 	void LoadGame();
 	
 	// prototype game play functions

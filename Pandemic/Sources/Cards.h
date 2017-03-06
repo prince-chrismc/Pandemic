@@ -241,7 +241,7 @@ private:
 	CityID m_cityID;
 	Color m_color;
 
-	static const char* getCardDesc(const uint64_t& id); /* TODO: properly implement */
+	static const char* getCardDesc(const uint64_t& id); /* TODO: needs proper description */
 	static bool IsRedCity(const uint64_t& id) { return (id > RED_MIN) && (id < RED_MAX); }
 	static bool IsYellowCity(const uint64_t& id) { return (id > YELLOW_MIN) && (id < YELLOW_MAX); }
 	static bool IsBlueCity(const uint64_t& id) { return (id > BLUE_MIN) && (id < BLUE_MAX); }

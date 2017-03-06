@@ -90,7 +90,7 @@ void PrintOpening()
 	std::cout << "Pandemic Board Game by: Christopher McArthur ~ " << (now->tm_year + 1900) << '-' << (now->tm_mon + 1) << '-' << now->tm_mday << " @ " << now->tm_hour << ':' << now->tm_min << ':' << now->tm_sec << std::endl;
 }
 
-// Sample test for outputting player options to move...
+// Sample test for outputting player options - TODO: move
 void PrintPlayerOptions(Player* joeur, WorldMap* map)
 {
 	printf("\n\n");
