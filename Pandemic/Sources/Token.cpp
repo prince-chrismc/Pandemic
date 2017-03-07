@@ -65,7 +65,7 @@ std::string City::GetSaveOutput()
 
 	if (m_DiseasCubes.size() != 0)
 	{
-		for each (DiseaseCube* cube in m_DiseasCubes) /* TODO: needs testing since ive never used it before */
+		for each (DiseaseCube* cube in m_DiseasCubes)
 		{
 			result += std::to_string(cube->getColor()) + " ";
 		}
@@ -124,6 +124,23 @@ bool CureMakers::IsCured(const Color& color)
 		return m_blue.IsCured();
 	case BLACK:
 		return m_black.IsCured();
+	default:
+		return false;
+	}
+}
+
+bool CureMakers::IsNotEradicated(const Color & color)
+{
+	switch (color)
+	{
+	case RED:
+		return m_red.IsNotEradicated();
+	case YELLOW:
+		return m_yellow.IsNotEradicated();
+	case BLUE:
+		return m_blue.IsNotEradicated();
+	case BLACK:
+		return m_black.IsNotEradicated();
 	default:
 		return false;
 	}
