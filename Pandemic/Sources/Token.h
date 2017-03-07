@@ -23,6 +23,7 @@ public:
 	void CureDiscover() { m_state = KNOWN; }
 	void EradicateDisease() { m_state = ERADICATED; }
 	bool IsCured() { return (m_state == KNOWN); }
+	bool IsNotEradicated() { return (m_state != ERADICATED); }
 	std::string GetState() { return std::to_string(m_state); } //FilePrint
 };
 
@@ -49,6 +50,7 @@ public:
 	void CureDiscover(const Color& color);
 	void EradicateDisease(const Color& color);
 	bool IsCured(const Color& color);
+	bool IsNotEradicated(const Color& color);
 	std::string GetSaveOutput() { return (m_red.GetState() + m_blue.GetState() + m_yellow.GetState() + m_black.GetState()); } //FilePrint
 };
 
@@ -148,6 +150,8 @@ public:
 	void operator=(const City&) = delete;
 
 	void addNearByCity(City* nearby) { m_NearByCities.emplace_back(nearby); }
+
+	uint8_t GetNumberOfCubes() { return (uint8_t)m_DiseasCubes.size(); }
 	void addCube(DiseaseCube* cube) { m_DiseasCubes.emplace_back(cube); }
 
 	Color getCityColor();
@@ -156,6 +160,7 @@ public:
 	bool IsBlueCity() { return (m_cityID > BLUE_MIN) && (m_cityID < BLUE_MAX); }
 	bool IsBlackCity() { return (m_cityID > BLACK_MIN) && (m_cityID < BLACK_MAX); }
 
+	CityID getCityID() { return m_cityID; }
 	bool compareCityID(const uint64_t& id) { return (m_cityID == (CityID)id); }
 	std::vector<City*> getNearByCities() { return m_NearByCities; }
 
@@ -172,9 +177,29 @@ private:
 public:
 	ResearchCenter(City* city) : m_city(city) {}
 
-	//Prevent Copy/Assignment
-	ResearchCenter(const ResearchCenter&) = delete;
+	//Prevent Assignment
 	void operator=(const ResearchCenter&) = delete;
+
+	City::CityID GetCityID() { return m_city->getCityID(); }
+};
+
+class ResearchStations final
+{
+private:
+	std::vector<ResearchCenter> m_stations;
+
+protected:
+	bool validate() { return (m_stations.size() < 7); }
+
+public:
+	ResearchStations() : m_stations() {};
+
+	//Prevent Copy/Assignment
+	ResearchStations(const ResearchStations&) = delete;
+	void operator=(const ResearchStations&) = delete;
+
+	uint8_t GetNumberOfCenters() { return (uint8_t)m_stations.size(); }
+	void AddStation(City* city) { if(validate()) m_stations.emplace_back(ResearchCenter(city)); }
 };
 
 // Markers ----------------------------------------------------------------------------------------
@@ -192,7 +217,7 @@ public:
 	void operator=(const InfectionRate&) = delete;
 
 	uint8_t getRate() { return m_array[m_position]; }
-	void increaseRate() { m_position += 1; }
+	void IncreaseRate() { m_position += 1; }
 	std::string GetSaveOutput() { return std::to_string(m_position); }
 };
 
@@ -210,6 +235,6 @@ public:
 	void operator=(const OutbreakMarker&) = delete;
 
 	uint8_t getMarker() { return m_array[m_position]; }
-	void increaseRate() { m_position += 1; }
+	void IncreaseRate() { m_position += 1; }
 	std::string GetSaveOutput() { return std::to_string(m_position); }
 };
