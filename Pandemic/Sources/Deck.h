@@ -29,6 +29,8 @@ public:
 	void operator=(const InfectionDeck&) = delete;
 
 	InfectionCard* DrawCard();
+	InfectionCard* DrawCardForEpidemic();
+	void Intensify();
 	std::string GetSaveOutput();  //FilePrint
 };
 

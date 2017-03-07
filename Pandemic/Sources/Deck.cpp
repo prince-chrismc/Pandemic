@@ -2,6 +2,8 @@
 #include <random> //std::mt19937
 #include <ios> //std::hex
 #include <sstream> //std::stringstream
+#include <algorithm> //std::shuffle
+#include <random> //std::mt19937
 #include "Deck.h"
 
 InfectionDeck::InfectionDeck() : Deck(48)
@@ -72,6 +74,28 @@ InfectionCard* InfectionDeck::DrawCard()
 	m_deck.pop_front();
 	m_discard.emplace_front(nextID);
 	return new InfectionCard(nextID);
+}
+
+InfectionCard* InfectionDeck::DrawCardForEpidemic()
+{
+	if (m_deck.size() == 0) return nullptr; //for when deck is empty
+
+	InfectionCard::CardsList nextID = m_deck.back();
+	m_deck.pop_back();
+	m_discard.emplace_front(nextID);
+	return new InfectionCard(nextID);
+}
+
+void InfectionDeck::Intensify()
+{
+	std::random_device rd;
+	std::mt19937 g(rd());
+	std::shuffle(m_discard.begin(), m_discard.end(), g);
+
+	for each(InfectionCard::CardsList id in m_discard)
+	{
+		m_deck.emplace_front(id);
+	}
 }
 
 std::string InfectionDeck::GetSaveOutput()
