@@ -1,9 +1,8 @@
-#include <fstream> //file io
-#include <ctime> //time
-#include "boost\filesystem.hpp"
+#include <sstream>
+#include "Cards.h"
 #include "WorldMap.h" 
 
-WorldMap::WorldMap() : m_infectrate(), m_outbreeak(), m_cubepiles(), m_infecdeck(), m_playerdeck(), m_roledeck(), m_players(), m_cures(), m_centers()
+WorldMap::WorldMap()
 {
 	// Create Cities ------------------------------------------------------------------------------
 	City* Algiers = new City(City::ALGIERS, Card::getCardName(CityCard::ALGIERS));
@@ -344,120 +343,6 @@ WorldMap::~WorldMap()
 		delete m_cities[i];
 		m_cities[i] = nullptr;
 	}
-
-	for (size_t pos = 0; pos < m_players.size(); pos += 1)
-	{
-		if (m_players.at(pos) != nullptr)
-		{
-			delete m_players.at(pos);
-			m_players.at(pos) = nullptr;
-		}
-	}
-	m_players.clear();
-}
-
-std::string WorldMap::MakeFileName()
-{
-	time_t t = time(0);
-	struct tm* now = localtime(&t);
-
-	std::string filename = "bin/Pandemic-";
-	filename += std::to_string(now->tm_year + 1900);
-	if (now->tm_mon + 1 < 10) filename += "0";
-	filename += std::to_string(now->tm_mon + 1);
-	if (now->tm_mday < 10) filename += "0";
-	filename += std::to_string(now->tm_mday);
-	filename += "-";
-	filename += std::to_string(now->tm_hour);
-	filename += std::to_string(now->tm_min);
-	filename += std::to_string(now->tm_sec);
-	filename += ".txt";
-
-	return filename;
-}
-
-void WorldMap::SaveGame()
-{
-	// Get Timestamp ------------------------------------------------------------------------------
-	std::string filename = MakeFileName();
-
-	// Create File --------------------------------------------------------------------------------
-	std::ofstream myfile;
-	myfile.open(filename);
-	myfile << filename << "\n";
-
-	// Infection Cards ----------------------------------------------------------------------------
-	myfile << m_infecdeck.GetSaveOutput();
-	myfile << "\n";
-
-	// Player Cards -------------------------------------------------------------------------------
-	myfile << m_playerdeck.GetSaveOutput();
-	myfile << "\n";
-
-	// Role Cards ---------------------------------------------------------------------------------
-	myfile << m_roledeck.GetSaveOutput();
-	myfile << "\n";
-
-	// Cities -------------------------------------------------------------------------------------
-	for each  (City* city in m_cities)
-	{
-		myfile << city->GetSaveOutput();
-		myfile << "/ ";
-	}
-	myfile << "\n";
-
-	// Players ------------------------------------------------------------------------------------
-	for each (Player* play in m_players)
-	{
-		myfile << play->GetSaveOutput();
-		myfile << " / ";
-	}
-
-	// Cures --------------------------------------------------------------------------------------
-	myfile << m_cures.GetSaveOutput();
-	myfile << "\n";
-
-	// Cubes ---------------------------- Is done by adding them to cities -----------------------
-	//myfile << m_cubepiles.PrintCubesLeft();
-	//myfile << "\n";
-
-	// Infection Rate -----------------------------------------------------------------------------
-	myfile << m_infectrate.GetSaveOutput();
-	myfile << "\n";
-
-	// Outbreak Marker ----------------------------------------------------------------------------
-	myfile << m_outbreeak.GetSaveOutput();
-	myfile << "\n";
-
-	myfile.close();
-}
-
-void WorldMap::LoadGame()
-{
-	/* TODO: Implement */
-}
-
-void WorldMap::InfectCity(const uint8_t& cubesToAdd)
-{
-	InfectionCard* ic = m_infecdeck.DrawCard();
-	City::CityID cid = (City::CityID)(ic->getNumID() - InfectionCard::INFECTIONCARD_MIN);
-	delete ic; ic = nullptr;
-
-	for (int i = 0; i < 48; i += 1)
-	{
-		if (m_cities[i]->compareCityID(cid))
-		{
-			for (uint8_t j = 0; j < cubesToAdd; j++)
-			{
-				m_cities[i]->addCube(
-					m_cubepiles.takeCube(
-						m_cities[i]->getCityColor()
-					)
-				);
-			}
-			break;
-		}
-	}
 }
 
 std::vector<City*> WorldMap::getCitiesConnectedTo(const City::CityID & id)
@@ -485,7 +370,15 @@ City* WorldMap::getCityWithID(const City::CityID & id)
 	return nullptr;
 }
 
-void WorldMap::printCitiesStatus()
+std::string WorldMap::GetSaveOutput()
+{
+	std::stringstream ss;
+	for each(City* city in m_cities)
+		ss << city->GetSaveOutput() << "/ ";
+	return ss.str();
+}
+
+void WorldMap::PrintCitiesStatus()
 {
 	printf("\n");
 	for (int i = 0; i < 48; i += 1)
