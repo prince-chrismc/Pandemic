@@ -1,82 +1,30 @@
 // Pandemic.cpp : Defines the entry point for the console application.
 //
 
+#define WIN32_LEAN_AND_MEAN
+#include "windows.h"
+
 #include <ctime>
 #include <iostream>
-#include "Sources\WorldMap.h"
+#include "Sources\GameEngine.h"
 
 void PrintOpening();
 void PrintPlayerOptions(Player* joeur, WorldMap* map);
 
 int main()
 {
+	SetConsoleTitle(L"Pandemic board Game by Chris McArthur");
 	PrintOpening(); //Generic Welcome Message
 
-	WorldMap* wm = new WorldMap(); //New Game Board
+	GameEngine Game; //New Game Board
 
-	//Initial Game Setup
-	//Infect Cities 3x3 3x2 3x1
-	wm->printCitiesStatus();
-	wm->InfectCity(3);
-	wm->InfectCity(3);
-	wm->InfectCity(3);
-	wm->InfectCity(2);
-	wm->InfectCity(2);
-	wm->InfectCity(2);
-	wm->InfectCity();
-	wm->InfectCity();
-	wm->InfectCity();
-	wm->printCitiesStatus();	
+	Game.Initialize();
 
-	wm->RegisterPlayer("Chris");
-	Player* Chris = wm->GetPlayer(0); 
-	wm->RegisterPlayer("Barclay");
-	Player* Barclay = wm->GetPlayer(1);
-	
-	std::cout << "\n";
-	Chris->printInfo();
-	Barclay->printInfo();
-	Barclay->printRefCard();
+	Player* Chris = Game.GetPlayer(0);
+	Player* Barclay = Game.GetPlayer(1);
 
-	wm->DrawPlayerCardFor(Chris);
-	wm->DrawPlayerCardFor(Chris);
-	wm->DrawPlayerCardFor(Chris);
-	wm->DrawPlayerCardFor(Chris);
-	wm->DrawPlayerCardFor(Chris);
-	wm->DrawPlayerCardFor(Barclay);
-	wm->DrawPlayerCardFor(Barclay);
-	wm->DrawPlayerCardFor(Barclay);
-	wm->DrawPlayerCardFor(Barclay);
-	wm->DrawPlayerCardFor(Barclay);
-
-	Chris->printHand();
-	Barclay->printHand();
-	PrintPlayerOptions(Chris, wm);
-	PrintPlayerOptions(Barclay, wm);
-	
-	wm->DiscardPlayerCardFor(Chris, 1);
-	wm->DiscardPlayerCardFor(Barclay, 3);
-	wm->DiscardPlayerCardFor(Chris, 0);
-
-	Chris->printHand();
-	Barclay->printHand();
-	PrintPlayerOptions(Chris, wm);
-	PrintPlayerOptions(Barclay, wm);
-
-	wm->DrawPlayerCardFor(Chris);
-	wm->DrawPlayerCardFor(Chris);
-	wm->DrawPlayerCardFor(Barclay);
-	wm->DrawPlayerCardFor(Barclay);
-
-	Chris->printHand();
-	Barclay->printHand();
-	PrintPlayerOptions(Chris, wm);
-	PrintPlayerOptions(Barclay, wm);
-
-	wm->SaveGame();
-
-	delete wm;
-	wm = nullptr;
+	Chris;
+	Barclay;
 
 	std::cout << "\n\nDemontration finished press any key to exit...";
 	std::cin.get();
@@ -91,54 +39,54 @@ void PrintOpening()
 }
 
 // Sample test for outputting player options - TODO: move
-void PrintPlayerOptions(Player* joeur, WorldMap* map)
-{
-	printf("\n\n");
-	joeur->printInfo();
-	int i = 1;
-	printf("  A. Drive/Ferry Options\n");
-	const std::vector<City*> nbc = map->getCitiesConnectedTo(joeur->getCityID());
-	for (size_t s = 0; s < nbc.size(); s += 1)
-	{
-		printf("    %d: ", i++);
-		nbc.at(s)->PrintInformation();
-	}
-
-	std::vector<CityList::CityID> dfcID = joeur->getDirectFlightCities();
-	if (dfcID.size() > 0)
-	{
-		printf("  B. Direct Flight Options\n");
-		for (size_t s = 0; s < dfcID.size(); s += 1)
-		{
-			printf("    %d: ", i++);
-			if (map->getCityWithID(dfcID.at(s)) != nullptr)
-				map->getCityWithID(dfcID.at(s))->PrintInformation();
-			else
-				break;
-		}
-	}
-
-	if (joeur->hasCurrentCityCard())
-	{
-		printf("  C. Charter Flight.\n    %d: Pick Any City!\n", i++);
-	}
-
-	if (map->multipleResearchCentersExist())
-	{
-		printf("  D. Shuttle Flight.\n    %d: NOT IMPLEMENTED !\n", i++);
-	}
-
-	if (joeur->canBuildResearchCenter())
-	{
-		printf("  D. Shuttle Flight.\n    %d: NOT IMPLEMENTED !\n", i++);
-	}
-
-	printf("  F. Treat Disease.\n    %d: Remove Cube(s)\n", i++);
-
-	printf("  E. Share Knowledge.\n    %d: NOT IMPLEMENTED !\n", i++);
-
-	if (joeur->canDiscoverCure())
-	{
-		printf("  E. Discover Cure.\n    %d: NOT IMPLEMENTED !\n", i++);
-	}
-}
+//void PrintPlayerOptions(Player* joeur, WorldMap* map)
+//{
+//	printf("\n\n");
+//	joeur->printInfo();
+//	int i = 1;
+//	printf("  A. Drive/Ferry Options\n");
+//	const std::vector<City*> nbc = map->getCitiesConnectedTo(joeur->getCityID());
+//	for (size_t s = 0; s < nbc.size(); s += 1)
+//	{
+//		printf("    %d: ", i++);
+//		nbc.at(s)->PrintInformation();
+//	}
+//
+//	std::vector<CityList::CityID> dfcID = joeur->getDirectFlightCities();
+//	if (dfcID.size() > 0)
+//	{
+//		printf("  B. Direct Flight Options\n");
+//		for (size_t s = 0; s < dfcID.size(); s += 1)
+//		{
+//			printf("    %d: ", i++);
+//			if (map->getCityWithID(dfcID.at(s)) != nullptr)
+//				map->getCityWithID(dfcID.at(s))->PrintInformation();
+//			else
+//				break;
+//		}
+//	}
+//
+//	if (joeur->hasCurrentCityCard())
+//	{
+//		printf("  C. Charter Flight.\n    %d: Pick Any City!\n", i++);
+//	}
+//
+//	if (map->multipleResearchCentersExist())
+//	{
+//		printf("  D. Shuttle Flight.\n    %d: NOT IMPLEMENTED !\n", i++);
+//	}
+//
+//	if (joeur->canBuildResearchCenter())
+//	{
+//		printf("  D. Shuttle Flight.\n    %d: NOT IMPLEMENTED !\n", i++);
+//	}
+//
+//	printf("  F. Treat Disease.\n    %d: Remove Cube(s)\n", i++);
+//
+//	printf("  E. Share Knowledge.\n    %d: NOT IMPLEMENTED !\n", i++);
+//
+//	if (joeur->canDiscoverCure())
+//	{
+//		printf("  E. Discover Cure.\n    %d: NOT IMPLEMENTED !\n", i++);
+//	}
+//}
