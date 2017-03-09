@@ -120,7 +120,7 @@ std::string InfectionDeck::GetSaveOutput()
 }
 
 // Player Deck ------------------------------------------------------------------------------------
-PlayerDeck::PlayerDeck() : Deck(57)
+PlayerDeck::PlayerDeck() : Deck(57), m_difficulty(EASY)
 {
 	m_deck.emplace_back((PlayerCard::CardsList)CityCard::ALGIERS);
 	m_deck.emplace_back((PlayerCard::CardsList)CityCard::ATLANTA);
@@ -170,11 +170,6 @@ PlayerDeck::PlayerDeck() : Deck(57)
 	m_deck.emplace_back((PlayerCard::CardsList)CityCard::TEHRAN);
 	m_deck.emplace_back((PlayerCard::CardsList)CityCard::TOKYO);
 	m_deck.emplace_back((PlayerCard::CardsList)CityCard::WASHINGTON);
-
-	m_deck.emplace_back((PlayerCard::CardsList)EpidemicCard::EPIDEMICCARDONE);
-	m_deck.emplace_back((PlayerCard::CardsList)EpidemicCard::EPIDEMICCARDTWO);
-	m_deck.emplace_back((PlayerCard::CardsList)EpidemicCard::EPIDEMICCARDTHREE);
-	m_deck.emplace_back((PlayerCard::CardsList)EpidemicCard::EPIDEMICCARDFOUR);
 	
 	m_deck.emplace_back((PlayerCard::CardsList)EventCard::RESILLIENT);
 	m_deck.emplace_back((PlayerCard::CardsList)EventCard::AIRLIFT);
@@ -205,6 +200,30 @@ void PlayerDeck::DiscardCard(PlayerCard* pc)
 	uint64_t id = pc->getNumID();
 	m_discard.emplace_front( (PlayerCard::CardsList)id);
 	delete pc;
+}
+
+void PlayerDeck::IncreaseDifficulty(const Difficulty & dif)
+{
+	if (dif <= m_difficulty) return; //restrict to increasing only
+
+	switch (dif)
+	{
+	case HARD:
+		m_deck.emplace_back((PlayerCard::CardsList)EpidemicCard::EPIDEMICCARDSIX);
+	case MEDIUM:
+		m_deck.emplace_back((PlayerCard::CardsList)EpidemicCard::EPIDEMICCARDFIVE);
+	case EASY:
+		m_deck.emplace_back((PlayerCard::CardsList)EpidemicCard::EPIDEMICCARDFOUR);
+		m_deck.emplace_back((PlayerCard::CardsList)EpidemicCard::EPIDEMICCARDTHREE);
+		m_deck.emplace_back((PlayerCard::CardsList)EpidemicCard::EPIDEMICCARDTWO);
+		m_deck.emplace_back((PlayerCard::CardsList)EpidemicCard::EPIDEMICCARDONE);
+	default:
+		break;
+	}
+
+	std::random_device rd;
+	std::mt19937 g(rd());
+	std::shuffle(m_deck.begin(), m_deck.end(), g);
 }
 
 std::string PlayerDeck::GetSaveOutput()

@@ -8,6 +8,13 @@
 #include <string>
 #include <vector>
 
+enum Difficulty //Game Setting
+{
+	EASY = 1,
+	MEDIUM,
+	HARD
+};
+
 enum Color //Four base colors
 {
 	INVALID = -1,

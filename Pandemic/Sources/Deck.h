@@ -39,6 +39,7 @@ class PlayerDeck final : public Deck, private PlayerCardFactory //PlayerCards Fa
 private:
 	std::deque<PlayerCard::CardsList> m_deck;
 	std::deque<PlayerCard::CardsList> m_discard;
+	Difficulty m_difficulty;
 
 public:
 	PlayerDeck();
@@ -49,6 +50,7 @@ public:
 
 	PlayerCard* DrawCard();
 	void DiscardCard(PlayerCard* pc);
+	void IncreaseDifficulty(const Difficulty& dif);
 	std::string GetSaveOutput();  //FilePrint
 };
 
