@@ -3,8 +3,6 @@
 
 Player::~Player()
 {
-	delete m_role;
-
 	for (size_t pos = 0; pos < m_hand.size(); pos += 1)
 	{
 		if (m_hand.at(pos) != nullptr)
@@ -70,7 +68,7 @@ void Player::printInfo()
 	uint64_t num = 0;
 	ss >> std::hex >> num;
 
-	printf("Player %s - %s: is in %s\n", m_name.c_str(), m_role->getName(), Card::getCardName(num + CityCard::CITYCARD_MIN) );
+	printf("Player %s - %s: is in %s\n", m_name.c_str(), m_role.getName(), Card::getCardName(num + CityCard::CITYCARD_MIN) );
 }
 
 void Player::printHand()
@@ -99,7 +97,7 @@ void Player::printRefCard()
 
 std::string Player::GetSaveOutput()
 {
-	std::string result = m_name + " " + m_role->m_roleID + " ";
+	std::string result = m_name + " " + m_role.m_roleID + " ";
 
 	for each (PlayerCard* pc in m_hand)
 	{
@@ -111,7 +109,7 @@ std::string Player::GetSaveOutput()
 	return result;
 }
 
-Role::Role(const uint64_t & id) : m_name(Card::getCardName(id)), m_pawn(new Pawn(id))
+Role::Role(const uint64_t & id) : m_name(Card::getCardName(id)), m_pawn(id)
 {
 	std::stringstream ss;
 	ss << std::hex << id;
@@ -125,7 +123,6 @@ Role::Role(RoleCard* card) : Role(card->getNumID())
 
 Role::~Role()
 {
-	delete m_pawn;
 	delete m_card;
 }
 

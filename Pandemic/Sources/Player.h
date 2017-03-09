@@ -43,7 +43,7 @@ class Role //Defines Role Attributes held by a player
 private:
 	const std::string m_name;
 	std::hexadecimal m_roleID;
-	Pawn* m_pawn;
+	Pawn m_pawn;
 	RoleCard* m_card;
 
 	Role(const uint64_t& id);
@@ -65,11 +65,14 @@ class Player final //The Almighty Player
 private:
 	const std::string m_name;
 	std::vector<PlayerCard*> m_hand;
-	Role* m_role;
+	Role m_role;
 	ReferenceCard m_refcard;
 
+protected:
+	bool ValidateHand() { return (m_hand.size()); }
+
 public:
-	Player(const std::string& name, RoleCard* card) : m_name(name), m_role(new Role(card)), m_refcard() {}
+	Player(const std::string& name, RoleCard* card) : m_name(name), m_role(card), m_refcard() {}
 	~Player();
 
 	//Prevent Copy/Assignment
@@ -81,9 +84,9 @@ public:
 	PlayerCard* rmCard(uint8_t pos);
 
 	//Get/Set City
-	std::hexadecimal getCityHexID() { return m_role->m_pawn->m_CityID; }
+	std::hexadecimal getCityHexID() { return m_role.m_pawn.m_CityID; }
 	CityList::CityID getCityID();
-	void ChangeCity(const std::hexadecimal& id) { m_role->m_pawn->changeCity(id); }
+	void ChangeCity(const std::hexadecimal& id) { m_role.m_pawn.changeCity(id); }
 
 	//For game play
 	std::vector<CityList::CityID> getDirectFlightCities();
