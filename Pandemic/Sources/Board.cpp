@@ -32,7 +32,7 @@ void Board::Epidemic()
 	// 2. Infect Last Card of InfectionDeck with at most 3 Cubes
 	InfectionCard* ic = m_InfecDeck.DrawCardForEpidemic();
 	Color c = ic->getCityColor();
-	if(m_Cures.IsNotEradicated(c));
+	if(m_Cures.IsNotEradicated(c))
 	{
 		City::CityID cid = (City::CityID)(ic->getNumID() - InfectionCard::INFECTIONCARD_MIN);
 		delete ic; ic = nullptr;
