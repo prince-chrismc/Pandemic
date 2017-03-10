@@ -109,6 +109,7 @@ void GameEngine::DifficultySetup()
 
 void GameEngine::BoardSetup()
 {
+	/* TODO: GE needs to do this to factor in players +/- cure status */
 	m_Board.InfectCity(3);
 	m_Board.InfectCity(3);
 	m_Board.InfectCity(3);
@@ -281,7 +282,7 @@ std::vector<CityList::CityID> GameEngine::ShareKnowlegdeFor(const uint16_t pos)
 	std::vector<CityList::CityID> result;
 
 	// 1. Player is the researcher
-	if (m_Players.at(pos)->GetRoleID == RoleList::RESEARCHER)
+	if (m_Players.at(pos)->GetRoleID() == RoleList::RESEARCHER)
 	{
 		for each(Player* joeur in m_Players)
 		{
@@ -300,7 +301,7 @@ std::vector<CityList::CityID> GameEngine::ShareKnowlegdeFor(const uint16_t pos)
 		{
 			if (m_Players.at(pos)->getCityID() == joeur->getCityID())
 			{
-				if (joeur->GetRoleID == RoleList::RESEARCHER)
+				if (joeur->GetRoleID() == RoleList::RESEARCHER)
 				{
 					result.emplace_back(joeur->getCityID());
 					return result;
@@ -529,6 +530,7 @@ void GameEngine::ExecuteMove(const uint16_t pos, const MoveOptions & opt, const 
 	case SHARECARD:
 	case CUREDISEASE:
 	default:
+		break;
 	}
 	//switch(m_Players.at(pos)->GetRoleID())
 }

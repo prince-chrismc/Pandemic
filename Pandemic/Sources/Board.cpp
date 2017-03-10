@@ -39,7 +39,7 @@ void Board::Epidemic()
 
 		City* city = m_Map.getCityWithID(cid);
 
-		for (uint8_t i = city->GetNumberOfCubes(); i < 3; i += 1)
+		for (uint16_t i = city->GetNumberOfCubes(); i < 3; i += 1)
 			city->addCube(m_Cubes.takeCube(city->getCityColor()));
 
 		// 2.1. Otbreaks if Need be
