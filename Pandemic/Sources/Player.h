@@ -92,6 +92,7 @@ public:
 	
 	//utility
 	bool hasCurrentCityCard();
+	RoleList::Roles GetRoleID() { return (RoleList::Roles)m_role.m_card->getNumID(); }
 	int GetNumOfCardToDiscoverCure();
 
 	void printName();

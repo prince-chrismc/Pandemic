@@ -155,7 +155,7 @@ public:
 
 	void addNearByCity(City* nearby) { m_NearByCities.emplace_back(nearby); }
 
-	uint8_t GetNumberOfCubes() { return (uint8_t)m_DiseasCubes.size(); }
+	uint16_t GetNumberOfCubes() { return (uint16_t)m_DiseasCubes.size(); }
 	void addCube(DiseaseCube* cube) { m_DiseasCubes.emplace_back(cube); }
 
 	Color getCityColor();
@@ -168,8 +168,10 @@ public:
 	bool compareCityID(const uint64_t& id) { return (m_cityID == (CityID)id); }
 	std::vector<City*> getNearByCities() { return m_NearByCities; }
 
+	std::string GetCityName() { return m_name; }
+
 	void PrintInformation();
-	std::string GetSaveOutput();
+	std::string GetSaveOutput(); //For FilePrint
 };
 
 // Research Centers -------------------------------------------------------------------------------

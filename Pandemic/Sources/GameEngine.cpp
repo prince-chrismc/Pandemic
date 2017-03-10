@@ -125,22 +125,46 @@ void GameEngine::BoardSetup()
 
 void GameEngine::TurnSequence(const uint16_t & pos)
 {
-	PlayerOpt options = CalculatePlayerOpt(pos);
+	MovesPerCity options = CalculatePlayerOpt(pos);
 
+	//for test purposes
 	for each(std::pair<MoveOptions, City::CityID> pair in options)
 	{
-		std::cout << pair.first << " / " << pair.second << std::endl;
+		std::cout << pair.first << " / " << std::hex << pair.second << std::endl;
 	}
+
+	std::cout << "Select your desired move from the list below... (#)" << std::endl;
+	PlayerMoves moves = DeterminePlayerMoves(options);
+	uint16_t selection;
+	do
+	{
+		std::cout << "Selcetion: ";
+		std::string input;
+		std::getline(std::cin, input);
+		std::stringstream ss(input);
+		ss >> selection;
+
+		if (selection < 1 || selection >= moves.size())
+		{
+			std::cout << "Invalid option. Please Try again..." << std::endl;
+		}
+	} while (selection < 1 || selection >= moves.size());
+
+	/*
+		TODO: Execute Move
+	*/
+
+	ExecuteMove(pos, moves.at(selection).first, moves.at(selection).second);
 }
 
-GameEngine::PlayerOpt GameEngine::CalculatePlayerOpt(const uint16_t & pos)
+GameEngine::MovesPerCity GameEngine::CalculatePlayerOpt(const uint16_t & pos)
 {
-	PlayerOpt options;
+	MovesPerCity options;
 
 	// Drive --------------------------------------------------------------------------------------
-	for each(City* city in GetDriveCitiesFor(pos))
+	for each(CityList::CityID id in GetDriveCitiesFor(pos))
 	{
-		options.insert(std::make_pair(GameEngine::DRIVE_FERRY, city->getCityID()));
+		options.insert(std::make_pair(GameEngine::DRIVE_FERRY, id));
 	}
 
 	// Flight --------------------------------------------------------------------------------------
@@ -186,6 +210,16 @@ GameEngine::PlayerOpt GameEngine::CalculatePlayerOpt(const uint16_t & pos)
 	}
 
 	return options;
+}
+
+std::vector<CityList::CityID> GameEngine::GetDriveCitiesFor(const uint16_t pos)
+{
+	std::vector<CityList::CityID> result;
+	for each(City* city in m_Board.m_Map.getCitiesConnectedTo(m_Players.at(pos)->getCityID()))
+	{
+		result.emplace_back(city->getCityID());
+	}
+	return result;
 }
 
 std::vector<CityList::CityID> GameEngine::GetFlightCitiesFor(const uint16_t pos)
@@ -245,6 +279,37 @@ std::vector<CityList::CityID> GameEngine::GetShuttleFlightsFor(const uint16_t po
 std::vector<CityList::CityID> GameEngine::ShareKnowlegdeFor(const uint16_t pos)
 {
 	std::vector<CityList::CityID> result;
+
+	// 1. Player is the researcher
+	if (m_Players.at(pos)->GetRoleID == RoleList::RESEARCHER)
+	{
+		for each(Player* joeur in m_Players)
+		{
+			if (m_Players.at(pos)->getCityID() == joeur->getCityID())
+			{
+				result.emplace_back(joeur->getCityID());
+				return result;
+			}
+		}
+	}
+
+	// 2. Other Player in city is researcher
+	if (true)
+	{
+		for each(Player* joeur in m_Players)
+		{
+			if (m_Players.at(pos)->getCityID() == joeur->getCityID())
+			{
+				if (joeur->GetRoleID == RoleList::RESEARCHER)
+				{
+					result.emplace_back(joeur->getCityID());
+					return result;
+				}
+			}
+		}
+	}
+
+	// 3. has current city's matching city card
 	if (m_Players.at(pos)->hasCurrentCityCard())
 	{
 		for (size_t index = 0; index < m_Players.size(); index += 1)
@@ -255,7 +320,7 @@ std::vector<CityList::CityID> GameEngine::ShareKnowlegdeFor(const uint16_t pos)
 			if (m_Players.at(pos)->getCityID() == m_Players.at(index)->getCityID())
 			{
 				result.emplace_back(m_Players.at(index)->getCityID());
-				break;
+				return result;
 			}
 		}
 	}
@@ -269,8 +334,8 @@ std::vector<CityList::CityID> GameEngine::DiscoverCure(const uint16_t pos)
 	{
 		if (rc.GetCityID() == m_Players.at(pos)->getCityID())
 		{
-			int cardsneeded = m_Players.at(pos)->GetNumOfCardToDiscoverCure();
-			if (m_Players.at(pos)->m_hand.size() >= cardsneeded)
+			int NumOfCardsNeeded = m_Players.at(pos)->GetNumOfCardToDiscoverCure();
+			if (m_Players.at(pos)->m_hand.size() >= NumOfCardsNeeded)
 			{
 				int red = 0, blue = 0, yellow = 0, black = 0;
 				for each (PlayerCard* pc in m_Players.at(pos)->m_hand)
@@ -286,7 +351,7 @@ std::vector<CityList::CityID> GameEngine::DiscoverCure(const uint16_t pos)
 						}
 					}
 				}
-				if (red >= cardsneeded || blue >= cardsneeded || yellow >= cardsneeded || black >= cardsneeded)
+				if (red >= NumOfCardsNeeded || blue >= NumOfCardsNeeded || yellow >= NumOfCardsNeeded || black >= NumOfCardsNeeded)
 				{
 					result.emplace_back(rc.GetCityID());
 					break;
@@ -295,6 +360,177 @@ std::vector<CityList::CityID> GameEngine::DiscoverCure(const uint16_t pos)
 		}
 	}
 	return result;
+}
+
+GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & options)
+{
+	PlayerMoves moves;
+	int i = 0;
+
+	// Drive --------------------------------------------------------------------------------------
+	if (options.count(GameEngine::DRIVE_FERRY) > 0)
+	{
+		std::cout << std::endl << "A. Drive/Ferry" << std::endl;
+		auto low = options.lower_bound(GameEngine::DRIVE_FERRY);
+		auto high = options.upper_bound(GameEngine::DRIVE_FERRY);
+
+		for (auto it = low; it != high; it++)
+		{
+			moves.insert(std::make_pair(++i, *it));
+			City* city = m_Board.m_Map.getCityWithID(it->second);
+			std::cout << "  " << i << " - To " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
+		}
+	}
+
+	// Direct Flight ------------------------------------------------------------------------------
+	if (options.count(GameEngine::FLIGHT) > 0)
+	{
+		std::cout << std::endl << "B. Direct Flight" << std::endl;
+		auto low = options.lower_bound(GameEngine::FLIGHT);
+		auto high = options.upper_bound(GameEngine::FLIGHT);
+
+		for (auto it = low; it != high; it++)
+		{
+			moves.insert(std::make_pair(++i, *it));
+			City* city = m_Board.m_Map.getCityWithID(it->second);
+			std::cout << "  " << i << " - To " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
+		}
+	}
+
+	// Charter Flight -----------------------------------------------------------------------------
+	if (options.count(GameEngine::CHARTER) > 0)
+	{
+		std::cout << std::endl << "C. Charter Flight" << std::endl;
+		auto low = options.lower_bound(GameEngine::CHARTER);
+		auto high = options.upper_bound(GameEngine::CHARTER);
+
+		for (auto it = low; it != high; it++)
+		{
+			moves.insert(std::make_pair(++i, *it));
+			City* city = m_Board.m_Map.getCityWithID(it->second);
+			std::cout << "  " << i << " - To " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
+		}
+	}
+
+	// Shuttle Flight -----------------------------------------------------------------------------
+	if (options.count(GameEngine::SHUTTLE) > 0)
+	{
+		std::cout << std::endl << "C. Shuttle Flight" << std::endl;
+		auto low = options.lower_bound(GameEngine::SHUTTLE);
+		auto high = options.upper_bound(GameEngine::SHUTTLE);
+
+		for (auto it = low; it != high; it++)
+		{
+			moves.insert(std::make_pair(++i, *it));
+			City* city = m_Board.m_Map.getCityWithID(it->second);
+			std::cout << "  " << i << " - To " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
+		}
+	}
+
+	// Treat Diesease -----------------------------------------------------------------------------
+	if (options.count(GameEngine::TREATDISEASE) > 0)
+	{
+		std::cout << std::endl << "E. Treat Disease" << std::endl;
+		auto low = options.lower_bound(GameEngine::TREATDISEASE);
+		auto high = options.upper_bound(GameEngine::TREATDISEASE);
+
+		for (auto it = low; it != high; it++)
+		{
+			moves.insert(std::make_pair(++i, *it));
+			City* city = m_Board.m_Map.getCityWithID(it->second);
+			std::cout << "  " << i << " - To " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
+		}
+	}
+
+	// Build Research Center ----------------------------------------------------------------------
+	if (options.count(GameEngine::BUILDRC) > 0)
+	{
+		std::cout << std::endl << "F. Build Research Center" << std::endl;
+		auto low = options.lower_bound(GameEngine::BUILDRC);
+		auto high = options.upper_bound(GameEngine::BUILDRC);
+
+		for (auto it = low; it != high; it++)
+		{
+			moves.insert(std::make_pair(++i, *it));
+			City* city = m_Board.m_Map.getCityWithID(it->second);
+			std::cout << "  " << i << " - To " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
+		}
+	}
+	// Share Knowledge --------–-------------------------------------------------------------------
+	if (options.count(GameEngine::SHARECARD) > 0)
+	{
+		std::cout << std::endl << "G. Share Knowledge" << std::endl;
+		auto low = options.lower_bound(GameEngine::SHARECARD);
+		auto high = options.upper_bound(GameEngine::SHARECARD);
+
+		for (auto it = low; it != high; it++)
+		{
+			moves.insert(std::make_pair(++i, *it));
+			City* city = m_Board.m_Map.getCityWithID(it->second);
+			std::cout << "  " << i << " - To " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
+		}
+	}
+	// Discover Cure ------------------------------------------------------------------------------
+	if (options.count(GameEngine::CUREDISEASE) > 0)
+	{
+		std::cout << std::endl << "H. Discover a Cure" << std::endl;
+		auto low = options.lower_bound(GameEngine::CUREDISEASE);
+		auto high = options.upper_bound(GameEngine::CUREDISEASE);
+
+		for (auto it = low; it != high; it++)
+		{
+			moves.insert(std::make_pair(++i, *it));
+			City* city = m_Board.m_Map.getCityWithID(it->second);
+			std::cout << "  " << i << " - To " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
+		}
+	}
+	return moves;
+}
+
+std::string GameEngine::MoveOpToString(const MoveOptions & opt)
+{
+	switch (opt)
+	{
+	case DRIVE_FERRY:
+		return "Drive/Ferry";
+	case 	FLIGHT:
+		return "Direct Flight";
+	case 	CHARTER:
+		return "Charter Flight";
+	case 	SHUTTLE:
+		return "Shuttle Flight";
+	case 	TREATDISEASE:
+		return "Treat Disease";
+	case 	BUILDRC:
+		return "Build Research Station";
+	case 	SHARECARD:
+		return "Share Knowledge";
+	case 	CUREDISEASE:
+		return "Cure Disease";
+	default:
+		return "";
+	}
+}
+
+void GameEngine::ExecuteMove(const uint16_t pos, const MoveOptions & opt, const CityList::CityID & cityID)
+{
+	std::stringstream ss;
+	switch (opt)
+	{
+	case DRIVE_FERRY:
+	case FLIGHT:
+	case CHARTER:
+	case SHUTTLE:
+	case TREATDISEASE:
+		ss << std::hex << cityID;
+		m_Players.at(pos)->ChangeCity(ss.str());
+		break;
+	case BUILDRC:
+	case SHARECARD:
+	case CUREDISEASE:
+	default:
+	}
+	//switch(m_Players.at(pos)->GetRoleID())
 }
 
 void GameEngine::SaveGame()

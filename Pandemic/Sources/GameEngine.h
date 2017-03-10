@@ -45,16 +45,20 @@ protected:
 
 		MAX = 0xFFFUL
 	};
-	typedef std::multimap<MoveOptions, City::CityID> PlayerOpt; // Map of player turn options
+	typedef std::multimap<MoveOptions, City::CityID> MovesPerCity;
+	typedef std::map<int, std::pair<const MoveOptions, CityList::CityID>> PlayerMoves;
 
 	void TurnSequence(const uint16_t & pos);
-	PlayerOpt CalculatePlayerOpt(const uint16_t& pos);
-	std::vector<City*> GetDriveCitiesFor(const uint16_t & pos) { return m_Board.m_Map.getCitiesConnectedTo(m_Players.at(pos)->getCityID()); }
+	MovesPerCity CalculatePlayerOpt(const uint16_t& pos);
+	std::vector<CityList::CityID> GetDriveCitiesFor(const uint16_t pos);
 	std::vector<CityList::CityID> GetFlightCitiesFor(const uint16_t pos);
 	std::vector<CityList::CityID> GetCharterFlightsFor(const uint16_t pos);
 	std::vector<CityList::CityID> GetShuttleFlightsFor(const uint16_t pos);
 	std::vector<CityList::CityID> ShareKnowlegdeFor(const uint16_t pos);
 	std::vector<CityList::CityID> DiscoverCure(const uint16_t pos);
+	PlayerMoves DeterminePlayerMoves(const MovesPerCity& options);
+	static std::string MoveOpToString(const MoveOptions& opt);
+	void ExecuteMove(const uint16_t pos, const MoveOptions& opt, const CityList::CityID& cityID);
 
 public:
 	GameEngine() : m_Board(), m_Players(), m_PreGameComplete() { m_PreGameComplete.lock(); }
