@@ -46,6 +46,7 @@ private:
 	Pawn m_pawn;
 	RoleCard* m_card;
 
+protected:
 	Role(const uint64_t& id);
 
 public:
@@ -56,12 +57,13 @@ public:
 	Role(const Role&) = delete;
 	void operator=(const Role&) = delete;
 
-	virtual const uint8_t getHandLimit() { return 7; }
+	//virtual const uint8_t getHandLimit() { return 7; }
 	const char* getName() { return m_name.c_str(); }
 };
 
 class Player final //The Almighty Player
 {
+	friend class GameEngine;
 private:
 	const std::string m_name;
 	std::vector<PlayerCard*> m_hand;
@@ -69,7 +71,7 @@ private:
 	ReferenceCard m_refcard;
 
 protected:
-	bool ValidateHand() { return (m_hand.size()); }
+	bool ValidateHand() { return (m_hand.size() <= 7); }
 
 public:
 	Player(const std::string& name, RoleCard* card) : m_name(name), m_role(card), m_refcard() {}
@@ -87,13 +89,10 @@ public:
 	std::hexadecimal getCityHexID() { return m_role.m_pawn.m_CityID; }
 	CityList::CityID getCityID();
 	void ChangeCity(const std::hexadecimal& id) { m_role.m_pawn.changeCity(id); }
-
-	//For game play
-	std::vector<CityList::CityID> getDirectFlightCities();
+	
+	//utility
 	bool hasCurrentCityCard();
-	/* TODO: HAVENT BEEN IMPLEMENTED */
-	bool canBuildResearchCenter() { return false; }
-	bool canDiscoverCure() { return false; }
+	int GetNumOfCardToDiscoverCure();
 
 	void printName();
 	void printInfo();

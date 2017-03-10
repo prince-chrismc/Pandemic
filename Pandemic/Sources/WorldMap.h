@@ -22,6 +22,7 @@ public:
 	
 	City* getCityWithID(const City::CityID& id);
 	std::vector<City*> getCitiesConnectedTo(const City::CityID& id);
+	std::vector<City*> getAllCities();
 	void PrintCitiesStatus();
 	
 	std::string GetSaveOutput();

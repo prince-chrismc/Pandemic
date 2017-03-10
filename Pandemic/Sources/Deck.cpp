@@ -2,8 +2,6 @@
 #include <random> //std::mt19937
 #include <ios> //std::hex
 #include <sstream> //std::stringstream
-#include <algorithm> //std::shuffle
-#include <random> //std::mt19937
 #include "Deck.h"
 
 InfectionDeck::InfectionDeck() : Deck(48)

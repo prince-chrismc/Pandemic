@@ -129,7 +129,7 @@ public:
 	bool isAnyEmpty();
 	DiseaseCube* takeCube(const Color& color);
 	void placeCube(DiseaseCube* dc);
-	std::string PrintCubesLeft() { return std::to_string(m_red.cubesLeft()) + " " + std::to_string(m_yellow.cubesLeft()) + " " + std::to_string(m_blue.cubesLeft()) + " " + std::to_string(m_black.cubesLeft()); }
+	//std::string PrintCubesLeft() { return std::to_string(m_red.cubesLeft()) + " " + std::to_string(m_yellow.cubesLeft()) + " " + std::to_string(m_blue.cubesLeft()) + " " + std::to_string(m_black.cubesLeft()); }
 };
 
 // Cities -----------------------------------------------------------------------------------------
@@ -142,8 +142,12 @@ private:
 	std::vector<City*> m_NearByCities;
 	std::vector<DiseaseCube*> m_DiseasCubes;
 
+protected:
+	bool ValidateCubes() { return (m_DiseasCubes.size() <= 3); }
+
 public:
 	City(const CityID& id, const char* name) : m_cityID(id), m_color(getCityColor()), m_name(name), m_NearByCities(), m_DiseasCubes() {}
+	~City();
 
 	//Prevent Copy/Assignment
 	City(const City&) = delete;
@@ -200,6 +204,7 @@ public:
 
 	uint8_t GetNumberOfCenters() { return (uint8_t)m_stations.size(); }
 	void AddStation(City* city) { if(validate()) m_stations.emplace_back(ResearchCenter(city)); }
+	std::vector<ResearchCenter> GetCenters() { return m_stations; }
 };
 
 // Markers ----------------------------------------------------------------------------------------

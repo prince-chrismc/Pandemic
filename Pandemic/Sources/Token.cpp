@@ -45,6 +45,15 @@ void DiseaseCubePile::placeCube(DiseaseCube* dc)
 	}
 }
 
+City::~City()
+{
+	for each (DiseaseCube* cube in m_DiseasCubes)
+	{
+		delete cube;
+		cube = nullptr;
+	}
+}
+
 Color City::getCityColor()
 {
 	if (IsRedCity()) return RED;

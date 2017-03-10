@@ -32,19 +32,6 @@ CityList::CityID Player::getCityID()
 	return (CityList::CityID)num;
 }
 
-std::vector<CityList::CityID> Player::getDirectFlightCities()
-{
-	std::vector<CityList::CityID> result;
-	for (size_t pos = 0; pos < m_hand.size(); pos += 1)
-	{
-		if (PlayerCardFactory::IsaCityCard(m_hand.at(pos)->getNumID()))
-		{
-			result.emplace_back((CityList::CityID)(m_hand.at(pos)->getNumID() - CityCard::CITYCARD_MIN));
-		}
-	}
-	return result;
-}
-
 bool Player::hasCurrentCityCard()
 {
 	for (size_t pos = 0; pos < m_hand.size(); pos += 1)
@@ -53,6 +40,17 @@ bool Player::hasCurrentCityCard()
 			return true;
 	}
 	return false;
+}
+
+int Player::GetNumOfCardToDiscoverCure()
+{
+	switch (m_role.m_card->getNumID())
+	{
+	case RoleList::SCIENTIST:
+		return 4;
+	default:
+		return 5;
+	}
 }
 
 void Player::printName()

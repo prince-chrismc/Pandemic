@@ -1,4 +1,6 @@
-#include <sstream>
+#include <sstream>  //std::stringstream
+#include <algorithm> //std::shuffle
+#include <random> //std::mt19937
 #include <iostream> //io
 #include <ctime> //time
 #include "boost\filesystem.hpp" //dir
@@ -6,6 +8,8 @@
 
 GameEngine::~GameEngine()
 {
+	m_PreGameComplete.unlock();
+
 	for (size_t pos = 0; pos < m_Players.size(); pos += 1)
 	{
 		if (m_Players.at(pos) != nullptr)
@@ -69,6 +73,11 @@ void GameEngine::PlayersSetup()
 		RegisterPlayer(name);
 	}
 
+	//random shuffle =)
+	std::random_device rd;
+	std::mt19937 g(rd());
+	std::shuffle(m_Players.begin(), m_Players.end(), g);
+
 	for each(Player* joeur in m_Players)
 	{
 		switch (m_Players.size())
@@ -111,6 +120,181 @@ void GameEngine::BoardSetup()
 	m_Board.InfectCity();
 
 	m_Board.AddResearchCenter(City::ATLANTA);
+}
+
+
+void GameEngine::TurnSequence(const uint16_t & pos)
+{
+	PlayerOpt options = CalculatePlayerOpt(pos);
+
+	for each(std::pair<MoveOptions, City::CityID> pair in options)
+	{
+		std::cout << pair.first << " / " << pair.second << std::endl;
+	}
+}
+
+GameEngine::PlayerOpt GameEngine::CalculatePlayerOpt(const uint16_t & pos)
+{
+	PlayerOpt options;
+
+	// Drive --------------------------------------------------------------------------------------
+	for each(City* city in GetDriveCitiesFor(pos))
+	{
+		options.insert(std::make_pair(GameEngine::DRIVE_FERRY, city->getCityID()));
+	}
+
+	// Flight --------------------------------------------------------------------------------------
+	for each(CityList::CityID id in GetFlightCitiesFor(pos))
+	{
+		options.insert(std::make_pair(GameEngine::FLIGHT, id));
+	}
+
+	// Charter ------------------------------------------------------------------------------------
+	for each(CityList::CityID id in GetCharterFlightsFor(pos))
+	{
+		options.insert(std::make_pair(GameEngine::CHARTER, id));
+	}
+
+	// Shuttle ------------------------------------------------------------------------------------
+	for each(CityList::CityID id in GetShuttleFlightsFor(pos))
+	{
+		options.insert(std::make_pair(GameEngine::SHUTTLE, id));
+	}
+
+	// Treat Diesease -----------------------------------------------------------------------------
+	if (m_Board.m_Map.getCityWithID(m_Players.at(pos)->getCityID())->GetNumberOfCubes() > 0)
+	{
+		options.insert(std::make_pair(GameEngine::TREATDISEASE, m_Players.at(pos)->getCityID()));
+	}
+
+	// Build Research Center ----------------------------------------------------------------------
+	if (m_Players.at(pos)->hasCurrentCityCard())
+	{
+		options.insert(std::make_pair(GameEngine::BUILDRC, m_Players.at(pos)->getCityID()));
+	}
+
+	// Share Knowledge --------–-------------------------------------------------------------------
+	for each(CityList::CityID id in ShareKnowlegdeFor(pos))
+	{
+		options.insert(std::make_pair(GameEngine::SHARECARD, id));
+	}
+
+	// Discover Cure ------------------------------------------------------------------------------
+	for each(CityList::CityID id in DiscoverCure(pos))
+	{
+		options.insert(std::make_pair(GameEngine::CUREDISEASE, id));
+	}
+
+	return options;
+}
+
+std::vector<CityList::CityID> GameEngine::GetFlightCitiesFor(const uint16_t pos)
+{
+	std::vector<CityList::CityID> result;
+	for each (PlayerCard* pc in m_Players.at(pos)->m_hand)
+	{
+		if (PlayerCardFactory::IsaCityCard(pc->getNumID()))
+		{
+			result.emplace_back((CityList::CityID)(pc->getNumID() - CityCard::CITYCARD_MIN));
+		}
+	}
+	return result;
+}
+
+std::vector<CityList::CityID> GameEngine::GetCharterFlightsFor(const uint16_t pos)
+{
+	std::vector<CityList::CityID> result;
+	if (m_Players.at(pos)->hasCurrentCityCard())
+	{
+		for each (City* city in m_Board.m_Map.getAllCities())
+		{
+			if (city->getCityID() == m_Players.at(pos)->getCityID())
+				continue;
+
+			result.emplace_back(city->getCityID());
+		}
+	}
+	return result;
+}
+
+std::vector<CityList::CityID> GameEngine::GetShuttleFlightsFor(const uint16_t pos)
+{
+	bool IsInACityWithAResearchCEnter = false;
+	std::vector<CityList::CityID> flights;
+	CityList::CityID cid = m_Players.at(pos)->getCityID();
+	for each(ResearchCenter rc in m_Board.m_Centers.GetCenters())
+	{
+		if (rc.GetCityID() == cid)
+		{
+			IsInACityWithAResearchCEnter = true;
+			continue;
+		}
+		else
+		{
+			flights.emplace_back(rc.GetCityID());
+		}
+	}
+
+	if (!IsInACityWithAResearchCEnter)
+	{
+		flights.clear();
+	}
+	return flights;
+}
+
+std::vector<CityList::CityID> GameEngine::ShareKnowlegdeFor(const uint16_t pos)
+{
+	std::vector<CityList::CityID> result;
+	if (m_Players.at(pos)->hasCurrentCityCard())
+	{
+		for (size_t index = 0; index < m_Players.size(); index += 1)
+		{
+			if (index == pos)
+				continue;
+
+			if (m_Players.at(pos)->getCityID() == m_Players.at(index)->getCityID())
+			{
+				result.emplace_back(m_Players.at(index)->getCityID());
+				break;
+			}
+		}
+	}
+	return result;
+}
+
+std::vector<CityList::CityID> GameEngine::DiscoverCure(const uint16_t pos)
+{
+	std::vector<CityList::CityID> result;
+	for each(ResearchCenter rc in m_Board.m_Centers.GetCenters())
+	{
+		if (rc.GetCityID() == m_Players.at(pos)->getCityID())
+		{
+			int cardsneeded = m_Players.at(pos)->GetNumOfCardToDiscoverCure();
+			if (m_Players.at(pos)->m_hand.size() >= cardsneeded)
+			{
+				int red = 0, blue = 0, yellow = 0, black = 0;
+				for each (PlayerCard* pc in m_Players.at(pos)->m_hand)
+				{
+					if (PlayerCardFactory::IsaCityCard(pc->getNumID()))
+					{
+						switch (((CityCard*)pc)->getCityColor())
+						{
+						case RED: red++; break;
+						case BLUE: blue++; break;
+						case YELLOW: yellow++; break;
+						case BLACK: black++; break;
+						}
+					}
+				}
+				if (red >= cardsneeded || blue >= cardsneeded || yellow >= cardsneeded || black >= cardsneeded)
+				{
+					result.emplace_back(rc.GetCityID());
+					break;
+				}
+			}
+		}
+	}
+	return result;
 }
 
 void GameEngine::SaveGame()
@@ -188,14 +372,6 @@ void GameEngine::Launch()
 		return;
 	}
 
-	while (true) /* needs validate game still alive funct */
-	{
-		for (int i = 0; i < (int)m_Players.size(); i += 1)
-		{
-			Player* joeur = m_Players.at(i);
-			joeur->getCityID();
-		}
-	}
-
+	TurnSequence(0);
 
 }

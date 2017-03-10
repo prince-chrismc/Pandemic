@@ -358,6 +358,16 @@ std::vector<City*> WorldMap::getCitiesConnectedTo(const City::CityID & id)
 	return  result;
 }
 
+std::vector<City*> WorldMap::getAllCities()
+{
+	std::vector<City*> all;
+	for each (City* icity in m_cities)
+	{
+		all.emplace_back(icity);
+	}
+	return all;
+}
+
 City* WorldMap::getCityWithID(const City::CityID & id)
 {
 	for (int i = 0; i < 48; i += 1)
