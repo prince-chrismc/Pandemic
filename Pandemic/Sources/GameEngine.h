@@ -49,6 +49,7 @@ protected:
 	typedef std::map<int, std::pair<const MoveOptions, CityList::CityID>> PlayerMoves;
 
 	void TurnSequence(const uint16_t & pos);
+	void TurnActionsPhase(const uint16_t& pos);
 	MovesPerCity CalculatePlayerOpt(const uint16_t& pos);
 	std::vector<CityList::CityID> GetDriveCitiesFor(const uint16_t pos);
 	std::vector<CityList::CityID> GetFlightCitiesFor(const uint16_t pos);
@@ -56,6 +57,7 @@ protected:
 	std::vector<CityList::CityID> GetShuttleFlightsFor(const uint16_t pos);
 	std::vector<CityList::CityID> ShareKnowlegdeFor(const uint16_t pos);
 	std::vector<CityList::CityID> DiscoverCure(const uint16_t pos);
+	Color DetermineCureColor(const uint16_t pos);
 	PlayerMoves DeterminePlayerMoves(const MovesPerCity& options);
 	static std::string MoveOpToString(const MoveOptions& opt);
 	void ExecuteMove(const uint16_t pos, const MoveOptions& opt, const CityList::CityID& cityID);
@@ -71,7 +73,7 @@ public:
 	void Launch();
 
 	// Temp fuction for game play
-	Player* GetPlayer(const uint8_t pos) { return m_Players.at(pos); }
+	Player* GetPlayer(const uint16_t pos) { return m_Players.at(pos); }
 
 };
 

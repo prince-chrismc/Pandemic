@@ -73,12 +73,12 @@ class BlackDiseaseCube final : public DiseaseCube { public: BlackDiseaseCube() :
 class CubePile abstract
 {
 protected:
-	uint8_t m_cubes;
+	uint16_t m_cubes;
 
 public:
 	CubePile() : m_cubes(24) {}
 
-	uint8_t cubesLeft() { return m_cubes; }
+	uint16_t cubesLeft() { return m_cubes; }
 	bool isEmpty() { return (m_cubes == 0); }
 	virtual DiseaseCube* takeCube() = 0;
 	void placeCube(DiseaseCube* dc) { delete dc; m_cubes += 1; }
@@ -204,7 +204,7 @@ public:
 	ResearchStations(const ResearchStations&) = delete;
 	void operator=(const ResearchStations&) = delete;
 
-	uint8_t GetNumberOfCenters() { return (uint8_t)m_stations.size(); }
+	uint16_t GetNumberOfCenters() { return (uint16_t)m_stations.size(); }
 	void AddStation(City* city) { if(validate()) m_stations.emplace_back(ResearchCenter(city)); }
 	std::vector<ResearchCenter> GetCenters() { return m_stations; }
 };
@@ -213,8 +213,8 @@ public:
 class InfectionRate final
 {
 private:
-	uint8_t m_position;
-	const uint8_t m_array[7] = { 2, 2, 2, 3, 3, 4, 4 };
+	uint16_t m_position;
+	const uint16_t m_array[7] = { 2, 2, 2, 3, 3, 4, 4 };
 
 public:
 	InfectionRate() : m_position(0) {}
@@ -223,7 +223,7 @@ public:
 	InfectionRate(const InfectionRate&) = delete;
 	void operator=(const InfectionRate&) = delete;
 
-	uint8_t getRate() { return m_array[m_position]; }
+	uint16_t getRate() { return m_array[m_position]; }
 	void IncreaseRate() { m_position += 1; }
 	std::string GetSaveOutput() { return std::to_string(m_position); }
 };
@@ -231,8 +231,8 @@ public:
 class OutbreakMarker final
 {
 private:
-	uint8_t m_position;
-	const uint8_t m_array[8] = { 1, 2, 3, 4, 5, 6, 7, 8 };
+	uint16_t m_position;
+	const uint16_t m_array[8] = { 1, 2, 3, 4, 5, 6, 7, 8 };
 
 public:
 	OutbreakMarker() : m_position(0) {}
@@ -241,7 +241,7 @@ public:
 	OutbreakMarker(const OutbreakMarker&) = delete;
 	void operator=(const OutbreakMarker&) = delete;
 
-	uint8_t getMarker() { return m_array[m_position]; }
+	uint16_t getMarker() { return m_array[m_position]; }
 	void IncreaseRate() { m_position += 1; }
 	std::string GetSaveOutput() { return std::to_string(m_position); }
 };

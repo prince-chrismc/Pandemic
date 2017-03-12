@@ -2,7 +2,7 @@
 #include <random> //std::mt19937
 #include "Board.h"
 
-void Board::InfectCity(const uint8_t& cubesToAdd)
+void Board::InfectCity(const uint16_t& cubesToAdd)
 {
 	InfectionCard* ic = m_InfecDeck.DrawCard();
 	City::CityID cid = (City::CityID)(ic->getNumID() - InfectionCard::INFECTIONCARD_MIN);
@@ -10,8 +10,18 @@ void Board::InfectCity(const uint8_t& cubesToAdd)
 
 	City* city = m_Map.getCityWithID(cid);
 
-	for(uint8_t i = 0; i < cubesToAdd; i += 1)
-		city->addCube(m_Cubes.takeCube(city->getCityColor()));
+	for (uint16_t i = 0; i < cubesToAdd; i += 1)
+	{
+		if (city->GetNumberOfCubes() == 3)
+		{
+			Outbreak(city);
+			break;
+		}
+		else
+		{
+			city->addCube(m_Cubes.takeCube(city->getCityColor()));
+		}
+	}
 }
 
 void Board::Outbreak(City* city)

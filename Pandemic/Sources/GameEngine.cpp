@@ -126,36 +126,40 @@ void GameEngine::BoardSetup()
 
 void GameEngine::TurnSequence(const uint16_t & pos)
 {
-	MovesPerCity options = CalculatePlayerOpt(pos);
+	TurnActionsPhase(pos);
+}
 
-	//for test purposes
-	for each(std::pair<MoveOptions, City::CityID> pair in options)
+void GameEngine::TurnActionsPhase(const uint16_t & pos)
+{
+	for (size_t i = 0; i < 5; i++)
 	{
-		std::cout << pair.first << " / " << std::hex << pair.second << std::endl;
-	}
+		MovesPerCity options = CalculatePlayerOpt(pos);
 
-	std::cout << "Select your desired move from the list below... (#)" << std::endl;
-	PlayerMoves moves = DeterminePlayerMoves(options);
-	uint16_t selection;
-	do
-	{
-		std::cout << "Selcetion: ";
-		std::string input;
-		std::getline(std::cin, input);
-		std::stringstream ss(input);
-		ss >> selection;
-
-		if (selection < 1 || selection >= moves.size())
+		//for test purposes
+		for each(std::pair<MoveOptions, City::CityID> pair in options)
 		{
-			std::cout << "Invalid option. Please Try again..." << std::endl;
+			std::cout << pair.first << " / " << std::hex << pair.second << std::endl;
 		}
-	} while (selection < 1 || selection >= moves.size());
 
-	/*
-		TODO: Execute Move
-	*/
+		std::cout << "Select your desired move from the list below... (#)" << std::endl;
+		PlayerMoves moves = DeterminePlayerMoves(options);
+		uint16_t selection;
+		do
+		{
+			std::cout << "Selcetion: ";
+			std::string input;
+			std::getline(std::cin, input);
+			std::stringstream ss(input);
+			ss >> selection;
 
-	ExecuteMove(pos, moves.at(selection).first, moves.at(selection).second);
+			if (selection < 1 || selection >= moves.size())
+			{
+				std::cout << "Invalid option. Please Try again..." << std::endl;
+			}
+		} while (selection < 1 || selection >= moves.size());
+
+		ExecuteMove(pos, moves.at(selection).first, moves.at(selection).second);
+	}
 }
 
 GameEngine::MovesPerCity GameEngine::CalculatePlayerOpt(const uint16_t & pos)
@@ -294,23 +298,7 @@ std::vector<CityList::CityID> GameEngine::ShareKnowlegdeFor(const uint16_t pos)
 		}
 	}
 
-	// 2. Other Player in city is researcher
-	if (true)
-	{
-		for each(Player* joeur in m_Players)
-		{
-			if (m_Players.at(pos)->getCityID() == joeur->getCityID())
-			{
-				if (joeur->GetRoleID() == RoleList::RESEARCHER)
-				{
-					result.emplace_back(joeur->getCityID());
-					return result;
-				}
-			}
-		}
-	}
-
-	// 3. has current city's matching city card
+	// 2. has current city's matching city card
 	if (m_Players.at(pos)->hasCurrentCityCard())
 	{
 		for (size_t index = 0; index < m_Players.size(); index += 1)
@@ -338,29 +326,52 @@ std::vector<CityList::CityID> GameEngine::DiscoverCure(const uint16_t pos)
 			int NumOfCardsNeeded = m_Players.at(pos)->GetNumOfCardToDiscoverCure();
 			if (m_Players.at(pos)->m_hand.size() >= NumOfCardsNeeded)
 			{
-				int red = 0, blue = 0, yellow = 0, black = 0;
-				for each (PlayerCard* pc in m_Players.at(pos)->m_hand)
+				switch (DetermineCureColor(pos))
 				{
-					if (PlayerCardFactory::IsaCityCard(pc->getNumID()))
-					{
-						switch (((CityCard*)pc)->getCityColor())
-						{
-						case RED: red++; break;
-						case BLUE: blue++; break;
-						case YELLOW: yellow++; break;
-						case BLACK: black++; break;
-						}
-					}
-				}
-				if (red >= NumOfCardsNeeded || blue >= NumOfCardsNeeded || yellow >= NumOfCardsNeeded || black >= NumOfCardsNeeded)
-				{
+				case RED:
+				case BLUE:
+				case YELLOW:
+				case BLACK:
 					result.emplace_back(rc.GetCityID());
+				default:
 					break;
 				}
+				break;
 			}
 		}
 	}
 	return result;
+}
+
+Color GameEngine::DetermineCureColor(const uint16_t pos)
+{
+	int NumOfCardsNeeded = m_Players.at(pos)->GetNumOfCardToDiscoverCure();
+	if (m_Players.at(pos)->m_hand.size() >= NumOfCardsNeeded)
+	{
+		int red = 0, blue = 0, yellow = 0, black = 0;
+		for each (PlayerCard* pc in m_Players.at(pos)->m_hand)
+		{
+			if (PlayerCardFactory::IsaCityCard(pc->getNumID()))
+			{
+				switch (static_cast<CityCard*>(pc)->getCityColor())
+				{
+				case RED: red++; break;
+				case BLUE: blue++; break;
+				case YELLOW: yellow++; break;
+				case BLACK: black++; break;
+				}
+			}
+		}
+		if (red >= NumOfCardsNeeded)
+			return RED;
+		else if (blue >= NumOfCardsNeeded)
+			return BLUE;
+		else if (yellow >= NumOfCardsNeeded)
+			return YELLOW;
+		else if (black >= NumOfCardsNeeded)
+			return BLACK;
+	}
+	return Color::INVALID;
 }
 
 GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & options)
@@ -516,6 +527,7 @@ std::string GameEngine::MoveOpToString(const MoveOptions & opt)
 void GameEngine::ExecuteMove(const uint16_t pos, const MoveOptions & opt, const CityList::CityID & cityID)
 {
 	std::stringstream ss;
+	Color cc;
 	switch (opt)
 	{
 	case DRIVE_FERRY:
@@ -527,12 +539,79 @@ void GameEngine::ExecuteMove(const uint16_t pos, const MoveOptions & opt, const 
 		m_Players.at(pos)->ChangeCity(ss.str());
 		break;
 	case BUILDRC:
+		for(size_t i = 0; i < m_Players.at(pos)->m_hand.size(); i += 1)
+		{
+			if (m_Players.at(pos)->m_hand.at(i)->getNumID() == m_Players.at(pos)->getCityID())
+			{
+				m_Board.m_Centers.AddStation(m_Board.m_Map.getCityWithID(m_Players.at(pos)->getCityID()));
+				m_Board.m_PlayerDeck.DiscardCard(m_Players.at(pos)->rmCard(i));
+				break;
+			}
+		}
+		break;
 	case SHARECARD:
+		if (m_Players.at(pos)->GetRoleID() == RoleList::RESEARCHER)
+		{
+			uint16_t selection = 0;
+			do 
+			{
+				std::cout << "Which card would you like to share...";
+				m_Players.at(pos)->printHand();
+				std::string input;
+				std::getline(std::cin, input);
+				ss << input;
+				ss >> selection;
+			} while (selection < 0 || selection >= m_Players.at(pos)->m_hand.size());
+
+			for (size_t index = 0; index < m_Players.size(); index += 1)
+			{
+				if (index == pos)
+					continue;
+
+				if (m_Players.at(pos)->getCityID() == m_Players.at(index)->getCityID())
+				{
+					m_Players.at(index)->addCard(m_Players.at(pos)->rmCard(selection));
+					return;
+				}
+			}
+		}
+		else
+		{
+			for (size_t i = 0; i < m_Players.at(pos)->m_hand.size(); i += 1)
+			{
+				if (m_Players.at(pos)->m_hand.at(i)->getNumID() == m_Players.at(pos)->getCityID())
+				{
+					for (size_t index = 0; index < m_Players.size(); index += 1)
+					{
+						if (index == pos)
+							continue;
+
+						if (m_Players.at(pos)->getCityID() == m_Players.at(index)->getCityID())
+						{
+							m_Players.at(index)->addCard(m_Players.at(pos)->rmCard(i));
+							return;
+						}
+					}
+				}
+			}
+		}
+		break;
 	case CUREDISEASE:
+		cc = DetermineCureColor(pos);
+		if (cc != Color::INVALID)
+		{
+			m_Board.m_Cures.CureDiscover(cc);
+			for (size_t i = 0; i < m_Players.at(pos)->m_hand.size(); i += 1)
+			{
+				if(PlayerCardFactory::IsaCityCard(m_Players.at(pos)->m_hand.at(i)->getNumID()))
+					if (static_cast<CityCard*>(m_Players.at(pos)->m_hand.at(i))->getCityColor() == cc)
+						m_Board.m_PlayerDeck.DiscardCard(m_Players.at(pos)->rmCard(i));
+			}
+		}
+		break;
 	default:
 		break;
 	}
-	//switch(m_Players.at(pos)->GetRoleID())
 }
 
 void GameEngine::SaveGame()

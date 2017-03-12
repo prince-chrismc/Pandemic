@@ -57,7 +57,7 @@ public:
 	Role(const Role&) = delete;
 	void operator=(const Role&) = delete;
 
-	//virtual const uint8_t getHandLimit() { return 7; }
+	//virtual const uint16_t getHandLimit() { return 7; }
 	const char* getName() { return m_name.c_str(); }
 };
 
@@ -83,7 +83,7 @@ public:
 
 	//Manipulate Hand
 	void addCard(PlayerCard* card) { m_hand.emplace_back(card); }
-	PlayerCard* rmCard(uint8_t pos);
+	PlayerCard* rmCard(uint16_t pos);
 
 	//Get/Set City
 	std::hexadecimal getCityHexID() { return m_role.m_pawn.m_CityID; }

@@ -29,7 +29,7 @@ public:
 	Board() : m_Map(), m_InfectRate(), m_OutBreak(), m_Cubes(), m_InfecDeck(), m_PlayerDeck(), m_RoleDeck(), m_Cures(), m_Centers()  {}
 	~Board() {}
 
-	void InfectCity(const uint8_t& cubesToAdd = 1); // Draw infection card and infect city with X cubes of its color
+	void InfectCity(const uint16_t& cubesToAdd = 1); // Draw infection card and infect city with X cubes of its color
 	void AddResearchCenter(const CityList::CityID& id) { m_Centers.AddStation(m_Map.getCityWithID(id)); }
 	void Outbreak(City* city); //add one cube of that city's color to all connected cities
 	void Epidemic(); //Increase, Infect, Intensify

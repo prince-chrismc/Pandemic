@@ -15,7 +15,7 @@ Player::~Player()
 	m_hand.clear();
 }
 
-PlayerCard* Player::rmCard(uint8_t pos)
+PlayerCard* Player::rmCard(uint16_t pos)
 {
 	PlayerCard* pc = m_hand.at(pos); 
 	m_hand.erase(m_hand.begin() + pos); 

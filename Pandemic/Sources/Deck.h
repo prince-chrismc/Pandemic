@@ -11,8 +11,8 @@
 class Deck abstract //Primative Definition
 {
 protected:
-	const uint8_t m_size;
-	Deck(const uint8_t& size) : m_size(size) {}
+	const uint16_t m_size;
+	Deck(const uint16_t& size) : m_size(size) {}
 };
 
 class InfectionDeck final : public Deck //InfectionCard Factory
