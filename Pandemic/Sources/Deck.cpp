@@ -117,8 +117,14 @@ std::string InfectionDeck::GetSaveOutput()
 	return result;
 }
 
+void InfectionDeck::InputLoadedGame(std::deque<InfectionCard::CardsList> deck, std::deque<InfectionCard::CardsList> discard)
+{
+	m_deck = deck;
+	m_discard = discard;
+}
+
 // Player Deck ------------------------------------------------------------------------------------
-PlayerDeck::PlayerDeck() : Deck(57), m_difficulty(EASY)
+PlayerDeck::PlayerDeck() : Deck(53), m_difficulty(DIF_INVALID)
 {
 	m_deck.emplace_back((PlayerCard::CardsList)CityCard::ALGIERS);
 	m_deck.emplace_back((PlayerCard::CardsList)CityCard::ATLANTA);
@@ -245,6 +251,12 @@ std::string PlayerDeck::GetSaveOutput()
 	return result;
 }
 
+void PlayerDeck::InputLoadedGame(std::deque<PlayerCard::CardsList> deck, std::deque<PlayerCard::CardsList> discard)
+{
+	m_deck = deck;
+	m_discard = discard;
+}
+
 // Role Deck --------------------------------------------------------------------------------------
 RoleDeck::RoleDeck() : Deck(7)
 {
@@ -286,4 +298,9 @@ std::string RoleDeck::GetSaveOutput()
 	}
 
 	return result;
+}
+
+void RoleDeck::InputLoadedGame(std::deque<RoleCard::Roles> deck)
+{
+	m_deck = deck;
 }

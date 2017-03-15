@@ -32,6 +32,7 @@ public:
 	InfectionCard* DrawCardForEpidemic();
 	void Intensify();
 	std::string GetSaveOutput();  //FilePrint
+	void InputLoadedGame(std::deque<InfectionCard::CardsList> deck, std::deque<InfectionCard::CardsList> discard);
 };
 
 class PlayerDeck final : public Deck, private PlayerCardFactory //PlayerCards Factory
@@ -52,6 +53,7 @@ public:
 	void DiscardCard(PlayerCard* pc);
 	void IncreaseDifficulty(const Difficulty& dif);
 	std::string GetSaveOutput();  //FilePrint
+	void InputLoadedGame(std::deque<PlayerCard::CardsList> deck, std::deque<PlayerCard::CardsList> discard);
 };
 
 class RoleDeck final : public Deck //RoleCard Factory
@@ -68,4 +70,5 @@ public:
 
 	RoleCard* DrawCard();
 	std::string GetSaveOutput();  //FilePrint
+	void InputLoadedGame(std::deque<RoleCard::Roles> deck);
 };

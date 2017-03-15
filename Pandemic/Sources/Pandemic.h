@@ -10,7 +10,8 @@
 
 enum Difficulty //Game Setting
 {
-	EASY = 1,
+	DIF_INVALID,
+	EASY,
 	MEDIUM,
 	HARD
 };
