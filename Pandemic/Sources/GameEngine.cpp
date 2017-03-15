@@ -5,11 +5,10 @@
 #include <ctime> //time
 #include "boost\filesystem.hpp" //dir
 #include "GameEngine.h"
+namespace bfs = boost::filesystem;
 
 GameEngine::~GameEngine()
 {
-	m_PreGameComplete.unlock();
-
 	for (size_t pos = 0; pos < m_Players.size(); pos += 1)
 	{
 		if (m_Players.at(pos) != nullptr)
@@ -33,8 +32,11 @@ std::string GameEngine::MakeFileName()
 	if (now->tm_mday < 10) filename += "0";
 	filename += std::to_string(now->tm_mday);
 	filename += "-";
+	if (now->tm_hour < 10) filename += "0";
 	filename += std::to_string(now->tm_hour);
+	if (now->tm_min < 10) filename += "0";
 	filename += std::to_string(now->tm_min);
+	if (now->tm_sec < 10) filename += "0";
 	filename += std::to_string(now->tm_sec);
 	filename += ".txt";
 
@@ -152,7 +154,7 @@ void GameEngine::TurnActionsPhase(const uint16_t & pos)
 			std::stringstream ss(input);
 			ss >> selection;
 
-			if (selection < 1 || selection >= moves.size())
+			if (selection < 1 || selection > moves.size())
 			{
 				std::cout << "Invalid option. Please Try again..." << std::endl;
 			}
@@ -616,6 +618,12 @@ void GameEngine::ExecuteMove(const uint16_t pos, const MoveOptions & opt, const 
 
 void GameEngine::SaveGame()
 {
+	if (!m_PreGameComplete)
+	{
+		std::cout << "Game Not Initialized" << std::endl;
+		return;
+	}
+
 	// Get Timestamp ------------------------------------------------------------------------------
 	std::string filename = MakeFileName();
 
@@ -644,16 +652,13 @@ void GameEngine::SaveGame()
 	for each (Player* play in m_Players)
 	{
 		myfile << play->GetSaveOutput();
-		myfile << " / ";
+		myfile << "/ ";
 	}
+	myfile << "\n";
 
 	// Cures --------------------------------------------------------------------------------------
 	myfile << m_Board.m_Cures.GetSaveOutput();
 	myfile << "\n";
-
-	// Cubes ---------------------------- Is done by adding them to cities -----------------------
-	//myfile << m_cubepiles.PrintCubesLeft();
-	//myfile << "\n";
 
 	// Infection Rate -----------------------------------------------------------------------------
 	myfile << m_Board.m_InfectRate.GetSaveOutput();
@@ -668,7 +673,353 @@ void GameEngine::SaveGame()
 
 void GameEngine::LoadGame()
 {
-	/* TODO: Implement */
+	if (m_PreGameComplete)
+	{
+		std::cout << "WARNING: Game has already started..." << std::endl;
+		SaveGame();
+		std::cout << "AutoSave Completed" << std::endl;
+	}
+
+	int i = 0;
+	std::map<int, bfs::directory_entry> files;
+	bfs::path p("bin");
+	if (bfs::exists(p)) // does p exist
+	{
+		if (bfs::is_directory(p)) // is p a directory?
+		{
+			std::cout << "Your Load Options are:\n";
+			for (bfs::directory_iterator itor(p); itor != bfs::directory_iterator(); itor++) // for all items in dir
+			{
+				if (bfs::is_regular_file(itor->path())) //if item is a regular file
+				{
+					std::cout << i << ": " << itor->path().filename() << std::endl; // print option
+					files.emplace(std::make_pair(i++, *itor)); // save options
+				}
+			}
+		}
+		else
+		{
+			std::cout << p << " exists, but is neither a regular file nor a directory\n";
+			return;
+		}
+	}
+	else
+	{
+		std::cout << p << " does not exist\n";
+		return;
+	}
+
+	int selection = -1;
+	do
+	{
+		std::cout << "Selection: ";
+		std::string input;
+		std::getline(std::cin, input); // get usesrs choice
+		std::stringstream ss(input);
+		ss >> selection;
+	} while (selection < 0 || selection >= i);
+
+	bfs::ifstream load;
+	load.open(files.at(selection).path()); // open correct file
+
+	char* buffer = new char[512];
+	load.getline(buffer, 512); // to remove title line that is saved
+	delete[] buffer;
+	buffer = nullptr;
+
+	// Infection Cards ----------------------------------------------------------------------------
+	{
+		buffer = new char[512];
+		load.getline(buffer, 512); // get saved output
+		std::string infec(buffer);
+		delete[] buffer;
+		buffer = nullptr;
+
+		size_t sep = infec.find("/"); // split save output
+		std::string infecdeck = infec.substr(0, sep); // by deck
+		std::string infecdiscard = infec.substr(sep + 2); // and discard
+
+		std::deque<InfectionCard::CardsList> deckLoaded;
+		for (int i = 0; i < 48; i += 1)
+		{
+			size_t space = infecdeck.find(" ");
+			if (space == std::string::npos) break;
+			std::stringstream ss(infecdeck.substr(0, space));
+			infecdeck = infecdeck.substr(space + 1);
+			uint64_t num = 0;
+			ss >> std::hex >> num;
+			deckLoaded.emplace_back((InfectionCard::CardsList)num);
+		}
+
+		std::deque<InfectionCard::CardsList> discardLoaded;
+		for (int i = 0; i < 48; i += 1)
+		{
+			size_t space = infecdiscard.find(" ");
+			if (space == std::string::npos) break;
+			std::stringstream ss(infecdiscard.substr(0, space));
+			infecdiscard = infecdiscard.substr(space + 1);
+			uint64_t num = 0;
+			ss >> std::hex >> num;
+			discardLoaded.emplace_back((InfectionCard::CardsList)num);
+		}
+
+		m_Board.m_InfecDeck.InputLoadedGame(deckLoaded, discardLoaded);
+	}
+
+	// Player Cards -------------------------------------------------------------------------------
+	{
+		buffer = new char[512];
+		load.getline(buffer, 512); // get saved output
+		std::string play(buffer);
+		delete[] buffer;
+		buffer = nullptr;
+
+		size_t sep = play.find("/"); // split save output
+		std::string playdeck = play.substr(0, sep); // by deck
+		std::string playdiscard = play.substr(sep + 2); // and discard
+
+		std::deque<PlayerCard::CardsList> deckLoaded;
+		for (int i = 0; i < 59; i += 1)
+		{
+			size_t space = playdeck.find(" ");
+			if (space == std::string::npos) break;
+			std::stringstream ss(playdeck.substr(0, space));
+			playdeck = playdeck.substr(space + 1);
+			uint64_t num = 0;
+			ss >> std::hex >> num;
+			deckLoaded.emplace_back((PlayerCard::CardsList)num);
+		}
+
+		std::deque<PlayerCard::CardsList> discardLoaded;
+		for (int i = 0; i < 59; i += 1)
+		{
+			size_t space = playdiscard.find(" ");
+			if (space == std::string::npos) break;
+			std::stringstream ss(playdiscard.substr(0, space));
+			playdiscard = playdiscard.substr(space + 1);
+			uint64_t num = 0;
+			ss >> std::hex >> num;
+			discardLoaded.emplace_back((PlayerCard::CardsList)num);
+		}
+
+		m_Board.m_PlayerDeck.InputLoadedGame(deckLoaded, discardLoaded);
+	}
+	
+	// Role Cards ---------------------------------------------------------------------------------
+	{
+		buffer = new char[512];
+		load.getline(buffer, 512); // get saved output
+		std::string role(buffer);
+		delete[] buffer;
+		buffer = nullptr;
+
+		std::deque<RoleCard::Roles> deckLoaded;
+		for (int i = 0; i < 7; i += 1)
+		{
+			size_t space = role.find(" ");
+			if (space == std::string::npos) break;
+			std::stringstream ss(role.substr(0, space));
+			role = role.substr(space + 1);
+			uint64_t num = 0;
+			ss >> std::hex >> num;
+			deckLoaded.emplace_back((RoleCard::Roles)num);
+		}
+
+		m_Board.m_RoleDeck.InputLoadedGame(deckLoaded);
+	}
+
+	// Cities -------------------------------------------------------------------------------------
+	{
+		buffer = new char[512];
+		load.getline(buffer, 512); // get saved output
+		std::string cities(buffer);
+		delete[] buffer;
+		buffer = nullptr;
+
+		for each(City* city in m_Board.m_Map.getAllCities())
+		{
+			size_t sep = cities.find("/");
+			if (sep == 0)
+			{
+				cities = cities.substr(sep + 2);
+				continue;
+			}
+			std::string cubecolors = cities.substr(0, sep);
+			cities = cities.substr(sep + 2);
+			for each(char c in cubecolors)
+			{
+				switch (c)
+				{
+				case '0':
+					city->addCube(m_Board.m_Cubes.takeCube(RED));
+					break;
+				case '1':
+					city->addCube(m_Board.m_Cubes.takeCube(BLUE));
+					break;
+				case '2':
+					city->addCube(m_Board.m_Cubes.takeCube(YELLOW));
+					break;
+				case '3':
+					city->addCube(m_Board.m_Cubes.takeCube(BLACK));
+					break;
+				default:
+					break;
+				}
+			}
+			
+		}
+		
+	}
+
+	// Players ------------------------------------------------------------------------------------
+	{
+		buffer = new char[512];
+		load.getline(buffer, 512); // get saved output
+		std::string players(buffer);
+		delete[] buffer;
+		buffer = nullptr;
+		
+		std::vector<Player*> gamers;
+		for (int i = 0; i < 4; i += 1)
+		{
+			size_t slash = players.find("/");
+			if (slash == std::string::npos) break;
+			players = players.substr(slash + 2);
+			std::string play = players.substr(0, slash - 1);
+
+			size_t space = play.find(" ");
+			if (space == std::string::npos) break;
+			std::string name = play.substr(0, space); // get players name
+			play = play.substr(space + 1);
+
+			space = play.find(" ");
+			std::string id = play.substr(0, space); // get players role id
+			play = play.substr(space + 1);
+			std::stringstream ss(id);
+			uint64_t roleid;
+			ss >> std::hex >> roleid;
+			Player* joeur = new Player(name, new RoleCard((RoleList::Roles)roleid));
+
+			for (int j = 0; j < 7; j += 1)
+			{
+				ss.clear();
+				space = play.find(" ");
+				ss << play.substr(0, space); // get card id
+				play = play.substr(space + 1);
+				uint64_t cardnum;
+				ss >> std::hex >> cardnum;
+				joeur->addCard(PlayerCardFactory::makeCard(cardnum));
+			}
+
+			gamers.emplace_back(joeur);
+		}
+		m_Players = gamers;
+	}
+
+	// Cures --------------------------------------------------------------------------------------
+	{
+		buffer = new char[512];
+		load.getline(buffer, 512); // get saved output
+		std::string rate(buffer);
+		delete[] buffer;
+		buffer = nullptr;
+
+		uint16_t red, blue, yellow, black;
+		std::stringstream ss;
+		ss << rate.at(0);
+		ss >> red;
+		ss.clear();
+		ss << rate.at(1);
+		ss >> blue;
+		ss.clear();
+		ss << rate.at(2);
+		ss >> yellow;
+		ss.clear();
+		ss << rate.at(3);
+		ss >> black;
+
+		m_Board.m_Cures.InputLoadedGame(red, blue, yellow, black);
+	}
+	
+	// Infection Rate -----------------------------------------------------------------------------
+	{
+		buffer = new char[512];
+		load.getline(buffer, 512); // get saved output
+		std::string rate(buffer);
+		delete[] buffer;
+		buffer = nullptr;
+
+		switch (rate.at(0))
+		{
+		case '0':
+			m_Board.m_InfectRate.InputLoadedGame(0);
+			break;
+		case '1':
+			m_Board.m_InfectRate.InputLoadedGame(1);
+			break;
+		case '2':
+			m_Board.m_InfectRate.InputLoadedGame(2);
+			break;
+		case '3':
+			m_Board.m_InfectRate.InputLoadedGame(3);
+			break;
+		case '4':
+			m_Board.m_InfectRate.InputLoadedGame(4);
+			break;
+		case '5':
+			m_Board.m_InfectRate.InputLoadedGame(5);
+			break;
+		case '6':
+			m_Board.m_InfectRate.InputLoadedGame(6);
+			break;
+		default:
+			m_Board.m_InfectRate.InputLoadedGame(0);
+			break;
+		}
+	}
+
+	// Outbreak Marker ----------------------------------------------------------------------------
+	{
+		buffer = new char[512];
+		load.getline(buffer, 512); // get saved output
+		std::string marker(buffer);
+		delete[] buffer;
+		buffer = nullptr;
+
+		switch (marker.at(0))
+		{
+		case '0':
+			m_Board.m_OutBreak.InputLoadedGame(0);
+			break;
+		case '1':
+			m_Board.m_OutBreak.InputLoadedGame(1);
+			break;
+		case '2':
+			m_Board.m_OutBreak.InputLoadedGame(2);
+			break;
+		case '3':
+			m_Board.m_OutBreak.InputLoadedGame(3);
+			break;
+		case '4':
+			m_Board.m_OutBreak.InputLoadedGame(4);
+			break;
+		case '5':
+			m_Board.m_OutBreak.InputLoadedGame(5);
+			break;
+		case '6':
+			m_Board.m_OutBreak.InputLoadedGame(6);
+			break;
+		case '7':
+			m_Board.m_OutBreak.InputLoadedGame(7);
+			break;
+		case '8':
+			m_Board.m_OutBreak.InputLoadedGame(8);
+			break;
+		default:
+			m_Board.m_OutBreak.InputLoadedGame(0);
+			break;
+		}
+	}
 }
 
 void GameEngine::Initialize()
@@ -677,18 +1028,19 @@ void GameEngine::Initialize()
 	DifficultySetup();
 	BoardSetup();
 
-	m_PreGameComplete.unlock();
+	m_PreGameComplete = true;
 }
 
 void GameEngine::Launch()
 {
-	/* TODO: Implement */
-	if (!m_PreGameComplete.try_lock())
+	if (!m_PreGameComplete)
 	{
 		std::cout << "Game Not Initialized" << std::endl; 
 		return;
 	}
 
+	/* TODO: Implement */
 	TurnSequence(0);
+	TurnSequence(1);
 
 }

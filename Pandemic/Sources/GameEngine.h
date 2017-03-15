@@ -15,7 +15,7 @@ class GameEngine final
 private:
 	Board m_Board;
 	std::vector<Player*> m_Players;
-	std::mutex m_PreGameComplete;
+	bool m_PreGameComplete;
 
 protected:
 	std::string MakeFileName(); // used in save
@@ -63,7 +63,7 @@ protected:
 	void ExecuteMove(const uint16_t pos, const MoveOptions& opt, const CityList::CityID& cityID);
 
 public:
-	GameEngine() : m_Board(), m_Players(), m_PreGameComplete() { m_PreGameComplete.lock(); }
+	GameEngine() : m_Board(), m_Players(), m_PreGameComplete(false) {}
 	~GameEngine();
 	
 	void SaveGame();
