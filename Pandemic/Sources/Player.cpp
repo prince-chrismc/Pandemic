@@ -100,7 +100,7 @@ std::string Player::GetSaveOutput()
 	for each (PlayerCard* pc in m_hand)
 	{
 		std::stringstream ss;
-		ss << std::hex << pc;
+		ss << std::hex << pc->getNumID();
 		result += ss.str() + " ";
 	}
 
