@@ -51,6 +51,7 @@ public:
 
 class PlayerCardFactory abstract //Generates the various player cards with various support functions
 {
+	friend class GameEngine;
 protected:
 	static PlayerCard* makeCard(const uint64_t& id);
 
