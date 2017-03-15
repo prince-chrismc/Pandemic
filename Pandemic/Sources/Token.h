@@ -25,6 +25,7 @@ public:
 	bool IsCured() { return (m_state == KNOWN); }
 	bool IsNotEradicated() { return (m_state != ERADICATED); }
 	std::string GetState() { return std::to_string(m_state); } //FilePrint
+	void SetState(const uint16_t& state) { m_state = (State)state; }
 };
 
 class RedCure final : public Cure { public: RedCure() : Cure(RED) {} };
@@ -52,6 +53,7 @@ public:
 	bool IsCured(const Color& color);
 	bool IsNotEradicated(const Color& color);
 	std::string GetSaveOutput() { return (m_red.GetState() + m_blue.GetState() + m_yellow.GetState() + m_black.GetState()); } //FilePrint
+	void InputLoadedGame(const uint16_t& red, const uint16_t& blue, const uint16_t& yellow, const uint16_t& black) { m_red.SetState(red); m_blue.SetState(blue); m_yellow.SetState(yellow); m_black.SetState(black); }
 };
 
 // Cubes ------------------------------------------------------------------------------------------
@@ -226,6 +228,7 @@ public:
 	uint16_t getRate() { return m_array[m_position]; }
 	void IncreaseRate() { m_position += 1; }
 	std::string GetSaveOutput() { return std::to_string(m_position); }
+	void InputLoadedGame(const uint16_t& position) { m_position = position; }
 };
 
 class OutbreakMarker final
@@ -244,4 +247,5 @@ public:
 	uint16_t getMarker() { return m_array[m_position]; }
 	void IncreaseRate() { m_position += 1; }
 	std::string GetSaveOutput() { return std::to_string(m_position); }
+	void InputLoadedGame(const uint16_t& position) { m_position = position; }
 };
