@@ -94,6 +94,8 @@ void InfectionDeck::Intensify()
 	{
 		m_deck.emplace_front(id);
 	}
+
+	m_discard.clear();
 }
 
 std::string InfectionDeck::GetSaveOutput()
