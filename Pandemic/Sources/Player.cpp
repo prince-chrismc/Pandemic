@@ -22,6 +22,22 @@ PlayerCard* Player::rmCard(uint16_t pos)
 	return pc;
 }
 
+PlayerCard* Player::rmCard(CityList::CityID id)
+{
+	uint16_t counter = 0;
+	for each(PlayerCard* pc in m_hand)
+	{
+		if (PlayerCardFactory::IsaCityCard(pc->getNumID()))
+		{
+			if ((pc->getNumID() - CityCard::CITYCARD_MIN) == id)
+			{
+				return rmCard(counter);
+			}
+		}
+		++counter;
+	}
+}
+
 CityList::CityID Player::getCityID()
 {
 	std::stringstream ss;

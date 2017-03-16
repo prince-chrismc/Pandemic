@@ -49,6 +49,7 @@ public:
 	PlayerDeck(const PlayerDeck&) = delete;
 	void operator=(const PlayerDeck&) = delete;
 
+	bool IsDeckEmpty() { return (m_deck.size() == 0); }
 	PlayerCard* DrawCard();
 	void DiscardCard(PlayerCard* pc);
 	void IncreaseDifficulty(const Difficulty& dif);

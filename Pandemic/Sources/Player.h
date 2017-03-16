@@ -84,6 +84,7 @@ public:
 	//Manipulate Hand
 	void addCard(PlayerCard* card) { m_hand.emplace_back(card); }
 	PlayerCard* rmCard(uint16_t pos);
+	PlayerCard* rmCard(CityList::CityID id);
 
 	//Get/Set City
 	std::hexadecimal getCityHexID() { return m_role.m_pawn.m_CityID; }

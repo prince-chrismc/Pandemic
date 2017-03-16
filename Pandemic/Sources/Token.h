@@ -52,6 +52,7 @@ public:
 	void EradicateDisease(const Color& color);
 	bool IsCured(const Color& color);
 	bool IsNotEradicated(const Color& color);
+	bool IsEradicated(const Color& color) { return !IsNotEradicated(color); }
 	std::string GetSaveOutput() { return (m_red.GetState() + m_blue.GetState() + m_yellow.GetState() + m_black.GetState()); } //FilePrint
 	void InputLoadedGame(const uint16_t& red, const uint16_t& blue, const uint16_t& yellow, const uint16_t& black) { m_red.SetState(red); m_blue.SetState(blue); m_yellow.SetState(yellow); m_black.SetState(black); }
 };
@@ -159,6 +160,8 @@ public:
 
 	uint16_t GetNumberOfCubes() { return (uint16_t)m_DiseasCubes.size(); }
 	void addCube(DiseaseCube* cube) { m_DiseasCubes.emplace_back(cube); }
+	void RemoveCube() { m_DiseasCubes.erase(m_DiseasCubes.begin(), m_DiseasCubes.begin() + 1); }
+	void RemoveAllCubes() { m_DiseasCubes.clear(); }
 
 	Color getCityColor();
 	bool IsRedCity() { return (m_cityID > RED_MIN) && (m_cityID < RED_MAX); }
@@ -177,7 +180,7 @@ public:
 };
 
 // Research Centers -------------------------------------------------------------------------------
-class ResearchCenter final /* TODO: Develop object */
+class ResearchCenter final
 {
 private:
 	City* m_city;
