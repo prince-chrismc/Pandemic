@@ -7,8 +7,11 @@
 #pragma once
 #include <mutex>
 #include <map>
+#include <exception>
 #include "Board.h"
 #include "Player.h"
+
+class GameOverException final : std::exception {};
 
 class GameEngine final
 {
@@ -46,10 +49,15 @@ protected:
 		MAX = 0xFFFUL
 	};
 	typedef std::multimap<MoveOptions, City::CityID> MovesPerCity;
-	typedef std::map<int, std::pair<const MoveOptions, CityList::CityID>> PlayerMoves;
+	typedef std::map<uint16_t, std::pair<const MoveOptions, CityList::CityID>> PlayerMoves;
 
 	void TurnSequence(const uint16_t & pos);
 	void TurnActionsPhase(const uint16_t& pos);
+	void TurnDrawPhase(const uint16_t& pos);
+	void TurnInfectPhase();
+	void InfectCity(const uint16_t& cubesToAdd = 1);
+	void Outbreak(City* city);
+	void Epidemic();
 	MovesPerCity CalculatePlayerOpt(const uint16_t& pos);
 	std::vector<CityList::CityID> GetDriveCitiesFor(const uint16_t pos);
 	std::vector<CityList::CityID> GetFlightCitiesFor(const uint16_t pos);
@@ -61,6 +69,9 @@ protected:
 	PlayerMoves DeterminePlayerMoves(const MovesPerCity& options);
 	static std::string MoveOpToString(const MoveOptions& opt);
 	void ExecuteMove(const uint16_t pos, const MoveOptions& opt, const CityList::CityID& cityID);
+	void AddResearchCenter(const CityList::CityID& id);
+	void CheckIfGameOver();
+
 
 public:
 	GameEngine() : m_Board(), m_Players(), m_PreGameComplete(false) {}
@@ -71,9 +82,5 @@ public:
 
 	void Initialize();
 	void Launch();
-
-	// Temp fuction for game play
-	Player* GetPlayer(const uint16_t pos) { return m_Players.at(pos); }
-
 };
 
