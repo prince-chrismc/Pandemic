@@ -51,7 +51,7 @@ protected:
 	typedef std::multimap<MoveOptions, City::CityID> MovesPerCity;
 	typedef std::map<uint16_t, std::pair<const MoveOptions, CityList::CityID>> PlayerMoves;
 
-	void TurnSequence(const uint16_t & pos);
+	void TurnSequence(const uint16_t& pos);
 	void TurnActionsPhase(const uint16_t& pos);
 	void TurnDrawPhase(const uint16_t& pos);
 	void TurnInfectPhase();
@@ -59,16 +59,16 @@ protected:
 	void Outbreak(City* city);
 	void Epidemic();
 	MovesPerCity CalculatePlayerOpt(const uint16_t& pos);
-	std::vector<CityList::CityID> GetDriveCitiesFor(const uint16_t pos);
-	std::vector<CityList::CityID> GetFlightCitiesFor(const uint16_t pos);
-	std::vector<CityList::CityID> GetCharterFlightsFor(const uint16_t pos);
-	std::vector<CityList::CityID> GetShuttleFlightsFor(const uint16_t pos);
-	std::vector<CityList::CityID> ShareKnowlegdeFor(const uint16_t pos);
-	std::vector<CityList::CityID> DiscoverCure(const uint16_t pos);
-	Color DetermineCureColor(const uint16_t pos);
+	std::vector<CityList::CityID> GetDriveCitiesFor(const uint16_t& pos);
+	std::vector<CityList::CityID> GetFlightCitiesFor(const uint16_t& pos);
+	std::vector<CityList::CityID> GetCharterFlightsFor(const uint16_t& pos);
+	std::vector<CityList::CityID> GetShuttleFlightsFor(const uint16_t& pos);
+	std::vector<CityList::CityID> ShareKnowlegdeFor(const uint16_t& pos);
+	std::vector<CityList::CityID> DiscoverCure(const uint16_t& pos);
+	Color DetermineCureColor(const uint16_t& pos);
 	PlayerMoves DeterminePlayerMoves(const MovesPerCity& options);
 	static std::string MoveOpToString(const MoveOptions& opt);
-	void ExecuteMove(const uint16_t pos, const MoveOptions& opt, const CityList::CityID& cityID);
+	void ExecuteMove(const uint16_t& pos, const MoveOptions& opt, const CityList::CityID& cityID);
 	void AddResearchCenter(const CityList::CityID& id);
 	void CheckIfGameOver();
 
@@ -76,7 +76,7 @@ protected:
 public:
 	GameEngine() : m_Board(), m_Players(), m_PreGameComplete(false) {}
 	~GameEngine();
-	
+
 	void SaveGame();
 	void LoadGame();
 

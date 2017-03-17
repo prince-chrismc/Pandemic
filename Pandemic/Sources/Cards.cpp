@@ -3,32 +3,31 @@
 #include <sstream> //std::stringstream
 #include "Cards.h"
 
-uint64_t Card::getNumID()
+uint64_t Card::GetNumID()
 {
 	std::stringstream ss;
-	ss << m_id;
+	ss << m_ID;
 	uint64_t num = 0;
 	ss >> std::hex >> num;
 	return num;
 }
 
-Card::Card(const uint64_t & id, const char* name, const char* desc) : m_name(name), m_description(desc)
+Card::Card(const uint64_t& id, const char* name, const char* desc) : m_Name(name), m_Description(desc)
 {
 	std::stringstream ss;
 	ss << std::hex << id;
-	m_id = ss.str();
+	m_ID = ss.str();
 }
 
 void Card::PrintInformation()
 {
-	printf("ID: %s \t Name: %s \t Desc: %s\n", m_id.c_str(), m_name.c_str(), m_description.c_str());
+	printf("ID: %s \t Name: %s \t Desc: %s\n", m_ID.c_str(), m_Name.c_str(), m_Description.c_str());
 }
 
 // In here lies very bad OOP but all definitions are public so for convience this is an easy out
-const char* Card::getCardName(const uint64_t id)
+const char* Card::GetCardName(const uint64_t& id)
 {
 	const char* name = "";
-		
 	switch (id)
 	{
 	case Card::CARD_INVALID:
@@ -123,7 +122,7 @@ const char* Card::getCardName(const uint64_t id)
 	case EpidemicCard::EPIDEMICCARDONE:
 	case EpidemicCard::EPIDEMICCARDTWO:
 	case EpidemicCard::EPIDEMICCARDTHREE:
-	case EpidemicCard::EPIDEMICCARDFOUR: 
+	case EpidemicCard::EPIDEMICCARDFOUR:
 		name = "Epidemic Card"; break;
 
 	case RoleCard::CONTIGENCY: name = "Contingency Planner"; break;
@@ -187,20 +186,77 @@ const char* Card::getCardName(const uint64_t id)
 	return name;
 }
 
-Color CityCard::getCityColor()
+const char* CityCard::GetCardDesc(const uint64_t & id)
 {
-	uint64_t id = getNumID();
-	if (IsRedCity(id)) return RED;
-	else if (IsYellowCity(id)) return YELLOW;
-	else if (IsBlueCity(id)) return BLUE;
-	else if (IsBlackCity(id)) return BLACK;
+	std::string desc = "The city of ";
+	switch (id)
+	{
+	case CityCard::ALGIERS: desc += "Algiers"; break;
+	case CityCard::ATLANTA: desc += "Atlanta"; break;
+	case CityCard::BAGHDAD: desc += "Baghdad"; break;
+	case CityCard::BANGKOK: desc += "Bangkok"; break;
+	case CityCard::BEIJING: desc += "Beijing"; break;
+	case CityCard::BOGOTA: desc += "Bogota"; break;
+	case CityCard::BUENOSAIRES: desc += "Buenos Aires"; break;
+	case CityCard::CAIRO: desc += "Cairo"; break;
+	case CityCard::CHENNAI: desc += "Chennai"; break;
+	case CityCard::CHICAGO: desc += "Chicago"; break;
+	case CityCard::DELHI: desc += "Delhi"; break;
+	case CityCard::ESSEN: desc += "Essen"; break;
+	case CityCard::HOCHIMINH: desc += "Ho Chi Minh City"; break;
+	case CityCard::HONGKONG: desc += "Hong Kong"; break;
+	case CityCard::ISTANBUL: desc += "Istanbul"; break;
+	case CityCard::JAKARTA: desc += "Jakarta"; break;
+	case CityCard::JOHANNESBURG: desc += "Johannesburg"; break;
+	case CityCard::KARACHI: desc += "Karachi"; break;
+	case CityCard::KHARTOUM: desc += "Khartoum"; break;
+	case CityCard::KINSHASA: desc += "Kinshasa"; break;
+	case CityCard::KOLKATA: desc += "Kolkata"; break;
+	case CityCard::LAGOS: desc += "Lagos"; break;
+	case CityCard::LIMA: desc += "Lima"; break;
+	case CityCard::LONDON: desc += "London"; break;
+	case CityCard::LOSANGELES: desc += "Los Angeles"; break;
+	case CityCard::MADRID: desc += "Madrid"; break;
+	case CityCard::MANILA: desc += "Manila"; break;
+	case CityCard::MEXICO: desc += "Mexico City"; break;
+	case CityCard::MIAMI: desc += "Miami"; break;
+	case CityCard::MILAN: desc += "Milan"; break;
+	case CityCard::MONTREAL: desc += "Montreal"; break;
+	case CityCard::MOSCOW: desc += "Moscow"; break;
+	case CityCard::MUMBAI: desc += "Mumbai"; break;
+	case CityCard::NEWYORK: desc += "NewYork"; break;
+	case CityCard::OSAKA: desc += "Osaka"; break;
+	case CityCard::PARIS: desc += "Paris"; break;
+	case CityCard::RIYADH: desc += "Riyadh"; break;
+	case CityCard::SANFRAN: desc += "San Francisco"; break;
+	case CityCard::SANTIAGO: desc += "Santiago"; break;
+	case CityCard::SAOPAULO: desc += "Sao Paulo"; break;
+	case CityCard::SEOUL: desc += "Seoul"; break;
+	case CityCard::SHANGHAI: desc += "Shanghai"; break;
+	case CityCard::STPETER: desc += "St Petersburg"; break;
+	case CityCard::SYDNEY: desc += "Sydney"; break;
+	case CityCard::TAIPEI: desc += "Taipei"; break;
+	case CityCard::TEHRAN: desc += "Tehran"; break;
+	case CityCard::TOKYO: desc += "Tokyo"; break;
+	case CityCard::WASHINGTON: desc += "Washington"; break;
+	}
+	return desc.c_str();
+}
+
+Color CityCard::GetCityColor()
+{
+	uint64_t id = GetNumID();
+	if (IsaRedCity(id)) return RED;
+	else if (IsaYellowCity(id)) return YELLOW;
+	else if (IsaBlueCity(id)) return BLUE;
+	else if (IsaBlackCity(id)) return BLACK;
 	else return INVALID;
 }
 
-const char* EventCard::getCardDesc(const uint64_t& id)
+const char* EventCard::GetCardDesc(const uint64_t& id)
 {
 	const char* desc = "";
-	switch(id)
+	switch (id)
 	{
 	case EventCard::RESILLIENT: desc = "Remove a discarded infection card"; break;
 	case EventCard::AIRLIFT: desc = "Move any pawn to any city; ask permission if neccessary"; break;
@@ -211,7 +267,7 @@ const char* EventCard::getCardDesc(const uint64_t& id)
 	return desc;
 }
 
-const char* EpidemicCard::getCardDesc(const uint64_t& id)
+const char* EpidemicCard::GetCardDesc(const uint64_t& id)
 {
 	const char* desc = "";
 	switch (id)
@@ -219,12 +275,15 @@ const char* EpidemicCard::getCardDesc(const uint64_t& id)
 	case EpidemicCard::EPIDEMICCARDONE:
 	case EpidemicCard::EPIDEMICCARDTWO:
 	case EpidemicCard::EPIDEMICCARDTHREE:
-	case EpidemicCard::EPIDEMICCARDFOUR: desc = "A. Increase infection rate -- B. Infect last card of infection deck with 3 cubes -- C. Suffle discarded infection cards and readded to the top of the deck"; break;
+	case EpidemicCard::EPIDEMICCARDFOUR:
+	case EpidemicCard::EPIDEMICCARDFIVE:
+	case EpidemicCard::EPIDEMICCARDSIX:
+		desc = "A. Increase infection rate -- B. Infect last card of infection deck with 3 cubes -- C. Suffle discarded infection cards and readded to the top of the deck"; break;
 	}
 	return desc;
 }
 
-const char* RoleCard::getCardDesc(const uint64_t & id)
+const char* RoleCard::GetCardDesc(const uint64_t & id)
 {
 	const char* desc = "";
 	switch (id)
@@ -240,27 +299,79 @@ const char* RoleCard::getCardDesc(const uint64_t & id)
 	return desc;
 }
 
-const char* ReferenceCard::getCardDesc()
+const char* ReferenceCard::GetCardDesc()
 {
 	return "\n\n --Movement Actions --\n  Drive / Ferry: Move to a city connected by a white line to the one you are in.\n Direct Flight: Discard a City card to move to the city named on the card.\n Charter Flight: Discard the City card that matches the city you are in to move to any city.\n Shuttle Flight:	Move from a city with a research station to any other city that has a research station.\n\n -- Player Actions --\n Build a Research Station: Discard the City card that matches the city you are in to place a research station there.Take the research station from the pile next to the board.If all 6 research stations have been built, take a research station from anywhere on the board.\n Treat Disease: Remove 1 disease cube from the city you are in, placing it in the cube supply next to the board.If this disease color has been cured(see Discover a Cure below), remove all cubes of that color from the city you are in. NOTE: If the last cube of a cured disease is removed from the board, this disease	is eradicated.Flip its cure marker from its “vial” side to its 'ERADICATED' side.\n Share Knowledge: You can do this action in two ways A. give the City card that matches the city you are in to another player, or B. take the City card that matches the city you are in from another player. The other player must also be in the city with you. Both of you need to agree to do this. If the player who gets the card now has more than 7 cards, that player must immediately discard a card or play an Event card\n Discover a Cure: At any research station, discard 5 City cards of the same color from your hand to cure the disease of that color. Move the disease’s cure marker to its Cure Indicator. If no cubes of this color are on the board, this disease is now eradicated. Flip its cure marker from its “vial” side to its 'ERADICATED' side.\n";
 }
 
-const char* InfectionCard::getCardDesc(const uint64_t & id)
+const char* InfectionCard::GetCardDesc(const uint64_t & id)
 {
-	return getCardName(id);
+	std::string desc = "Infect the city of ";
+	switch (id)
+	{
+	case InfectionCard::ALGIERS: desc += "Algiers"; break;
+	case InfectionCard::ATLANTA: desc += "Atlanta"; break;
+	case InfectionCard::BAGHDAD: desc += "Baghdad"; break;
+	case InfectionCard::BANGKOK: desc += "Bangkok"; break;
+	case InfectionCard::BEIJING: desc += "Beijing"; break;
+	case InfectionCard::BOGOTA: desc += "Bogota"; break;
+	case InfectionCard::BUENOSAIRES: desc += "Buenos Aires"; break;
+	case InfectionCard::CAIRO: desc += "Cairo"; break;
+	case InfectionCard::CHENNAI: desc += "Chennai"; break;
+	case InfectionCard::CHICAGO: desc += "Chicago"; break;
+	case InfectionCard::DELHI: desc += "Delhi"; break;
+	case InfectionCard::ESSEN: desc += "Essen"; break;
+	case InfectionCard::HOCHIMINH: desc += "Ho Chi Minh City"; break;
+	case InfectionCard::HONGKONG: desc += "Hong Kong"; break;
+	case InfectionCard::ISTANBUL: desc += "Istanbul"; break;
+	case InfectionCard::JAKARTA: desc += "Jakarta"; break;
+	case InfectionCard::JOHANNESBURG: desc += "Johannesburg"; break;
+	case InfectionCard::KARACHI: desc += "Karachi"; break;
+	case InfectionCard::KHARTOUM: desc += "Khartoum"; break;
+	case InfectionCard::KINSHASA: desc += "Kinshasa"; break;
+	case InfectionCard::KOLKATA: desc += "Kolkata"; break;
+	case InfectionCard::LAGOS: desc += "Lagos"; break;
+	case InfectionCard::LIMA: desc += "Lima"; break;
+	case InfectionCard::LONDON: desc += "London"; break;
+	case InfectionCard::LOSANGELES: desc += "Los Angeles"; break;
+	case InfectionCard::MADRID: desc += "Madrid"; break;
+	case InfectionCard::MANILA: desc += "Manila"; break;
+	case InfectionCard::MEXICO: desc += "Mexico City"; break;
+	case InfectionCard::MIAMI: desc += "Miami"; break;
+	case InfectionCard::MILAN: desc += "Milan"; break;
+	case InfectionCard::MONTREAL: desc += "Montreal"; break;
+	case InfectionCard::MOSCOW: desc += "Moscow"; break;
+	case InfectionCard::MUMBAI: desc += "Mumbai"; break;
+	case InfectionCard::NEWYORK: desc += "NewYork"; break;
+	case InfectionCard::OSAKA: desc += "Osaka"; break;
+	case InfectionCard::PARIS: desc += "Paris"; break;
+	case InfectionCard::RIYADH: desc += "Riyadh"; break;
+	case InfectionCard::SANFRAN: desc += "San Francisco"; break;
+	case InfectionCard::SANTIAGO: desc += "Santiago"; break;
+	case InfectionCard::SAOPAULO: desc += "Sao Paulo"; break;
+	case InfectionCard::SEOUL: desc += "Seoul"; break;
+	case InfectionCard::SHANGHAI: desc += "Shanghai"; break;
+	case InfectionCard::STPETER: desc += "St Petersburg"; break;
+	case InfectionCard::SYDNEY: desc += "Sydney"; break;
+	case InfectionCard::TAIPEI: desc += "Taipei"; break;
+	case InfectionCard::TEHRAN: desc += "Tehran"; break;
+	case InfectionCard::TOKYO: desc += "Tokyo"; break;
+	case InfectionCard::WASHINGTON: desc += "Washington"; break;
+	}
+	return desc.c_str();
 }
 
-Color InfectionCard::getCityColor()
+Color InfectionCard::GetCityColor()
 {
-	uint64_t id = getNumID();
-	if (IsRedCity(id)) return RED;
-	else if (IsYellowCity(id)) return YELLOW;
-	else if (IsBlueCity(id)) return BLUE;
-	else if (IsBlackCity(id)) return BLACK;
+	uint64_t id = GetNumID();
+	if (IsaRedCity(id)) return RED;
+	else if (IsaYellowCity(id)) return YELLOW;
+	else if (IsaBlueCity(id)) return BLUE;
+	else if (IsaBlackCity(id)) return BLACK;
 	else return INVALID;
 }
 
-PlayerCard* PlayerCardFactory::makeCard(const uint64_t & id)
+PlayerCard* PlayerCardFactory::MakeCard(const uint64_t& id)
 {
 	if (IsaCityCard(id))
 		return new CityCard((CityCard::CardsList)id);
@@ -272,17 +383,17 @@ PlayerCard* PlayerCardFactory::makeCard(const uint64_t & id)
 		return nullptr;
 }
 
-bool PlayerCardFactory::IsaCityCard(const uint64_t & id)
+bool PlayerCardFactory::IsaCityCard(const uint64_t& id)
 {
 	return (id > CityCard::CITYCARD_MIN) && (id < CityCard::CITYCARD_MAX);
 }
 
-bool PlayerCardFactory::IsaEventCard(const uint64_t & id)
+bool PlayerCardFactory::IsaEventCard(const uint64_t& id)
 {
 	return (id > EventCard::EVENTCARD_MIN) && (id < EventCard::EVENTCARD_MAX);
 }
 
-bool PlayerCardFactory::IsaEpidemicCard(const uint64_t & id)
+bool PlayerCardFactory::IsaEpidemicCard(const uint64_t& id)
 {
 	return (id > EpidemicCard::EPIDEMICCARD_MIN) && (id < EpidemicCard::EPIDEMICCARD_MAX);
 }

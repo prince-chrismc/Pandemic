@@ -13,9 +13,9 @@ namespace std { typedef string hexadecimal; } //hex value (stored as a string) d
 class Card abstract //Basic Object hold primary definition
 {
 private:
-	std::hexadecimal m_id;
-	std::string m_name;
-	std::string m_description;
+	std::hexadecimal m_ID;
+	std::string m_Name;
+	std::string m_Description;
 
 protected:
 	Card(const uint64_t& id, const char* name, const char* desc);
@@ -28,8 +28,8 @@ public:
 		CARD_MAX = 0xFFFFFFFUL      //Invalid
 	};
 
-	static const char* getCardName(const uint64_t id);
-	uint64_t getNumID();
+	static const char* GetCardName(const uint64_t& id);
+	uint64_t GetNumID();
 	void PrintInformation();
 };
 
@@ -53,7 +53,7 @@ class PlayerCardFactory abstract //Generates the various player cards with vario
 {
 	friend class GameEngine;
 protected:
-	static PlayerCard* makeCard(const uint64_t& id);
+	static PlayerCard* MakeCard(const uint64_t& id);
 
 public:
 	static bool IsaCityCard(const uint64_t& id);
@@ -65,10 +65,11 @@ public:
 class CityCard final : public PlayerCard, private CityList //One of three player card types
 {
 private:
-	bool IsRedCity(const uint64_t& id) { return (id > RED_MIN) && (id < RED_MAX); }
-	bool IsYellowCity(const uint64_t& id) { return (id > YELLOW_MIN) && (id < YELLOW_MAX); }
-	bool IsBlueCity(const uint64_t& id) { return (id > BLUE_MIN) && (id < BLUE_MAX); }
-	bool IsBlackCity(const uint64_t& id) { return (id > BLACK_MIN) && (id < BLACK_MAX); }
+	static bool IsaRedCity(const uint64_t& id) { return (id > RED_MIN) && (id < RED_MAX); }
+	static bool IsaYellowCity(const uint64_t& id) { return (id > YELLOW_MIN) && (id < YELLOW_MAX); }
+	static bool IsaBlueCity(const uint64_t& id) { return (id > BLUE_MIN) && (id < BLUE_MAX); }
+	static bool IsaBlackCity(const uint64_t& id) { return (id > BLACK_MIN) && (id < BLACK_MAX); }
+	static const char* GetCardDesc(const uint64_t& id);
 
 public:
 	//Prevent Copy/Assignment
@@ -140,9 +141,9 @@ public:
 		CITYCARD_MAX = 0x24FFFFFUL,   //"Invalid"
 	};
 
-	CityCard(const CardsList& id) : PlayerCard(id, getCardName(id), getCardName(id)) {}
-	
-	Color getCityColor();
+	CityCard(const CardsList& id) : PlayerCard(id, GetCardName(id), GetCardName(id)) {}
+
+	Color GetCityColor();
 
 };
 
@@ -150,7 +151,7 @@ public:
 class EventCard final : public PlayerCard //Two of three player card types
 {
 private:
-	static const char* getCardDesc(const uint64_t & id);
+	static const char* GetCardDesc(const uint64_t& id);
 
 public:
 	//Prevent Copy/Assignment
@@ -171,14 +172,14 @@ public:
 		EVENTCARD_MAX = 0x28FFFFFUL,  //"Invalid"
 	};
 
-	EventCard(const CardsList& id) : PlayerCard(id, getCardName(id), getCardDesc(id)) {}
+	EventCard(const CardsList& id) : PlayerCard(id, GetCardName(id), GetCardDesc(id)) {}
 };
 
 
 class EpidemicCard final : public PlayerCard //Three of three player card types
 {
 private:
-	static const char * getCardDesc(const uint64_t & id);
+	static const char* GetCardDesc(const uint64_t& id);
 
 public:
 	//Prevent Copy/Assignment
@@ -198,28 +199,28 @@ public:
 		EPIDEMICCARD_MAX = 0x2BFFFFFUL,  //"Invalid"
 	};
 
-	EpidemicCard(const CardsList& id) : PlayerCard(id, getCardName(id), getCardDesc(id)) {}
+	EpidemicCard(const CardsList& id) : PlayerCard(id, GetCardName(id), GetCardDesc(id)) {}
 };
 
 
 class RoleCard final : public Card, public RoleList //Two of three basic card types
 {
 private:
-	static const char* getCardDesc(const uint64_t& id);
+	static const char* GetCardDesc(const uint64_t& id);
 
 public:
 	//Prevent Copy/Assignment
 	RoleCard(const RoleCard&) = delete;
 	void operator=(const RoleCard&) = delete;
 
-	RoleCard(const Roles& id) : Card(id, getCardName(id), getCardDesc(id)) {}
+	RoleCard(const Roles& id) : Card(id, GetCardName(id), GetCardDesc(id)) {}
 };
 
 
 class ReferenceCard final : public Card //The card explaining the base actions
 {
 private:
-	static const char* getCardDesc();
+	static const char* GetCardDesc();
 
 public:
 	//Prevent Copy/Assignment
@@ -234,21 +235,21 @@ public:
 		REFERENCECARD_MAX = 0xAFFFFFFUL, //"Invalid"
 	};
 
-	ReferenceCard() : Card(REFERENCECARD, "Reference Card", getCardDesc()) {}
+	ReferenceCard() : Card(REFERENCECARD, "Reference Card", GetCardDesc()) {}
 };
 
 
 class InfectionCard final : public Card, private CityList //Three of three basic card types
 {
 private:
-	CityID m_cityID;
-	Color m_color;
+	CityID m_CityID;
+	Color m_Color;
 
-	static const char* getCardDesc(const uint64_t& id); /* TODO: needs proper description */
-	static bool IsRedCity(const uint64_t& id) { return (id > RED_MIN) && (id < RED_MAX); }
-	static bool IsYellowCity(const uint64_t& id) { return (id > YELLOW_MIN) && (id < YELLOW_MAX); }
-	static bool IsBlueCity(const uint64_t& id) { return (id > BLUE_MIN) && (id < BLUE_MAX); }
-	static bool IsBlackCity(const uint64_t& id) { return (id > BLACK_MIN) && (id < BLACK_MAX); }
+	static const char* GetCardDesc(const uint64_t& id); /* TODO: needs proper description */
+	static bool IsaRedCity(const uint64_t& id) { return (id > RED_MIN) && (id < RED_MAX); }
+	static bool IsaYellowCity(const uint64_t& id) { return (id > YELLOW_MIN) && (id < YELLOW_MAX); }
+	static bool IsaBlueCity(const uint64_t& id) { return (id > BLUE_MIN) && (id < BLUE_MAX); }
+	static bool IsaBlackCity(const uint64_t& id) { return (id > BLACK_MIN) && (id < BLACK_MAX); }
 
 public:
 	//Prevent Copy/Assignment
@@ -318,7 +319,7 @@ public:
 		INFECTIONCARD_MAX = 0xCFFFFFFUL, //"Invalid"
 	};
 
-	InfectionCard(const CardsList& id) : Card(id, getCardName(id), getCardDesc(id)), m_color(getCityColor()), m_cityID((CityID)(id - INFECTIONCARD_MIN)) {}
+	InfectionCard(const CardsList& id) : Card(id, GetCardName(id), GetCardDesc(id)), m_Color(GetCityColor()), m_CityID((CityID)(id - INFECTIONCARD_MIN)) {}
 
-	Color getCityColor();
+	Color GetCityColor();
 };

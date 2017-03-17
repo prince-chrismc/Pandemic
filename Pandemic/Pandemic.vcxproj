@@ -86,13 +86,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Sources\Board.cpp" />
     <ClCompile Include="Sources\GameEngine.cpp" />
     <ClCompile Include="Pandemic.cpp" />
     <ClCompile Include="Sources\Cards.cpp" />
     <ClCompile Include="Sources\Deck.cpp" />
     <ClCompile Include="Sources\Player.cpp" />
-    <ClCompile Include="Sources\Token.cpp" />
+    <ClCompile Include="Sources\Tokens.cpp" />
     <ClCompile Include="Sources\WorldMap.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -100,7 +99,7 @@
     <ClInclude Include="Sources\GameEngine.h" />
     <ClInclude Include="Sources\Cards.h" />
     <ClInclude Include="Sources\Deck.h" />
-    <ClInclude Include="Sources\Token.h" />
+    <ClInclude Include="Sources\Tokens.h" />
     <ClInclude Include="Sources\Pandemic.h" />
     <ClInclude Include="Sources\Player.h" />
     <ClInclude Include="Sources\WorldMap.h" />

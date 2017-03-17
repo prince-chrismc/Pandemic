@@ -11,15 +11,15 @@
 class Deck abstract //Primative Definition
 {
 protected:
-	const uint16_t m_size;
-	Deck(const uint16_t& size) : m_size(size) {}
+	const uint16_t m_Size;
+	Deck(const uint16_t& size) : m_Size(size) {}
 };
 
 class InfectionDeck final : public Deck //InfectionCard Factory
 {
 private:
-	std::deque<InfectionCard::CardsList> m_deck;
-	std::deque<InfectionCard::CardsList> m_discard;
+	std::deque<InfectionCard::CardsList> m_Deck;
+	std::deque<InfectionCard::CardsList> m_Discard;
 
 public:
 	InfectionDeck();
@@ -38,9 +38,9 @@ public:
 class PlayerDeck final : public Deck, private PlayerCardFactory //PlayerCards Factory
 {
 private:
-	std::deque<PlayerCard::CardsList> m_deck;
-	std::deque<PlayerCard::CardsList> m_discard;
-	Difficulty m_difficulty;
+	std::deque<PlayerCard::CardsList> m_Deck;
+	std::deque<PlayerCard::CardsList> m_Discard;
+	Difficulty::DIFFICULTY m_Difficulty;
 
 public:
 	PlayerDeck();
@@ -49,10 +49,10 @@ public:
 	PlayerDeck(const PlayerDeck&) = delete;
 	void operator=(const PlayerDeck&) = delete;
 
-	bool IsDeckEmpty() { return (m_deck.size() == 0); }
+	bool IsDeckEmpty() { return (m_Deck.size() == 0); }
 	PlayerCard* DrawCard();
 	void DiscardCard(PlayerCard* pc);
-	void IncreaseDifficulty(const Difficulty& dif);
+	void IncreaseDifficulty(const Difficulty::DIFFICULTY& dif);
 	std::string GetSaveOutput();  //FilePrint
 	void InputLoadedGame(std::deque<PlayerCard::CardsList> deck, std::deque<PlayerCard::CardsList> discard);
 };
@@ -60,7 +60,7 @@ public:
 class RoleDeck final : public Deck //RoleCard Factory
 {
 private:
-	std::deque<RoleCard::Roles> m_deck;
+	std::deque<RoleCard::Roles> m_Deck;
 
 public:
 	RoleDeck();

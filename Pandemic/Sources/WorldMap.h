@@ -5,12 +5,12 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 #pragma once
-#include "Token.h"
+#include "Tokens.h"
 
 class WorldMap final //The Connected Cities
 {
 private:
-	City* m_cities[48];
+	City* m_Cities[48];
 
 public:
 	WorldMap();
@@ -20,9 +20,9 @@ public:
 	WorldMap(const WorldMap&) = delete;
 	void operator=(const WorldMap&) = delete;
 	
-	City* getCityWithID(const City::CityID& id);
-	std::vector<City*> getCitiesConnectedTo(const City::CityID& id);
-	std::vector<City*> getAllCities();
+	City* GetCityWithID(const City::CityID& id);
+	std::vector<City*> GetCitiesConnectedTo(const City::CityID& id);
+	std::vector<City*> GetAllCities();
 	void PrintCitiesStatus();
 	
 	std::string GetSaveOutput();

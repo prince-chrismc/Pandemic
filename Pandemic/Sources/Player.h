@@ -5,13 +5,14 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 #pragma once
+#include <vector>
 #include "Pandemic.h"
 #include "Cards.h"
 
 class Pawn final //Object on board to represent player
 {
 	friend class Player;
-public:
+private:
 	enum PawnColor
 	{
 		CYAN = RoleList::CONTIGENCY,
@@ -23,9 +24,8 @@ public:
 		WHITE = RoleList::SCIENTIST,
 	};
 
-private:
-	std::hexadecimal m_CityID; 
-	PawnColor m_color;
+	std::hexadecimal m_CityID;
+	PawnColor m_Color;
 
 public:
 	Pawn(const uint64_t& color);
@@ -33,18 +33,16 @@ public:
 	//Prevent Copy/Assignment
 	Pawn(const Pawn&) = delete;
 	void operator=(const Pawn&) = delete;
-
-	void changeCity(const std::hexadecimal& id) { m_CityID = id; }
 };
 
 class Role //Defines Role Attributes held by a player
 {
 	friend class Player;
 private:
-	const std::string m_name;
+	const std::string m_Name;
 	std::hexadecimal m_roleID;
-	Pawn m_pawn;
-	RoleCard* m_card;
+	Pawn m_Pawn;
+	RoleCard* m_Card;
 
 protected:
 	Role(const uint64_t& id);
@@ -56,25 +54,22 @@ public:
 	//Prevent Copy/Assignment
 	Role(const Role&) = delete;
 	void operator=(const Role&) = delete;
-
-	//virtual const uint16_t getHandLimit() { return 7; }
-	const char* getName() { return m_name.c_str(); }
 };
 
 class Player final //The Almighty Player
 {
 	friend class GameEngine;
 private:
-	const std::string m_name;
-	std::vector<PlayerCard*> m_hand;
-	Role m_role;
-	ReferenceCard m_refcard;
+	const std::string m_Name;
+	std::vector<PlayerCard*> m_Hand;
+	Role m_Role;
+	ReferenceCard m_RefCard;
 
 protected:
-	bool ValidateHand() { return (m_hand.size() <= 7); }
+	bool ValidateHand() { return (m_Hand.size() <= 7); }
 
 public:
-	Player(const std::string& name, RoleCard* card) : m_name(name), m_role(card), m_refcard() {}
+	Player(const std::string& name, RoleCard* card) : m_Name(name), m_Role(card), m_RefCard() {}
 	~Player();
 
 	//Prevent Copy/Assignment
@@ -82,24 +77,22 @@ public:
 	void operator=(const Player&) = delete;
 
 	//Manipulate Hand
-	void addCard(PlayerCard* card) { m_hand.emplace_back(card); }
-	PlayerCard* rmCard(uint16_t pos);
-	PlayerCard* rmCard(CityList::CityID id);
+	void AddCard(PlayerCard* card) { m_Hand.emplace_back(card); }
+	PlayerCard* RemoveCard(const CityList::CityID& id);
+	PlayerCard* RemoveCardAt(const uint16_t& pos);
 
 	//Get/Set City
-	std::hexadecimal getCityHexID() { return m_role.m_pawn.m_CityID; }
-	CityList::CityID getCityID();
-	void ChangeCity(const std::hexadecimal& id) { m_role.m_pawn.changeCity(id); }
-	
-	//utility
-	bool hasCurrentCityCard();
-	RoleList::Roles GetRoleID() { return (RoleList::Roles)m_role.m_card->getNumID(); }
-	int GetNumOfCardToDiscoverCure();
+	CityList::CityID GetCityID();
+	void ChangeCity(const std::hexadecimal& id) { m_Role.m_Pawn.m_CityID = id; }
 
-	void printName();
-	void printInfo();
-	void printHand();
-	void printRefCard();
+	//utility
+	bool HasCurrentCityCard();
+	RoleList::Roles GetRoleID() { return (RoleList::Roles)m_Role.m_Card->GetNumID(); }
+	uint16_t GetNumOfCardToDiscoverCure();
+
+	void PrintInfo();
+	void PrintHand();
+	void PrintRefCard();
 
 	std::string GetSaveOutput();  //FilePrint
 };

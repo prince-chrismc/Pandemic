@@ -18,13 +18,13 @@ int main()
 	GameEngine Game; //New Game Board
 	Game.Initialize();
 	Game.Launch();
-	
+
 	//Game.SaveGame();
 	//Game.LoadGame();
 
 	std::cout << "\n\nDemontration finished press 'enter' key to exit...";
 	std::cin.get();
-    return 0;
+	return 0;
 }
 
 void PrintOpening()

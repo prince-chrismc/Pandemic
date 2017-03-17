@@ -5,27 +5,30 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 #pragma once
+#include <string>
+#include <vector>
 #include "Pandemic.h"
 
 // Cure -------------------------------------------------------------------------------------------
 class Cure abstract
 {
-protected:
+private:
 	enum State { UNDISCOVERED, KNOWN, ERADICATED };
 
-private:
-	Color m_color;
-	State m_state;
+	Color m_Color;
+	State m_State;
 
 public:
-	Cure(const Color& color) : m_color(color), m_state(UNDISCOVERED) {}
+	Cure(const Color& color) : m_Color(color), m_State(UNDISCOVERED) {}
 
-	void CureDiscover() { m_state = KNOWN; }
-	void EradicateDisease() { m_state = ERADICATED; }
-	bool IsCured() { return (m_state == KNOWN); }
-	bool IsNotEradicated() { return (m_state != ERADICATED); }
-	std::string GetState() { return std::to_string(m_state); } //FilePrint
-	void SetState(const uint16_t& state) { m_state = (State)state; }
+	// Mutator/Accessor
+	std::string GetState() { return std::to_string(m_State); }
+	void SetState(const uint16_t& state) { m_State = (State)state; }
+
+	void CureDiscover() { m_State = KNOWN; }
+	void EradicateDisease() { m_State = ERADICATED; }
+	bool IsCured() { return (m_State == KNOWN); }
+	bool IsNotEradicated() { return (m_State != ERADICATED); }
 };
 
 class RedCure final : public Cure { public: RedCure() : Cure(RED) {} };
@@ -36,13 +39,13 @@ class BlackCure final : public Cure { public: BlackCure() : Cure(BLACK) {} };
 class CureMakers final
 {
 private:
-	RedCure m_red;
-	YellowCure m_yellow;
-	BlueCure m_blue;
-	BlackCure m_black;
+	RedCure m_Red;
+	YellowCure m_Yellow;
+	BlueCure m_Blue;
+	BlackCure m_Black;
 
 public:
-	CureMakers() : m_red(), m_yellow(), m_blue(), m_black() {}
+	CureMakers() : m_Red(), m_Yellow(), m_Blue(), m_Black() {}
 
 	//Prevent Copy/Assignment
 	CureMakers(const CureMakers&) = delete;
@@ -53,19 +56,19 @@ public:
 	bool IsCured(const Color& color);
 	bool IsNotEradicated(const Color& color);
 	bool IsEradicated(const Color& color) { return !IsNotEradicated(color); }
-	std::string GetSaveOutput() { return (m_red.GetState() + m_blue.GetState() + m_yellow.GetState() + m_black.GetState()); } //FilePrint
-	void InputLoadedGame(const uint16_t& red, const uint16_t& blue, const uint16_t& yellow, const uint16_t& black) { m_red.SetState(red); m_blue.SetState(blue); m_yellow.SetState(yellow); m_black.SetState(black); }
+	std::string GetSaveOutput() { return (m_Red.GetState() + m_Blue.GetState() + m_Yellow.GetState() + m_Black.GetState()); } //FilePrint
+	void InputLoadedGame(const uint16_t& red, const uint16_t& blue, const uint16_t& yellow, const uint16_t& black) { m_Red.SetState(red); m_Blue.SetState(blue); m_Yellow.SetState(yellow); m_Black.SetState(black); }
 };
 
 // Cubes ------------------------------------------------------------------------------------------
 class DiseaseCube abstract
 {
 private:
-	Color m_color;
+	Color m_Color;
 
 public:
-	DiseaseCube(const Color& color) : m_color(color) {}
-	Color getColor() { return m_color; }
+	DiseaseCube(const Color& color) : m_Color(color) {}
+	Color GetColor() { return m_Color; }
 };
 
 class RedDiseaseCube final : public DiseaseCube { public: RedDiseaseCube() : DiseaseCube(RED) {} };
@@ -76,51 +79,52 @@ class BlackDiseaseCube final : public DiseaseCube { public: BlackDiseaseCube() :
 class CubePile abstract
 {
 protected:
-	uint16_t m_cubes;
+	uint16_t m_CubesLeft;
 
 public:
-	CubePile() : m_cubes(24) {}
+	CubePile() : m_CubesLeft(24) {}
 
-	uint16_t cubesLeft() { return m_cubes; }
-	bool isEmpty() { return (m_cubes == 0); }
-	virtual DiseaseCube* takeCube() = 0;
-	void placeCube(DiseaseCube* dc) { delete dc; m_cubes += 1; }
-}; 
+	uint16_t CubesLeft() { return m_CubesLeft; }
+	bool IsEmpty() { return (m_CubesLeft == 0); }
+	virtual DiseaseCube* TakeCube() = 0;
+	void PlaceCube(DiseaseCube* dc) { delete dc; m_CubesLeft += 1; }
+};
 
-class RedDiseaseCubePile final : public CubePile 
-{ 
-public: 
+class RedDiseaseCubePile final : public CubePile
+{
+public:
 	RedDiseaseCubePile() {}
-	DiseaseCube* takeCube() { m_cubes -= 1; return new RedDiseaseCube(); }
+	DiseaseCube* TakeCube() { m_CubesLeft -= 1; return new RedDiseaseCube(); }
 };
 
-class YellowDiseaseCubePile final : public CubePile 
+class YellowDiseaseCubePile final : public CubePile
 {
-public: 
+public:
 	YellowDiseaseCubePile() {}
-	DiseaseCube* takeCube() { m_cubes -= 1; return new YellowDiseaseCube(); }
+	DiseaseCube* TakeCube() { m_CubesLeft -= 1; return new YellowDiseaseCube(); }
 };
 
-class BlueDiseaseCubePile final : public CubePile 
+class BlueDiseaseCubePile final : public CubePile
 {
-public: 
+public:
 	BlueDiseaseCubePile() {}
-	DiseaseCube* takeCube() { m_cubes -= 1; return new BlueDiseaseCube(); }
+	DiseaseCube* TakeCube() { m_CubesLeft -= 1; return new BlueDiseaseCube(); }
 };
 
-class BlackDiseaseCubePile final : public CubePile 
-{ public: 
+class BlackDiseaseCubePile final : public CubePile
+{
+public:
 	BlackDiseaseCubePile() {}
-	DiseaseCube* takeCube() { m_cubes -= 1; return new BlackDiseaseCube(); }
+	DiseaseCube* TakeCube() { m_CubesLeft -= 1; return new BlackDiseaseCube(); }
 };
 
 class DiseaseCubePile final
 {
 private:
-	RedDiseaseCubePile m_red;
-	YellowDiseaseCubePile m_yellow;
-	BlueDiseaseCubePile m_blue;
-	BlackDiseaseCubePile m_black;
+	RedDiseaseCubePile m_Red;
+	YellowDiseaseCubePile m_Yellow;
+	BlueDiseaseCubePile m_Blue;
+	BlackDiseaseCubePile m_Black;
 
 public:
 	DiseaseCubePile() {}
@@ -129,51 +133,50 @@ public:
 	DiseaseCubePile(const DiseaseCubePile&) = delete;
 	void operator=(const DiseaseCubePile&) = delete;
 
-	bool isAnyEmpty();
-	DiseaseCube* takeCube(const Color& color);
-	void placeCube(DiseaseCube* dc);
-	//std::string PrintCubesLeft() { return std::to_string(m_red.cubesLeft()) + " " + std::to_string(m_yellow.cubesLeft()) + " " + std::to_string(m_blue.cubesLeft()) + " " + std::to_string(m_black.cubesLeft()); }
+	bool IsAnyEmpty();
+	DiseaseCube* TakeCube(const Color& color);
+	void PlaceCube(DiseaseCube* dc);
 };
 
 // Cities -----------------------------------------------------------------------------------------
 class City final : public CityList
 {
 private:
-	CityID m_cityID;
-	Color m_color;
-	std::string m_name;
-	std::vector<City*> m_NearByCities;
-	std::vector<DiseaseCube*> m_DiseasCubes;
+	CityID m_CityID;
+	Color m_Color;
+	std::string m_Name;
+	std::vector<City*> m_NearBy;
+	std::vector<DiseaseCube*> m_Cubes;
 
 protected:
-	bool ValidateCubes() { return (m_DiseasCubes.size() <= 3); }
+	bool ValidateCubes() { return (m_Cubes.size() <= 3); }
 
 public:
-	City(const CityID& id, const char* name) : m_cityID(id), m_color(getCityColor()), m_name(name), m_NearByCities(), m_DiseasCubes() {}
+	City(const CityID& id, const char* name) : m_CityID(id), m_Color(GetCityColor()), m_Name(name), m_NearBy(), m_Cubes() {}
 	~City();
 
 	//Prevent Copy/Assignment
 	City(const City&) = delete;
 	void operator=(const City&) = delete;
 
-	void addNearByCity(City* nearby) { m_NearByCities.emplace_back(nearby); }
+	void AddNearByCity(City* nearby) { m_NearBy.emplace_back(nearby); }
 
-	uint16_t GetNumberOfCubes() { return (uint16_t)m_DiseasCubes.size(); }
-	void addCube(DiseaseCube* cube) { m_DiseasCubes.emplace_back(cube); }
-	void RemoveCube() { m_DiseasCubes.erase(m_DiseasCubes.begin(), m_DiseasCubes.begin() + 1); }
-	void RemoveAllCubes() { m_DiseasCubes.clear(); }
+	uint16_t GetNumberOfCubes() { return (uint16_t)m_Cubes.size(); }
+	void addCube(DiseaseCube* cube) { m_Cubes.emplace_back(cube); }
+	void RemoveCube() { m_Cubes.erase(m_Cubes.begin(), m_Cubes.begin() + 1); }
+	void RemoveAllCubes() { m_Cubes.clear(); }
 
-	Color getCityColor();
-	bool IsRedCity() { return (m_cityID > RED_MIN) && (m_cityID < RED_MAX); }
-	bool IsYellowCity() { return (m_cityID > YELLOW_MIN) && (m_cityID < YELLOW_MAX); }
-	bool IsBlueCity() { return (m_cityID > BLUE_MIN) && (m_cityID < BLUE_MAX); }
-	bool IsBlackCity() { return (m_cityID > BLACK_MIN) && (m_cityID < BLACK_MAX); }
+	Color GetCityColor();
+	bool IsaRedCity() { return (m_CityID > RED_MIN) && (m_CityID < RED_MAX); }
+	bool IsaYellowCity() { return (m_CityID > YELLOW_MIN) && (m_CityID < YELLOW_MAX); }
+	bool IsaBlueCity() { return (m_CityID > BLUE_MIN) && (m_CityID < BLUE_MAX); }
+	bool IsaBlackCity() { return (m_CityID > BLACK_MIN) && (m_CityID < BLACK_MAX); }
 
-	CityID getCityID() { return m_cityID; }
-	bool compareCityID(const uint64_t& id) { return (m_cityID == (CityID)id); }
-	std::vector<City*> getNearByCities() { return m_NearByCities; }
+	CityID GetCityID() { return m_CityID; }
+	bool CompareCityID(const uint64_t& id) { return (m_CityID == (CityID)id); }
+	std::vector<City*> GetNearByCities() { return m_NearBy; }
 
-	std::string GetCityName() { return m_name; }
+	std::string GetCityName() { return m_Name; }
 
 	void PrintInformation();
 	std::string GetSaveOutput(); //For FilePrint
@@ -183,35 +186,35 @@ public:
 class ResearchCenter final
 {
 private:
-	City* m_city;
+	City* m_City;
 
 public:
-	ResearchCenter(City* city) : m_city(city) {}
+	ResearchCenter(City* city) : m_City(city) {}
 
 	//Prevent Assignment
 	void operator=(const ResearchCenter&) = delete;
 
-	City::CityID GetCityID() { return m_city->getCityID(); }
+	City::CityID GetCityID() { return m_City->GetCityID(); }
 };
 
 class ResearchStations final
 {
 private:
-	std::vector<ResearchCenter> m_stations;
+	std::vector<ResearchCenter> m_Stations;
 
 protected:
-	bool validate() { return (m_stations.size() < 7); }
+	bool validate() { return (m_Stations.size() < 7); }
 
 public:
-	ResearchStations() : m_stations() {};
+	ResearchStations() : m_Stations() {};
 
 	//Prevent Copy/Assignment
 	ResearchStations(const ResearchStations&) = delete;
 	void operator=(const ResearchStations&) = delete;
 
-	uint16_t GetNumberOfCenters() { return (uint16_t)m_stations.size(); }
-	void AddStation(City* city) { if(validate()) m_stations.emplace_back(ResearchCenter(city)); }
-	std::vector<ResearchCenter> GetCenters() { return m_stations; }
+	uint16_t GetNumberOfCenters() { return (uint16_t)m_Stations.size(); }
+	void AddStation(City* city) { if (validate()) m_Stations.emplace_back(ResearchCenter(city)); }
+	std::vector<ResearchCenter> GetCenters() { return m_Stations; }
 };
 
 // Markers ----------------------------------------------------------------------------------------

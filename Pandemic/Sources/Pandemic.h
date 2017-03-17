@@ -5,16 +5,6 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 #pragma once
-#include <string>
-#include <vector>
-
-enum Difficulty //Game Setting
-{
-	DIF_INVALID,
-	EASY,
-	MEDIUM,
-	HARD
-};
 
 enum Color //Four base colors
 {
@@ -113,5 +103,17 @@ public:
 		SCIENTIST = 0x2E07F6CUL,
 
 		ROLECARD_MAX = 0x2EFFFFFUL,    //"Invalid"
+	};
+};
+
+class Difficulty
+{
+public:
+	enum DIFFICULTY //Game Setting
+	{
+		INVALID = -1,
+		EASY,
+		MEDIUM,
+		HARD
 	};
 };

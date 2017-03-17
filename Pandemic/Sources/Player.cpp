@@ -1,66 +1,90 @@
 #include <sstream> //std::stringstream
 #include "Player.h"
 
-Player::~Player()
+Pawn::Pawn(const uint64_t& color) : m_Color((PawnColor)color)
 {
-	for (size_t pos = 0; pos < m_hand.size(); pos += 1)
-	{
-		if (m_hand.at(pos) != nullptr)
-		{
-			delete m_hand.at(pos);
-			m_hand.at(pos) = nullptr;
-		}
-	}
-	m_hand.resize(0);
-	m_hand.clear();
+	std::stringstream ss;
+	ss << std::hex << CityList::ATLANTA;
+	m_CityID = ss.str();
 }
 
-PlayerCard* Player::rmCard(uint16_t pos)
+Role::Role(const uint64_t & id) : m_Name(Card::GetCardName(id)), m_Pawn(id)
 {
-	PlayerCard* pc = m_hand.at(pos); 
-	m_hand.erase(m_hand.begin() + pos); 
+	std::stringstream ss;
+	ss << std::hex << id;
+	m_roleID = ss.str();
+}
+
+Role::Role(RoleCard* card) : Role(card->GetNumID())
+{
+	m_Card = card;
+}
+
+Role::~Role()
+{
+	delete m_Card;
+}
+
+Player::~Player()
+{
+	for (size_t pos = 0; pos < m_Hand.size(); pos += 1)
+	{
+		if (m_Hand.at(pos) != nullptr)
+		{
+			delete m_Hand.at(pos);
+			m_Hand.at(pos) = nullptr;
+		}
+	}
+	m_Hand.resize(0);
+	m_Hand.clear();
+}
+
+PlayerCard* Player::RemoveCardAt(const uint16_t& pos)
+{
+	PlayerCard* pc = m_Hand.at(pos);
+	m_Hand.erase(m_Hand.begin() + pos);
 	return pc;
 }
 
-PlayerCard* Player::rmCard(CityList::CityID id)
+PlayerCard* Player::RemoveCard(const CityList::CityID& id)
 {
 	uint16_t counter = 0;
-	for each(PlayerCard* pc in m_hand)
+	for each(PlayerCard* pc in m_Hand)
 	{
-		if (PlayerCardFactory::IsaCityCard(pc->getNumID()))
+		if (PlayerCardFactory::IsaCityCard(pc->GetNumID()))
 		{
-			if ((pc->getNumID() - CityCard::CITYCARD_MIN) == id)
+			if ((pc->GetNumID() - CityCard::CITYCARD_MIN) == id)
 			{
-				return rmCard(counter);
+				return RemoveCardAt(counter);
 			}
 		}
 		++counter;
 	}
 }
 
-CityList::CityID Player::getCityID()
+CityList::CityID Player::GetCityID()
 {
 	std::stringstream ss;
-	ss << std::hex << getCityHexID();
+	ss << std::hex << m_Role.m_Pawn.m_CityID;
 	uint64_t num = 0;
 	ss >> std::hex >> num;
 
 	return (CityList::CityID)num;
 }
 
-bool Player::hasCurrentCityCard()
+bool Player::HasCurrentCityCard()
 {
-	for (size_t pos = 0; pos < m_hand.size(); pos += 1)
+	for (size_t pos = 0; pos < m_Hand.size(); pos += 1)
 	{
-		if (m_hand.at(pos)->getNumID() == (uint64_t)(getCityID() + CityCard::CITYCARD_MIN))
+		if (m_Hand.at(pos)->GetNumID() == (uint64_t)(GetCityID() + CityCard::CITYCARD_MIN))
 			return true;
 	}
 	return false;
 }
 
-int Player::GetNumOfCardToDiscoverCure()
+uint16_t Player::GetNumOfCardToDiscoverCure()
 {
-	switch (m_role.m_card->getNumID())
+	switch (m_Role.m_Card->GetNumID())
 	{
 	case RoleList::SCIENTIST:
 		return 4;
@@ -69,80 +93,50 @@ int Player::GetNumOfCardToDiscoverCure()
 	}
 }
 
-void Player::printName()
-{
-	printf("Player %s: \n", m_name.c_str());
-}
-
-
-void Player::printInfo()
+void Player::PrintInfo()
 {
 	std::stringstream ss;
-	ss << std::hex << getCityHexID();
+	ss << std::hex << m_Role.m_Pawn.m_CityID;
 	uint64_t num = 0;
 	ss >> std::hex >> num;
 
-	printf("Player %s - %s: is in %s\n", m_name.c_str(), m_role.getName(), Card::getCardName(num + CityCard::CITYCARD_MIN) );
+	printf("Player %s - %s: is in %s\n", m_Name.c_str(), m_Role.m_Name.c_str(), Card::GetCardName(num + CityCard::CITYCARD_MIN));
 }
 
-void Player::printHand()
+void Player::PrintHand()
 {
 	printf("\n");
-	printName();
-	if (m_hand.size() == 0)
+	printf("Player %s: \n", m_Name.c_str());
+	if (m_Hand.size() == 0)
 	{
 		printf(" Hand is empty\n");
 		return;
 	}
 
-	for (size_t s = 0; s < m_hand.size(); s += 1)
+	for (size_t s = 0; s < m_Hand.size(); s += 1)
 	{
 		printf("Card %d: ", (int)s);
-		m_hand.at(s)->PrintInformation();
+		m_Hand.at(s)->PrintInformation();
 	}
 }
 
-void Player::printRefCard()
+void Player::PrintRefCard()
 {
 	printf("Reference Card:\n--------------------------------------------------\n");
-	m_refcard.PrintInformation();
-	printf("--------------------------------------------------\n\n"); 
+	m_RefCard.PrintInformation();
+	printf("--------------------------------------------------\n\n");
 }
 
 std::string Player::GetSaveOutput()
 {
-	std::string result = m_name + " " + m_role.m_roleID + " ";
+	std::string result = m_Name + " " + m_Role.m_roleID + " ";
 
-	for each (PlayerCard* pc in m_hand)
+	for each (PlayerCard* pc in m_Hand)
 	{
 		std::stringstream ss;
-		ss << std::hex << pc->getNumID();
+		ss << std::hex << pc->GetNumID();
 		result += ss.str() + " ";
 	}
 
 	return result;
-}
-
-Role::Role(const uint64_t & id) : m_name(Card::getCardName(id)), m_pawn(id)
-{
-	std::stringstream ss;
-	ss << std::hex << id;
-	m_roleID = ss.str();
-}
-
-Role::Role(RoleCard* card) : Role(card->getNumID())
-{
-	m_card = card;
-}
-
-Role::~Role()
-{
-	delete m_card;
-}
-
-Pawn::Pawn(const uint64_t& color) : m_color( (PawnColor)color )
-{
-	std::stringstream ss;
-	ss << std::hex << CityList::ATLANTA;
-	m_CityID = ss.str();
 }

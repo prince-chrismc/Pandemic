@@ -5,376 +5,376 @@
 WorldMap::WorldMap()
 {
 	// Create Cities ------------------------------------------------------------------------------
-	City* Algiers = new City(City::ALGIERS, Card::getCardName(CityCard::ALGIERS));
-	City* Atlanta = new City(City::ATLANTA, Card::getCardName(CityCard::ATLANTA));
-	City* Baghdad = new City(City::BAGHDAD, Card::getCardName(CityCard::BAGHDAD));
-	City* Bangkok = new City(City::BANGKOK, Card::getCardName(CityCard::BANGKOK));
-	City* Beijing = new City(City::BEIJING, Card::getCardName(CityCard::BEIJING));
-	City* Bogota = new City(City::BOGOTA, Card::getCardName(CityCard::BOGOTA));
-	City* BuenosAires = new City(City::BUENOSAIRES, Card::getCardName(CityCard::BUENOSAIRES));
-	City* Cairo = new City(City::CAIRO, Card::getCardName(CityCard::CAIRO));
-	City* Chennai = new City(City::CHENNAI, Card::getCardName(CityCard::CHENNAI));
-	City* Chicago = new City(City::CHICAGO, Card::getCardName(CityCard::CHICAGO));
-	City* Delhi = new City(City::DELHI, Card::getCardName(CityCard::DELHI));
-	City* Essen = new City(City::ESSEN, Card::getCardName(CityCard::ESSEN));
-	City* HoChiMinhCity = new City(City::HOCHIMINH, Card::getCardName(CityCard::HOCHIMINH));
-	City* HongKong = new City(City::HONGKONG, Card::getCardName(CityCard::HONGKONG));
-	City* Istanbul = new City(City::ISTANBUL, Card::getCardName(CityCard::ISTANBUL));
-	City* Jakarta = new City(City::JAKARTA, Card::getCardName(CityCard::JAKARTA));
-	City* Johannesburg = new City(City::JOHANNESBURG, Card::getCardName(CityCard::JOHANNESBURG));
-	City* Karachi = new City(City::KARACHI, Card::getCardName(CityCard::KARACHI));
-	City* Khartoum = new City(City::KHARTOUM, Card::getCardName(CityCard::KHARTOUM));
-	City* Kinshasa = new City(City::KINSHASA, Card::getCardName(CityCard::KINSHASA));
-	City* Kolkata = new City(City::KOLKATA, Card::getCardName(CityCard::KOLKATA));
-	City* Lagos = new City(City::LAGOS, Card::getCardName(CityCard::LAGOS));
-	City* Lima = new City(City::LIMA, Card::getCardName(CityCard::LIMA));
-	City* London = new City(City::LONDON, Card::getCardName(CityCard::LONDON));
-	City* LosAngeles = new City(City::LOSANGELES, Card::getCardName(CityCard::LOSANGELES));
-	City* Madrid = new City(City::MADRID, Card::getCardName(CityCard::MADRID));
-	City* Manila = new City(City::MANILA, Card::getCardName(CityCard::MANILA));
-	City* MexicoCity = new City(City::MEXICO, Card::getCardName(CityCard::MEXICO));
-	City* Miami = new City(City::MIAMI, Card::getCardName(CityCard::MIAMI));
-	City* Milan = new City(City::MILAN, Card::getCardName(CityCard::MILAN));
-	City* Montreal = new City(City::MONTREAL, Card::getCardName(CityCard::MONTREAL));
-	City* Moscow = new City(City::MOSCOW, Card::getCardName(CityCard::MOSCOW));
-	City* Mumbai = new City(City::MUMBAI, Card::getCardName(CityCard::MUMBAI));
-	City* NewYork = new City(City::NEWYORK, Card::getCardName(CityCard::NEWYORK));
-	City* Osaka = new City(City::OSAKA, Card::getCardName(CityCard::OSAKA));
-	City* Paris = new City(City::PARIS, Card::getCardName(CityCard::PARIS));
-	City* Riyadh = new City(City::RIYADH, Card::getCardName(CityCard::RIYADH));
-	City* SanFrancisco = new City(City::SANFRAN, Card::getCardName(CityCard::SANFRAN));
-	City* Santiago = new City(City::SANTIAGO, Card::getCardName(CityCard::SANTIAGO));
-	City* SaoPaulo = new City(City::SAOPAULO, Card::getCardName(CityCard::SAOPAULO));
-	City* Seoul = new City(City::SEOUL, Card::getCardName(CityCard::SEOUL));
-	City* Shanghai = new City(City::SHANGHAI, Card::getCardName(CityCard::SHANGHAI));
-	City* StPetersburg = new City(City::STPETER, Card::getCardName(CityCard::STPETER));
-	City* Sydney = new City(City::SYDNEY, Card::getCardName(CityCard::SYDNEY));
-	City* Taipei = new City(City::TAIPEI, Card::getCardName(CityCard::TAIPEI));
-	City* Tehran = new City(City::TEHRAN, Card::getCardName(CityCard::TEHRAN));
-	City* Tokyo = new City(City::TOKYO, Card::getCardName(CityCard::TOKYO));
-	City* Washington = new City(City::WASHINGTON, Card::getCardName(CityCard::WASHINGTON));
+	City* Algiers = new City(City::ALGIERS, Card::GetCardName(CityCard::ALGIERS));
+	City* Atlanta = new City(City::ATLANTA, Card::GetCardName(CityCard::ATLANTA));
+	City* Baghdad = new City(City::BAGHDAD, Card::GetCardName(CityCard::BAGHDAD));
+	City* Bangkok = new City(City::BANGKOK, Card::GetCardName(CityCard::BANGKOK));
+	City* Beijing = new City(City::BEIJING, Card::GetCardName(CityCard::BEIJING));
+	City* Bogota = new City(City::BOGOTA, Card::GetCardName(CityCard::BOGOTA));
+	City* BuenosAires = new City(City::BUENOSAIRES, Card::GetCardName(CityCard::BUENOSAIRES));
+	City* Cairo = new City(City::CAIRO, Card::GetCardName(CityCard::CAIRO));
+	City* Chennai = new City(City::CHENNAI, Card::GetCardName(CityCard::CHENNAI));
+	City* Chicago = new City(City::CHICAGO, Card::GetCardName(CityCard::CHICAGO));
+	City* Delhi = new City(City::DELHI, Card::GetCardName(CityCard::DELHI));
+	City* Essen = new City(City::ESSEN, Card::GetCardName(CityCard::ESSEN));
+	City* HoChiMinhCity = new City(City::HOCHIMINH, Card::GetCardName(CityCard::HOCHIMINH));
+	City* HongKong = new City(City::HONGKONG, Card::GetCardName(CityCard::HONGKONG));
+	City* Istanbul = new City(City::ISTANBUL, Card::GetCardName(CityCard::ISTANBUL));
+	City* Jakarta = new City(City::JAKARTA, Card::GetCardName(CityCard::JAKARTA));
+	City* Johannesburg = new City(City::JOHANNESBURG, Card::GetCardName(CityCard::JOHANNESBURG));
+	City* Karachi = new City(City::KARACHI, Card::GetCardName(CityCard::KARACHI));
+	City* Khartoum = new City(City::KHARTOUM, Card::GetCardName(CityCard::KHARTOUM));
+	City* Kinshasa = new City(City::KINSHASA, Card::GetCardName(CityCard::KINSHASA));
+	City* Kolkata = new City(City::KOLKATA, Card::GetCardName(CityCard::KOLKATA));
+	City* Lagos = new City(City::LAGOS, Card::GetCardName(CityCard::LAGOS));
+	City* Lima = new City(City::LIMA, Card::GetCardName(CityCard::LIMA));
+	City* London = new City(City::LONDON, Card::GetCardName(CityCard::LONDON));
+	City* LosAngeles = new City(City::LOSANGELES, Card::GetCardName(CityCard::LOSANGELES));
+	City* Madrid = new City(City::MADRID, Card::GetCardName(CityCard::MADRID));
+	City* Manila = new City(City::MANILA, Card::GetCardName(CityCard::MANILA));
+	City* MexicoCity = new City(City::MEXICO, Card::GetCardName(CityCard::MEXICO));
+	City* Miami = new City(City::MIAMI, Card::GetCardName(CityCard::MIAMI));
+	City* Milan = new City(City::MILAN, Card::GetCardName(CityCard::MILAN));
+	City* Montreal = new City(City::MONTREAL, Card::GetCardName(CityCard::MONTREAL));
+	City* Moscow = new City(City::MOSCOW, Card::GetCardName(CityCard::MOSCOW));
+	City* Mumbai = new City(City::MUMBAI, Card::GetCardName(CityCard::MUMBAI));
+	City* NewYork = new City(City::NEWYORK, Card::GetCardName(CityCard::NEWYORK));
+	City* Osaka = new City(City::OSAKA, Card::GetCardName(CityCard::OSAKA));
+	City* Paris = new City(City::PARIS, Card::GetCardName(CityCard::PARIS));
+	City* Riyadh = new City(City::RIYADH, Card::GetCardName(CityCard::RIYADH));
+	City* SanFrancisco = new City(City::SANFRAN, Card::GetCardName(CityCard::SANFRAN));
+	City* Santiago = new City(City::SANTIAGO, Card::GetCardName(CityCard::SANTIAGO));
+	City* SaoPaulo = new City(City::SAOPAULO, Card::GetCardName(CityCard::SAOPAULO));
+	City* Seoul = new City(City::SEOUL, Card::GetCardName(CityCard::SEOUL));
+	City* Shanghai = new City(City::SHANGHAI, Card::GetCardName(CityCard::SHANGHAI));
+	City* StPetersburg = new City(City::STPETER, Card::GetCardName(CityCard::STPETER));
+	City* Sydney = new City(City::SYDNEY, Card::GetCardName(CityCard::SYDNEY));
+	City* Taipei = new City(City::TAIPEI, Card::GetCardName(CityCard::TAIPEI));
+	City* Tehran = new City(City::TEHRAN, Card::GetCardName(CityCard::TEHRAN));
+	City* Tokyo = new City(City::TOKYO, Card::GetCardName(CityCard::TOKYO));
+	City* Washington = new City(City::WASHINGTON, Card::GetCardName(CityCard::WASHINGTON));
 
-	Algiers->addNearByCity(Madrid);
-	Algiers->addNearByCity(Paris);
-	Algiers->addNearByCity(Istanbul);
-	Algiers->addNearByCity(Cairo);
+	Algiers->AddNearByCity(Madrid);
+	Algiers->AddNearByCity(Paris);
+	Algiers->AddNearByCity(Istanbul);
+	Algiers->AddNearByCity(Cairo);
 
-	Atlanta->addNearByCity(Chicago);
-	Atlanta->addNearByCity(Washington);
-	Atlanta->addNearByCity(Miami);
+	Atlanta->AddNearByCity(Chicago);
+	Atlanta->AddNearByCity(Washington);
+	Atlanta->AddNearByCity(Miami);
 
-	Baghdad->addNearByCity(Istanbul);
-	Baghdad->addNearByCity(Tehran);
-	Baghdad->addNearByCity(Karachi);
-	Baghdad->addNearByCity(Riyadh);
-	Baghdad->addNearByCity(Cairo);
+	Baghdad->AddNearByCity(Istanbul);
+	Baghdad->AddNearByCity(Tehran);
+	Baghdad->AddNearByCity(Karachi);
+	Baghdad->AddNearByCity(Riyadh);
+	Baghdad->AddNearByCity(Cairo);
 
-	Bangkok->addNearByCity(Kolkata);
-	Bangkok->addNearByCity(HongKong);
-	Bangkok->addNearByCity(HoChiMinhCity);
-	Bangkok->addNearByCity(Jakarta);
-	Bangkok->addNearByCity(Chennai);
+	Bangkok->AddNearByCity(Kolkata);
+	Bangkok->AddNearByCity(HongKong);
+	Bangkok->AddNearByCity(HoChiMinhCity);
+	Bangkok->AddNearByCity(Jakarta);
+	Bangkok->AddNearByCity(Chennai);
 
-	Beijing->addNearByCity(Seoul);
-	Beijing->addNearByCity(Shanghai);
+	Beijing->AddNearByCity(Seoul);
+	Beijing->AddNearByCity(Shanghai);
 
-	Bogota->addNearByCity(Miami);
-	Bogota->addNearByCity(SaoPaulo);
-	Bogota->addNearByCity(BuenosAires);
-	Bogota->addNearByCity(Lima);
-	Bogota->addNearByCity(MexicoCity);
+	Bogota->AddNearByCity(Miami);
+	Bogota->AddNearByCity(SaoPaulo);
+	Bogota->AddNearByCity(BuenosAires);
+	Bogota->AddNearByCity(Lima);
+	Bogota->AddNearByCity(MexicoCity);
 
-	BuenosAires->addNearByCity(Bogota);
-	BuenosAires->addNearByCity(SaoPaulo);
+	BuenosAires->AddNearByCity(Bogota);
+	BuenosAires->AddNearByCity(SaoPaulo);
 
-	Cairo->addNearByCity(Istanbul);
-	Cairo->addNearByCity(Baghdad);
-	Cairo->addNearByCity(Riyadh);
-	Cairo->addNearByCity(Khartoum);
-	Cairo->addNearByCity(Algiers);
+	Cairo->AddNearByCity(Istanbul);
+	Cairo->AddNearByCity(Baghdad);
+	Cairo->AddNearByCity(Riyadh);
+	Cairo->AddNearByCity(Khartoum);
+	Cairo->AddNearByCity(Algiers);
 
-	Chennai->addNearByCity(Delhi);
-	Chennai->addNearByCity(Kolkata);
-	Chennai->addNearByCity(Bangkok);
-	Chennai->addNearByCity(Jakarta);
-	Chennai->addNearByCity(Mumbai);
+	Chennai->AddNearByCity(Delhi);
+	Chennai->AddNearByCity(Kolkata);
+	Chennai->AddNearByCity(Bangkok);
+	Chennai->AddNearByCity(Jakarta);
+	Chennai->AddNearByCity(Mumbai);
 
-	Chicago->addNearByCity(Montreal);
-	Chicago->addNearByCity(Atlanta);
-	Chicago->addNearByCity(MexicoCity);
-	Chicago->addNearByCity(LosAngeles);
-	Chicago->addNearByCity(SanFrancisco);
+	Chicago->AddNearByCity(Montreal);
+	Chicago->AddNearByCity(Atlanta);
+	Chicago->AddNearByCity(MexicoCity);
+	Chicago->AddNearByCity(LosAngeles);
+	Chicago->AddNearByCity(SanFrancisco);
 
-	Delhi->addNearByCity(Kolkata);
-	Delhi->addNearByCity(Chennai);
-	Delhi->addNearByCity(Mumbai);
-	Delhi->addNearByCity(Karachi);
-	Delhi->addNearByCity(Tehran);
+	Delhi->AddNearByCity(Kolkata);
+	Delhi->AddNearByCity(Chennai);
+	Delhi->AddNearByCity(Mumbai);
+	Delhi->AddNearByCity(Karachi);
+	Delhi->AddNearByCity(Tehran);
 
-	Essen->addNearByCity(StPetersburg);
-	Essen->addNearByCity(Milan);
-	Essen->addNearByCity(Paris);
-	Essen->addNearByCity(London);
+	Essen->AddNearByCity(StPetersburg);
+	Essen->AddNearByCity(Milan);
+	Essen->AddNearByCity(Paris);
+	Essen->AddNearByCity(London);
 
-	HoChiMinhCity->addNearByCity(HongKong);
-	HoChiMinhCity->addNearByCity(Manila);
-	HoChiMinhCity->addNearByCity(Jakarta);
-	HoChiMinhCity->addNearByCity(Bangkok);
+	HoChiMinhCity->AddNearByCity(HongKong);
+	HoChiMinhCity->AddNearByCity(Manila);
+	HoChiMinhCity->AddNearByCity(Jakarta);
+	HoChiMinhCity->AddNearByCity(Bangkok);
 
-	HongKong->addNearByCity(Shanghai);
-	HongKong->addNearByCity(Taipei);
-	HongKong->addNearByCity(Manila);
-	HongKong->addNearByCity(HoChiMinhCity);
-	HongKong->addNearByCity(Bangkok);
-	HongKong->addNearByCity(Kolkata);
+	HongKong->AddNearByCity(Shanghai);
+	HongKong->AddNearByCity(Taipei);
+	HongKong->AddNearByCity(Manila);
+	HongKong->AddNearByCity(HoChiMinhCity);
+	HongKong->AddNearByCity(Bangkok);
+	HongKong->AddNearByCity(Kolkata);
 
-	Istanbul->addNearByCity(StPetersburg);
-	Istanbul->addNearByCity(Moscow);
-	Istanbul->addNearByCity(Baghdad);
-	Istanbul->addNearByCity(Cairo);
-	Istanbul->addNearByCity(Algiers);
-	Istanbul->addNearByCity(Milan);
+	Istanbul->AddNearByCity(StPetersburg);
+	Istanbul->AddNearByCity(Moscow);
+	Istanbul->AddNearByCity(Baghdad);
+	Istanbul->AddNearByCity(Cairo);
+	Istanbul->AddNearByCity(Algiers);
+	Istanbul->AddNearByCity(Milan);
 
-	Jakarta->addNearByCity(Bangkok);
-	Jakarta->addNearByCity(HoChiMinhCity);
-	Jakarta->addNearByCity(Sydney);
-	Jakarta->addNearByCity(Chennai);
+	Jakarta->AddNearByCity(Bangkok);
+	Jakarta->AddNearByCity(HoChiMinhCity);
+	Jakarta->AddNearByCity(Sydney);
+	Jakarta->AddNearByCity(Chennai);
 
-	Johannesburg->addNearByCity(Khartoum);
-	Johannesburg->addNearByCity(Kinshasa);
+	Johannesburg->AddNearByCity(Khartoum);
+	Johannesburg->AddNearByCity(Kinshasa);
 
-	Karachi->addNearByCity(Tehran);
-	Karachi->addNearByCity(Delhi);
-	Karachi->addNearByCity(Mumbai);
-	Karachi->addNearByCity(Riyadh);
-	Karachi->addNearByCity(Baghdad);
+	Karachi->AddNearByCity(Tehran);
+	Karachi->AddNearByCity(Delhi);
+	Karachi->AddNearByCity(Mumbai);
+	Karachi->AddNearByCity(Riyadh);
+	Karachi->AddNearByCity(Baghdad);
 
-	Khartoum->addNearByCity(Cairo);
-	Khartoum->addNearByCity(Johannesburg);
-	Khartoum->addNearByCity(Kinshasa);
-	Khartoum->addNearByCity(Lagos);
+	Khartoum->AddNearByCity(Cairo);
+	Khartoum->AddNearByCity(Johannesburg);
+	Khartoum->AddNearByCity(Kinshasa);
+	Khartoum->AddNearByCity(Lagos);
 
-	Kinshasa->addNearByCity(Khartoum);
-	Kinshasa->addNearByCity(Johannesburg);
-	Kinshasa->addNearByCity(Lagos);
+	Kinshasa->AddNearByCity(Khartoum);
+	Kinshasa->AddNearByCity(Johannesburg);
+	Kinshasa->AddNearByCity(Lagos);
 
-	Kolkata->addNearByCity(HongKong);
-	Kolkata->addNearByCity(Bangkok);
-	Kolkata->addNearByCity(Chennai);
-	Kolkata->addNearByCity(Delhi);
+	Kolkata->AddNearByCity(HongKong);
+	Kolkata->AddNearByCity(Bangkok);
+	Kolkata->AddNearByCity(Chennai);
+	Kolkata->AddNearByCity(Delhi);
 
-	Lagos->addNearByCity(Khartoum);
-	Lagos->addNearByCity(Kinshasa);
-	Lagos->addNearByCity(SaoPaulo);
+	Lagos->AddNearByCity(Khartoum);
+	Lagos->AddNearByCity(Kinshasa);
+	Lagos->AddNearByCity(SaoPaulo);
 
-	Lima->addNearByCity(Bogota);
-	Lima->addNearByCity(Santiago);
-	Lima->addNearByCity(MexicoCity);
+	Lima->AddNearByCity(Bogota);
+	Lima->AddNearByCity(Santiago);
+	Lima->AddNearByCity(MexicoCity);
 
-	London->addNearByCity(Essen);
-	London->addNearByCity(Paris);
-	London->addNearByCity(Madrid);
-	London->addNearByCity(NewYork);
+	London->AddNearByCity(Essen);
+	London->AddNearByCity(Paris);
+	London->AddNearByCity(Madrid);
+	London->AddNearByCity(NewYork);
 
-	LosAngeles->addNearByCity(SanFrancisco);
-	LosAngeles->addNearByCity(Chicago);
-	LosAngeles->addNearByCity(MexicoCity);
-	LosAngeles->addNearByCity(Sydney);
+	LosAngeles->AddNearByCity(SanFrancisco);
+	LosAngeles->AddNearByCity(Chicago);
+	LosAngeles->AddNearByCity(MexicoCity);
+	LosAngeles->AddNearByCity(Sydney);
 
-	Madrid->addNearByCity(London);
-	Madrid->addNearByCity(Paris);
-	Madrid->addNearByCity(Algiers);
-	Madrid->addNearByCity(SaoPaulo);
+	Madrid->AddNearByCity(London);
+	Madrid->AddNearByCity(Paris);
+	Madrid->AddNearByCity(Algiers);
+	Madrid->AddNearByCity(SaoPaulo);
 
-	Manila->addNearByCity(Taipei);
-	Manila->addNearByCity(SanFrancisco);
-	Manila->addNearByCity(Sydney);
-	Manila->addNearByCity(HoChiMinhCity);
+	Manila->AddNearByCity(Taipei);
+	Manila->AddNearByCity(SanFrancisco);
+	Manila->AddNearByCity(Sydney);
+	Manila->AddNearByCity(HoChiMinhCity);
 
-	MexicoCity->addNearByCity(Chicago);
-	MexicoCity->addNearByCity(Miami);
-	MexicoCity->addNearByCity(Bogota);
-	MexicoCity->addNearByCity(Lima);
-	MexicoCity->addNearByCity(LosAngeles);
+	MexicoCity->AddNearByCity(Chicago);
+	MexicoCity->AddNearByCity(Miami);
+	MexicoCity->AddNearByCity(Bogota);
+	MexicoCity->AddNearByCity(Lima);
+	MexicoCity->AddNearByCity(LosAngeles);
 
-	Miami->addNearByCity(Washington);
-	Miami->addNearByCity(Bogota);
-	Miami->addNearByCity(MexicoCity);
-	Miami->addNearByCity(Atlanta);
+	Miami->AddNearByCity(Washington);
+	Miami->AddNearByCity(Bogota);
+	Miami->AddNearByCity(MexicoCity);
+	Miami->AddNearByCity(Atlanta);
 
-	Milan->addNearByCity(Istanbul);
-	Milan->addNearByCity(Paris);
-	Milan->addNearByCity(Essen);
+	Milan->AddNearByCity(Istanbul);
+	Milan->AddNearByCity(Paris);
+	Milan->AddNearByCity(Essen);
 
-	Montreal->addNearByCity(NewYork);
-	Montreal->addNearByCity(Washington);
-	Montreal->addNearByCity(Chicago);
+	Montreal->AddNearByCity(NewYork);
+	Montreal->AddNearByCity(Washington);
+	Montreal->AddNearByCity(Chicago);
 
-	Moscow->addNearByCity(Tehran);
-	Moscow->addNearByCity(Istanbul);
-	Moscow->addNearByCity(StPetersburg);
+	Moscow->AddNearByCity(Tehran);
+	Moscow->AddNearByCity(Istanbul);
+	Moscow->AddNearByCity(StPetersburg);
 
-	Mumbai->addNearByCity(Karachi);
-	Mumbai->addNearByCity(Delhi);
-	Mumbai->addNearByCity(Chennai);
+	Mumbai->AddNearByCity(Karachi);
+	Mumbai->AddNearByCity(Delhi);
+	Mumbai->AddNearByCity(Chennai);
 
-	NewYork->addNearByCity(London);
-	NewYork->addNearByCity(Madrid);
-	NewYork->addNearByCity(Washington);
-	NewYork->addNearByCity(Montreal);
+	NewYork->AddNearByCity(London);
+	NewYork->AddNearByCity(Madrid);
+	NewYork->AddNearByCity(Washington);
+	NewYork->AddNearByCity(Montreal);
 
-	Osaka->addNearByCity(Tokyo);
-	Osaka->addNearByCity(Taipei);
+	Osaka->AddNearByCity(Tokyo);
+	Osaka->AddNearByCity(Taipei);
 
-	Paris->addNearByCity(Essen);
-	Paris->addNearByCity(Milan);
-	Paris->addNearByCity(Algiers);
-	Paris->addNearByCity(Madrid);
-	Paris->addNearByCity(London);
+	Paris->AddNearByCity(Essen);
+	Paris->AddNearByCity(Milan);
+	Paris->AddNearByCity(Algiers);
+	Paris->AddNearByCity(Madrid);
+	Paris->AddNearByCity(London);
 
-	Riyadh->addNearByCity(Baghdad);
-	Riyadh->addNearByCity(Karachi);
-	Riyadh->addNearByCity(Cairo);
+	Riyadh->AddNearByCity(Baghdad);
+	Riyadh->AddNearByCity(Karachi);
+	Riyadh->AddNearByCity(Cairo);
 
-	SanFrancisco->addNearByCity(Chicago);
-	SanFrancisco->addNearByCity(LosAngeles);
-	SanFrancisco->addNearByCity(Manila);
-	SanFrancisco->addNearByCity(Tokyo);
+	SanFrancisco->AddNearByCity(Chicago);
+	SanFrancisco->AddNearByCity(LosAngeles);
+	SanFrancisco->AddNearByCity(Manila);
+	SanFrancisco->AddNearByCity(Tokyo);
 
-	Santiago->addNearByCity(Lima);
+	Santiago->AddNearByCity(Lima);
 
-	SaoPaulo->addNearByCity(Madrid);
-	SaoPaulo->addNearByCity(Lagos);
-	SaoPaulo->addNearByCity(BuenosAires);
-	SaoPaulo->addNearByCity(Bogota);
+	SaoPaulo->AddNearByCity(Madrid);
+	SaoPaulo->AddNearByCity(Lagos);
+	SaoPaulo->AddNearByCity(BuenosAires);
+	SaoPaulo->AddNearByCity(Bogota);
 
-	Seoul->addNearByCity(Tokyo);
-	Seoul->addNearByCity(Shanghai);
-	Seoul->addNearByCity(Beijing);
+	Seoul->AddNearByCity(Tokyo);
+	Seoul->AddNearByCity(Shanghai);
+	Seoul->AddNearByCity(Beijing);
 
-	Shanghai->addNearByCity(Beijing);
-	Shanghai->addNearByCity(Seoul);
-	Shanghai->addNearByCity(Tokyo);
-	Shanghai->addNearByCity(Taipei);
-	Shanghai->addNearByCity(HongKong);
-	
-	StPetersburg->addNearByCity(Moscow);
-	StPetersburg->addNearByCity(Istanbul);
-	StPetersburg->addNearByCity(Essen);
+	Shanghai->AddNearByCity(Beijing);
+	Shanghai->AddNearByCity(Seoul);
+	Shanghai->AddNearByCity(Tokyo);
+	Shanghai->AddNearByCity(Taipei);
+	Shanghai->AddNearByCity(HongKong);
 
-	Sydney->addNearByCity(Manila);
-	Sydney->addNearByCity(LosAngeles);
-	Sydney->addNearByCity(Jakarta);
+	StPetersburg->AddNearByCity(Moscow);
+	StPetersburg->AddNearByCity(Istanbul);
+	StPetersburg->AddNearByCity(Essen);
 
-	Taipei->addNearByCity(Osaka);
-	Taipei->addNearByCity(Manila);
-	Taipei->addNearByCity(HongKong);
-	Taipei->addNearByCity(Shanghai);
+	Sydney->AddNearByCity(Manila);
+	Sydney->AddNearByCity(LosAngeles);
+	Sydney->AddNearByCity(Jakarta);
 
-	Tehran->addNearByCity(Delhi);
-	Tehran->addNearByCity(Karachi);
-	Tehran->addNearByCity(Baghdad);
-	Tehran->addNearByCity(Moscow);
+	Taipei->AddNearByCity(Osaka);
+	Taipei->AddNearByCity(Manila);
+	Taipei->AddNearByCity(HongKong);
+	Taipei->AddNearByCity(Shanghai);
 
-	Tokyo->addNearByCity(SanFrancisco);
-	Tokyo->addNearByCity(Osaka);
-	Tokyo->addNearByCity(Shanghai);
-	Tokyo->addNearByCity(Seoul);
+	Tehran->AddNearByCity(Delhi);
+	Tehran->AddNearByCity(Karachi);
+	Tehran->AddNearByCity(Baghdad);
+	Tehran->AddNearByCity(Moscow);
 
-	Washington->addNearByCity(NewYork);
-	Washington->addNearByCity(Miami);
-	Washington->addNearByCity(Atlanta);
-	Washington->addNearByCity(Montreal);
+	Tokyo->AddNearByCity(SanFrancisco);
+	Tokyo->AddNearByCity(Osaka);
+	Tokyo->AddNearByCity(Shanghai);
+	Tokyo->AddNearByCity(Seoul);
 
-	m_cities[0] = Algiers;
-	m_cities[1] = Atlanta;
-	m_cities[2] = Baghdad;
-	m_cities[3] = Bangkok;
-	m_cities[4] = Beijing;
-	m_cities[5] = Bogota;
-	m_cities[6] = BuenosAires;
-	m_cities[7] = Cairo;
-	m_cities[8] = Chennai;
-	m_cities[9] = Chicago;
-	m_cities[10] = Delhi;
-	m_cities[11] = Essen;
-	m_cities[12] = HoChiMinhCity;
-	m_cities[13] = HongKong;
-	m_cities[14] = Istanbul;
-	m_cities[15] = Jakarta;
-	m_cities[16] = Johannesburg;
-	m_cities[17] = Karachi;
-	m_cities[18] = Khartoum;
-	m_cities[19] = Kinshasa;
-	m_cities[20] = Kolkata;
-	m_cities[21] = Lagos;
-	m_cities[22] = Lima;
-	m_cities[23] = London;
-	m_cities[24] = LosAngeles;
-	m_cities[25] = Madrid;
-	m_cities[26] = Manila;
-	m_cities[27] = MexicoCity;
-	m_cities[28] = Miami;
-	m_cities[29] = Milan;
-	m_cities[30] = Montreal;
-	m_cities[31] = Moscow;
-	m_cities[32] = Mumbai;
-	m_cities[33] = NewYork;
-	m_cities[34] = Osaka;
-	m_cities[35] = Paris;
-	m_cities[36] = Riyadh;
-	m_cities[37] = SanFrancisco;
-	m_cities[38] = Santiago;
-	m_cities[39] = SaoPaulo;
-	m_cities[40] = Seoul;
-	m_cities[41] = Shanghai;
-	m_cities[42] = StPetersburg;
-	m_cities[43] = Sydney;
-	m_cities[44] = Taipei;
-	m_cities[45] = Tehran;
-	m_cities[46] = Tokyo;
-	m_cities[47] = Washington;
+	Washington->AddNearByCity(NewYork);
+	Washington->AddNearByCity(Miami);
+	Washington->AddNearByCity(Atlanta);
+	Washington->AddNearByCity(Montreal);
+
+	m_Cities[0] = Algiers;
+	m_Cities[1] = Atlanta;
+	m_Cities[2] = Baghdad;
+	m_Cities[3] = Bangkok;
+	m_Cities[4] = Beijing;
+	m_Cities[5] = Bogota;
+	m_Cities[6] = BuenosAires;
+	m_Cities[7] = Cairo;
+	m_Cities[8] = Chennai;
+	m_Cities[9] = Chicago;
+	m_Cities[10] = Delhi;
+	m_Cities[11] = Essen;
+	m_Cities[12] = HoChiMinhCity;
+	m_Cities[13] = HongKong;
+	m_Cities[14] = Istanbul;
+	m_Cities[15] = Jakarta;
+	m_Cities[16] = Johannesburg;
+	m_Cities[17] = Karachi;
+	m_Cities[18] = Khartoum;
+	m_Cities[19] = Kinshasa;
+	m_Cities[20] = Kolkata;
+	m_Cities[21] = Lagos;
+	m_Cities[22] = Lima;
+	m_Cities[23] = London;
+	m_Cities[24] = LosAngeles;
+	m_Cities[25] = Madrid;
+	m_Cities[26] = Manila;
+	m_Cities[27] = MexicoCity;
+	m_Cities[28] = Miami;
+	m_Cities[29] = Milan;
+	m_Cities[30] = Montreal;
+	m_Cities[31] = Moscow;
+	m_Cities[32] = Mumbai;
+	m_Cities[33] = NewYork;
+	m_Cities[34] = Osaka;
+	m_Cities[35] = Paris;
+	m_Cities[36] = Riyadh;
+	m_Cities[37] = SanFrancisco;
+	m_Cities[38] = Santiago;
+	m_Cities[39] = SaoPaulo;
+	m_Cities[40] = Seoul;
+	m_Cities[41] = Shanghai;
+	m_Cities[42] = StPetersburg;
+	m_Cities[43] = Sydney;
+	m_Cities[44] = Taipei;
+	m_Cities[45] = Tehran;
+	m_Cities[46] = Tokyo;
+	m_Cities[47] = Washington;
 }
 
 WorldMap::~WorldMap()
 {
 	for (int i = 0; i < 48; i += 1)
 	{
-		delete m_cities[i];
-		m_cities[i] = nullptr;
+		delete m_Cities[i];
+		m_Cities[i] = nullptr;
 	}
 }
 
-std::vector<City*> WorldMap::getCitiesConnectedTo(const City::CityID & id)
+std::vector<City*> WorldMap::GetCitiesConnectedTo(const City::CityID& id)
 {
 	for (int i = 0; i < 48; i += 1)
 	{
-		if (m_cities[i]->compareCityID(id))
+		if (m_Cities[i]->CompareCityID(id))
 		{
-			return m_cities[i]->getNearByCities();
+			return m_Cities[i]->GetNearByCities();
 		}
 	}
 	std::vector<City*> result;
 	return  result;
 }
 
-std::vector<City*> WorldMap::getAllCities()
+std::vector<City*> WorldMap::GetAllCities()
 {
 	std::vector<City*> all;
-	for each (City* icity in m_cities)
+	for each (City* icity in m_Cities)
 	{
 		all.emplace_back(icity);
 	}
 	return all;
 }
 
-City* WorldMap::getCityWithID(const City::CityID & id)
+City* WorldMap::GetCityWithID(const City::CityID & id)
 {
 	for (int i = 0; i < 48; i += 1)
 	{
-		if (m_cities[i]->compareCityID(id))
+		if (m_Cities[i]->CompareCityID(id))
 		{
-			return m_cities[i];
+			return m_Cities[i];
 		}
 	}
 	return nullptr;
@@ -383,7 +383,7 @@ City* WorldMap::getCityWithID(const City::CityID & id)
 std::string WorldMap::GetSaveOutput()
 {
 	std::stringstream ss;
-	for each(City* city in m_cities)
+	for each(City* city in m_Cities)
 		ss << city->GetSaveOutput() << "/ ";
 	return ss.str();
 }
@@ -393,6 +393,6 @@ void WorldMap::PrintCitiesStatus()
 	printf("\n");
 	for (int i = 0; i < 48; i += 1)
 	{
-		m_cities[i]->PrintInformation();
+		m_Cities[i]->PrintInformation();
 	}
 }
