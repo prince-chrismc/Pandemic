@@ -147,7 +147,7 @@ void GameEngine::TurnSequence(const uint16_t & pos)
 // TurnActionsPhase -------------------------------------------------------------------------------
 void GameEngine::TurnActionsPhase(const uint16_t & pos)
 {
-	for (size_t i = 0; i < 5; i++)
+	for (size_t i = 0; i < 4; i++)
 	{
 		MovesPerCity options = CalculatePlayerOpt(pos);
 
@@ -1081,8 +1081,8 @@ void GameEngine::LoadGame()
 		{
 			size_t slash = players.find("/");
 			if (slash == std::string::npos) break;
+			std::string play = players.substr(0, slash);
 			players = players.substr(slash + 2);
-			std::string play = players.substr(0, slash - 1);
 
 			size_t space = play.find(" ");
 			if (space == std::string::npos) break;
@@ -1099,8 +1099,9 @@ void GameEngine::LoadGame()
 
 			for (int j = 0; j < 7; j += 1)
 			{
-				ss.clear();
+				ss = std::stringstream();
 				space = play.find(" ");
+				if (space == std::string::npos) break;
 				ss << play.substr(0, space); // get card id
 				play = play.substr(space + 1);
 				uint64_t cardnum;
@@ -1217,6 +1218,7 @@ void GameEngine::LoadGame()
 			break;
 		}
 	}
+	m_PreGameComplete = true;
 }
 // LoadGame ---------------------------------------------------------------------------------------
 
