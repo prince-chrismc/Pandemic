@@ -1,7 +1,7 @@
 #include <sstream>  //std::stringstream
 #include <algorithm> //std::shuffle
 #include <random> //std::mt19937
-#include <iostream> //io
+#include <iostream> //std::cout
 #include <ctime> //time
 #include "boost\filesystem.hpp" //dir
 #include "GameEngine.h"
