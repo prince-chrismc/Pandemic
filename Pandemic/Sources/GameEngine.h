@@ -42,6 +42,8 @@ protected:
 		CUREDISEASE = 0x008UL,
 
 		/*
+			QUIT = 0x0F0UL,
+			REFCARD = 0x0A0UL,
 			TODO: MORE TO COME
 		*/
 

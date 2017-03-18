@@ -137,16 +137,19 @@ void GameEngine::BoardSetup()
 // TurnSequence -----------------------------------------------------------------------------------
 void GameEngine::TurnSequence(const uint16_t & pos)
 {
-	m_Players.at(pos)->PrintInfo();
+	std::cout << std::endl;
 	TurnActionsPhase(pos);
 	TurnDrawPhase(pos);
 	TurnInfectPhase();
+	//SaveGame();
 }
 // TurnSequence -----------------------------------------------------------------------------------
 
 // TurnActionsPhase -------------------------------------------------------------------------------
 void GameEngine::TurnActionsPhase(const uint16_t & pos)
 {
+	std::cout << std::endl;
+	m_Players.at(pos)->PrintInfo();
 	for (size_t i = 0; i < 4; i++)
 	{
 		MovesPerCity options = CalculatePlayerOpt(pos);
@@ -196,6 +199,7 @@ void GameEngine::TurnDrawPhase(const uint16_t& pos)
 		}
 		m_Players.at(pos)->AddCard(m_Board.m_PlayerDeck.DrawCard()); // no matter what draw card
 	}
+	m_Players.at(pos)->PrintHand();
 }
 // TurnDrawPhase ----------------------------------------------------------------------------------
 
@@ -704,14 +708,16 @@ void GameEngine::ExecuteMove(const uint16_t& pos, const MoveOptions & opt, const
 	case FLIGHT:
 		ss << std::hex << cityID;
 		m_Players.at(pos)->ChangeCity(ss.str());
-		m_Players.at(pos)->PrintInfo();
 		m_Board.m_PlayerDeck.DiscardCard(m_Players.at(pos)->RemoveCard(cityID));
+		m_Players.at(pos)->PrintInfo();
+		m_Players.at(pos)->PrintHand();
 		break;
 	case CHARTER:
 		ss << std::hex << cityID;
 		m_Players.at(pos)->ChangeCity(ss.str());
 		m_Players.at(pos)->PrintInfo();
 		m_Board.m_PlayerDeck.DiscardCard(m_Players.at(pos)->RemoveCard(m_Players.at(pos)->GetCityID()));
+		m_Players.at(pos)->PrintHand();
 	case SHUTTLE:
 		ss << std::hex << cityID;
 		m_Players.at(pos)->ChangeCity(ss.str());
@@ -735,6 +741,8 @@ void GameEngine::ExecuteMove(const uint16_t& pos, const MoveOptions & opt, const
 	case BUILDRC:
 		m_Board.m_Centers.AddStation(m_Board.m_Map.GetCityWithID(cityID));
 		m_Board.m_PlayerDeck.DiscardCard(m_Players.at(pos)->RemoveCard(cityID));
+		std::cout << "New Research Center in: ";
+		m_Board.m_Map.GetCityWithID(cityID)->PrintInformation();
 		break;
 	case SHARECARD:
 		if (m_Players.at(pos)->GetRoleID() == RoleList::RESEARCHER)
@@ -757,6 +765,8 @@ void GameEngine::ExecuteMove(const uint16_t& pos, const MoveOptions & opt, const
 				if (m_Players.at(pos)->GetCityID() == m_Players.at(index)->GetCityID())
 				{
 					m_Players.at(index)->AddCard(m_Players.at(pos)->RemoveCardAt(selection));
+					m_Players.at(index)->PrintHand();
+					m_Players.at(pos)->PrintHand();
 					return;
 				}
 			}
@@ -770,6 +780,8 @@ void GameEngine::ExecuteMove(const uint16_t& pos, const MoveOptions & opt, const
 				if (m_Players.at(pos)->GetCityID() == m_Players.at(index)->GetCityID())
 				{
 					m_Players.at(index)->AddCard(m_Players.at(pos)->RemoveCard(cityID));
+					m_Players.at(index)->PrintHand();
+					m_Players.at(pos)->PrintHand();
 					return;
 				}
 			}
@@ -1247,6 +1259,7 @@ void GameEngine::Launch()
 		for (int i = 0; /* no limit */; i += 1)
 		{
 			TurnSequence(i % 2);
+			//TurnSequence(i % m_Players.size());
 		}
 	}
 	catch (const GameOverException)
