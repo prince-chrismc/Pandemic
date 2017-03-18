@@ -1295,9 +1295,9 @@ void GameEngine::LoadGame()
 // Initialize -------------------------------------------------------------------------------------
 void GameEngine::Initialize()
 {
-	BoardSetup();
-	DifficultySetup();
-	PlayersSetup();
+	BoardSetup();			 //DO NOT TOUCH ORDER !
+	PlayersSetup();			 //DO NOT TOUCH ORDER !
+	DifficultySetup();		 //DO NOT TOUCH ORDER !
 
 	m_PreGameComplete = true;
 }
