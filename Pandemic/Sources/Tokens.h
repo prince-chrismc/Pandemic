@@ -160,9 +160,10 @@ public:
 	void operator=(const City&) = delete;
 
 	void AddNearByCity(City* nearby) { m_NearBy.emplace_back(nearby); }
-
+	
 	uint16_t GetNumberOfCubes() { return (uint16_t)m_Cubes.size(); }
-	void addCube(DiseaseCube* cube) { m_Cubes.emplace_back(cube); }
+	uint16_t GetNumberOfCubes(const Color& color);
+	void AddCube(DiseaseCube* cube) { m_Cubes.emplace_back(cube); }
 	void RemoveCube() { m_Cubes.erase(m_Cubes.begin(), m_Cubes.begin() + 1); }
 	void RemoveAllCubes() { m_Cubes.clear(); }
 
@@ -231,7 +232,7 @@ public:
 	InfectionRate(const InfectionRate&) = delete;
 	void operator=(const InfectionRate&) = delete;
 
-	uint16_t getRate() { return m_array[m_position]; }
+	uint16_t GetRate() { return m_array[m_position]; }
 	void IncreaseRate() { m_position += 1; }
 	std::string GetSaveOutput() { return std::to_string(m_position); }
 	void InputLoadedGame(const uint16_t& position) { m_position = position; }

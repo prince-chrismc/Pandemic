@@ -197,7 +197,17 @@ void GameEngine::TurnDrawPhase(const uint16_t& pos)
 
 			m_Players.at(pos)->RemoveCardAt(selection); // discard card
 		}
-		m_Players.at(pos)->AddCard(m_Board.m_PlayerDeck.DrawCard()); // no matter what draw card
+		PlayerCard* pc = m_Board.m_PlayerDeck.DrawCard();
+		if (PlayerCardFactory::IsaEpidemicCard(pc->GetNumID()))
+		{
+			delete pc; 
+			pc = nullptr;
+			Epidemic();
+		}
+		else
+		{
+			m_Players.at(pos)->AddCard(pc); // no matter what draw card
+		}
 	}
 	m_Players.at(pos)->PrintHand();
 }
@@ -206,7 +216,7 @@ void GameEngine::TurnDrawPhase(const uint16_t& pos)
 // TurnInfectPhase --------------------------------------------------------------------------------
 void GameEngine::TurnInfectPhase()
 {
-	for (size_t i = 0; i < m_Board.m_InfectRate.getRate(); i++)
+	for (size_t i = 0; i < m_Board.m_InfectRate.GetRate(); i++)
 	{
 		InfectCity();
 		CheckIfGameOver();
@@ -219,23 +229,23 @@ void GameEngine::InfectCity(const uint16_t& cubesToAdd)
 {
 	InfectionCard* ic = m_Board.m_InfecDeck.DrawCard(); // Draw card
 	CityList::CityID cid = (City::CityID)(ic->GetNumID() - InfectionCard::INFECTIONCARD_MIN); // calculate id
-
-	City* city = m_Board.m_Map.GetCityWithID(cid);
-
-	Color c = ic->GetCityColor();
-	if (m_Board.m_Cures.IsEradicated(c)) // if eradicated do add cubes
-		return;
-
 	delete ic;
 	ic = nullptr;
 
+	City* city = m_Board.m_Map.GetCityWithID(cid); // get city
+	Color c = city->GetCityColor();
+	if (m_Board.m_Cures.IsEradicated(c)) // if eradicated do add cubes
+		return;
 
-	std::vector<RoleList::Roles> rolesincity;
+	std::vector<RoleList::Roles> rolesincity; // lets figure out whos in the city
 	for each(Player* joeur in m_Players)
 	{
 		if (joeur->GetCityID() == city->GetCityID())
 			rolesincity.emplace_back(joeur->GetRoleID());
 	}
+
+	if (IsQuarentineSpecialistNearBy(city)) // make sure quarantine specialist isnt nearby
+		rolesincity.emplace_back(RoleList::QUARANTINE);
 
 	for each(RoleList::Roles roleid in rolesincity)
 	{
@@ -251,29 +261,66 @@ void GameEngine::InfectCity(const uint16_t& cubesToAdd)
 		}
 	}
 
+	uint16_t cubesActuallyAdded = 0;
 	for (size_t i = 0; i < cubesToAdd; i++)
 	{
-		if (city->GetNumberOfCubes() == 3)
+		if (city->GetNumberOfCubes(city->GetCityColor()) == 3)
 		{
+			if(cubesActuallyAdded > 0) 
+				m_Log.Notify(city->GetCityName(), cubesActuallyAdded);
+
 			Outbreak(city);
 			return;
 		}
 		else
 		{
-			city->addCube(m_Board.m_Cubes.TakeCube(city->GetCityColor()));
+			city->AddCube(m_Board.m_Cubes.TakeCube(city->GetCityColor()));
+			cubesActuallyAdded += 1;
 		}
 	}
+
+	m_Log.Notify(city->GetCityName(), cubesActuallyAdded);
 }
 // InfectCity -------------------------------------------------------------------------------------
+
+// IsQuarentineSpecialistNearBy -------------------------------------------------------------------
+bool GameEngine::IsQuarentineSpecialistNearBy(City * city)
+{
+	for each(Player* joeur in m_Players)
+	{
+		if (joeur->GetRoleID() == RoleList::QUARANTINE)
+		{
+			CityList::CityID cid = joeur->GetCityID();
+			for each(City* ville in city->GetNearByCities())
+			{
+				if (ville->GetCityID() == cid)
+					return true;
+			}
+			break;
+		}
+	}
+	return false;
+}
+// IsQuarentineSpecialistNearBy -------------------------------------------------------------------
 
 // Outbreak ---------------------------------------------------------------------------------------
 void GameEngine::Outbreak(City * city)
 {
+	std::cout << " --- OUTBREAK --- " << city->GetCityName() << std::endl;
 	m_Board.m_OutBreak.IncreaseRate();
+	std::cout << "Outbreak Marker: " << m_Board.m_OutBreak.getMarker() << std::endl;
 
 	for each(City* connected in city->GetNearByCities())
 	{
-		connected->addCube(m_Board.m_Cubes.TakeCube(city->GetCityColor()));
+		if (connected->GetNumberOfCubes(city->GetCityColor()) == 3)
+		{
+			Outbreak(connected);
+		}
+		else
+		{
+			connected->AddCube(m_Board.m_Cubes.TakeCube(city->GetCityColor()));
+			m_Log.Notify(connected->GetCityName());
+		}
 	}
 }
 // Outbreak ---------------------------------------------------------------------------------------
@@ -281,8 +328,10 @@ void GameEngine::Outbreak(City * city)
 // Epidemic ---------------------------------------------------------------------------------------
 void GameEngine::Epidemic()
 {
+	std::cout << " --- EPIDEMIC --- " << std::endl;
 	// 1. Increase Infection Rate
 	m_Board.m_InfectRate.IncreaseRate();
+	std::cout << "Infection Rate: " << m_Board.m_InfectRate.GetRate() << std::endl;
 
 	// 2. Infect Last Card of InfectionDeck with at most 3 Cubes
 	InfectionCard* ic = m_Board.m_InfecDeck.DrawCardForEpidemic();
@@ -294,14 +343,17 @@ void GameEngine::Epidemic()
 
 		City* city = m_Board.m_Map.GetCityWithID(cid);
 
-		for (uint16_t i = city->GetNumberOfCubes(); i < 3; i += 1)
-			city->addCube(m_Board.m_Cubes.TakeCube(city->GetCityColor()));
-
-		// 2.1. Otbreaks if Need be
-		if (city->GetNumberOfCubes() > 0)
+		int i = 0;
+		for (; i < 3; i += 1)
 		{
-			Outbreak(city);
+			// 2.1. Otbreaks if Need be
+			if (city->GetNumberOfCubes(city->GetCityColor()) == 3)
+			{
+				Outbreak(city);
+				break;
+			}			
 		}
+		m_Log.Notify(city->GetCityName(), i);
 
 		// 3. Intensify reshuffle infect discard and add on top of deck
 		m_Board.m_InfecDeck.Intensify();
@@ -949,7 +1001,7 @@ void GameEngine::LoadGame()
 		std::string infecdiscard = infec.substr(sep + 2); // and discard
 
 		std::deque<InfectionCard::CardsList> deckLoaded;
-		for (int i = 0; i < 48; i += 1)
+		for (int a = 0; a < 48; a += 1)
 		{
 			size_t space = infecdeck.find(" ");
 			if (space == std::string::npos) break;
@@ -961,7 +1013,7 @@ void GameEngine::LoadGame()
 		}
 
 		std::deque<InfectionCard::CardsList> discardLoaded;
-		for (int i = 0; i < 48; i += 1)
+		for (int b = 0; b < 48; b += 1)
 		{
 			size_t space = infecdiscard.find(" ");
 			if (space == std::string::npos) break;
@@ -988,7 +1040,7 @@ void GameEngine::LoadGame()
 		std::string playdiscard = play.substr(sep + 2); // and discard
 
 		std::deque<PlayerCard::CardsList> deckLoaded;
-		for (int i = 0; i < 59; i += 1)
+		for (int z = 0; z < 59; z += 1)
 		{
 			size_t space = playdeck.find(" ");
 			if (space == std::string::npos) break;
@@ -1000,7 +1052,7 @@ void GameEngine::LoadGame()
 		}
 
 		std::deque<PlayerCard::CardsList> discardLoaded;
-		for (int i = 0; i < 59; i += 1)
+		for (int j = 0; j < 59; j += 1)
 		{
 			size_t space = playdiscard.find(" ");
 			if (space == std::string::npos) break;
@@ -1023,7 +1075,7 @@ void GameEngine::LoadGame()
 		buffer = nullptr;
 
 		std::deque<RoleCard::Roles> deckLoaded;
-		for (int i = 0; i < 7; i += 1)
+		for (int x = 0; x < 7; x += 1)
 		{
 			size_t space = role.find(" ");
 			if (space == std::string::npos) break;
@@ -1060,16 +1112,16 @@ void GameEngine::LoadGame()
 				switch (c)
 				{
 				case '0':
-					city->addCube(m_Board.m_Cubes.TakeCube(RED));
+					city->AddCube(m_Board.m_Cubes.TakeCube(RED));
 					break;
 				case '1':
-					city->addCube(m_Board.m_Cubes.TakeCube(BLUE));
+					city->AddCube(m_Board.m_Cubes.TakeCube(BLUE));
 					break;
 				case '2':
-					city->addCube(m_Board.m_Cubes.TakeCube(YELLOW));
+					city->AddCube(m_Board.m_Cubes.TakeCube(YELLOW));
 					break;
 				case '3':
-					city->addCube(m_Board.m_Cubes.TakeCube(BLACK));
+					city->AddCube(m_Board.m_Cubes.TakeCube(BLACK));
 					break;
 				default:
 					break;
@@ -1089,7 +1141,7 @@ void GameEngine::LoadGame()
 		buffer = nullptr;
 
 		std::vector<Player*> gamers;
-		for (int i = 0; i < 4; i += 1)
+		for (int r = 0; r < 4; r += 1)
 		{
 			size_t slash = players.find("/");
 			if (slash == std::string::npos) break;
@@ -1109,7 +1161,7 @@ void GameEngine::LoadGame()
 			ss >> std::hex >> roleid;
 			Player* joeur = new Player(name, new RoleCard((RoleList::Roles)roleid));
 
-			for (int j = 0; j < 7; j += 1)
+			for (int s = 0; s < 7; s += 1)
 			{
 				ss = std::stringstream();
 				space = play.find(" ");

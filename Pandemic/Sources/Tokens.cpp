@@ -54,6 +54,17 @@ City::~City()
 	}
 }
 
+uint16_t City::GetNumberOfCubes(const Color & color)
+{
+	uint16_t result = 0;
+	for each(DiseaseCube* cube in m_Cubes)
+	{
+		if (cube->GetColor() == color)
+			++result;
+	}
+	return result;
+}
+
 Color City::GetCityColor()
 {
 	if (IsaRedCity()) return RED;

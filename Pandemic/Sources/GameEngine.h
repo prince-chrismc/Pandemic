@@ -9,13 +9,15 @@
 #include <exception>
 #include "Board.h"
 #include "Player.h"
+#include "InfectionLog.h"
 
-class GameOverException final : std::exception {};
+class GameOverException final : public std::exception {};
 
 class GameEngine final
 {
 private:
 	Board m_Board;
+	InfectionLog m_Log;
 	std::vector<Player*> m_Players;
 	bool m_PreGameComplete;
 
@@ -44,6 +46,15 @@ protected:
 		/*
 			QUIT = 0x0F0UL,
 			REFCARD = 0x0A0UL,
+			
+			PEAK_PLAYER_DISCARD,
+			PEAK_INFECTION_DISCARD,
+
+			CONTIN_PLANNER_DRAW_EVENT,
+			DISPATCH_MOVE_OTHERS_PAWN,
+			OPERATIONS_BUILD_RESEARCH_CENTER,
+			OPERATIONS_MOVE FROM_RESEARCH_CENTER,
+
 			TODO: MORE TO COME
 		*/
 
@@ -57,6 +68,7 @@ protected:
 	void TurnDrawPhase(const uint16_t& pos);
 	void TurnInfectPhase();
 	void InfectCity(const uint16_t& cubesToAdd = 1);
+	bool IsQuarentineSpecialistNearBy(City* city);
 	void Outbreak(City* city);
 	void Epidemic();
 	MovesPerCity CalculatePlayerOpt(const uint16_t& pos);
