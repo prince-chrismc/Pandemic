@@ -141,7 +141,7 @@ public:
 		CITYCARD_MAX = 0x24FFFFFUL,   //"Invalid"
 	};
 
-	CityCard(const CardsList& id) : PlayerCard(id, GetCardName(id), GetCardName(id)) {}
+	CityCard(const CardsList& id) : PlayerCard(id, GetCardName(id), GetCardDesc(id)) {}
 
 	Color GetCityColor();
 
@@ -245,7 +245,7 @@ private:
 	CityID m_CityID;
 	Color m_Color;
 
-	static const char* GetCardDesc(const uint64_t& id); /* TODO: needs proper description */
+	static const char* GetCardDesc(const uint64_t& id);
 	static bool IsaRedCity(const uint64_t& id) { return (id > RED_MIN) && (id < RED_MAX); }
 	static bool IsaYellowCity(const uint64_t& id) { return (id > YELLOW_MIN) && (id < YELLOW_MAX); }
 	static bool IsaBlueCity(const uint64_t& id) { return (id > BLUE_MIN) && (id < BLUE_MAX); }
