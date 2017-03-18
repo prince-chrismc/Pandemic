@@ -970,6 +970,12 @@ void GameEngine::LoadGame()
 		return;
 	}
 
+	if (files.size() == 0) // fail if no load options
+	{
+		std::cout << "No Load options avaliable." << std::endl;
+		return;
+	}
+
 	int selection = -1;
 	do
 	{
