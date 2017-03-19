@@ -129,7 +129,7 @@ void Player::PrintRefCard()
 
 std::string Player::GetSaveOutput()
 {
-	std::string result = m_Name + " " + m_Role.m_roleID + " ";
+	std::string result = m_Name + " " + m_Role.m_roleID + " " + m_Role.m_Pawn.m_CityID + " ";
 
 	for each (PlayerCard* pc in m_Hand)
 	{

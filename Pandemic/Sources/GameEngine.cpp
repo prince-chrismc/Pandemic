@@ -927,6 +927,10 @@ void GameEngine::SaveGame()
 	myfile << m_Board.m_OutBreak.GetSaveOutput();
 	myfile << "\n";
 
+	// Infection Log ------------------------------------------------------------------------------
+	myfile << m_Log.GetSaveOutput();
+	myfile << "\n";
+
 	myfile.close();
 }
 // SaveGame ---------------------------------------------------------------------------------------
@@ -1167,6 +1171,11 @@ void GameEngine::LoadGame()
 			ss >> std::hex >> roleid;
 			Player* joeur = new Player(name, new RoleCard((RoleList::Roles)roleid));
 
+			space = play.find(" ");
+			std::string city = play.substr(0, space); // get players city
+			play = play.substr(space + 1);
+			joeur->ChangeCity(city);
+
 			for (int s = 0; s < 7; s += 1)
 			{
 				ss = std::stringstream();
@@ -1287,6 +1296,33 @@ void GameEngine::LoadGame()
 			m_Board.m_OutBreak.InputLoadedGame(0);
 			break;
 		}
+
+		// Infection Log ------------------------------------------------------------------------------
+		{
+			buffer = new char[512];
+			load.getline(buffer, 512); // get saved output
+			std::string log(buffer);
+			delete[] buffer;
+			buffer = nullptr;
+
+			std::vector<std::pair<std::string, uint16_t>> infectlog;
+			for (int e = 0; e < 99; e += 1)
+			{
+				size_t slash = log.find("/");
+				if (slash == std::string::npos) break;
+				std::string entry(log.substr(0, slash));
+				log = log.substr(slash + 2);
+
+				size_t space = entry.find(" ");
+				std::stringstream ss(entry.substr(space + 1));
+				uint16_t num = 0;
+				ss >> std::hex >> num;
+				infectlog.emplace_back(std::make_pair(entry.substr(0,space), num));
+			}
+
+			m_Log.InputLoadedGame(infectlog);
+		}
+
 	}
 	m_PreGameComplete = true;
 }

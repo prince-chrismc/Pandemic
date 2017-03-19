@@ -46,6 +46,8 @@ protected:
 		/*
 			QUIT = 0x0F0UL,
 			REFCARD = 0x0A0UL,
+
+			--> ALL EVENT CARDS
 			
 			PEAK_PLAYER_DISCARD,
 			PEAK_INFECTION_DISCARD,
