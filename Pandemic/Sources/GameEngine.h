@@ -43,12 +43,16 @@ protected:
 		SHARECARD = 0x007UL,
 		CUREDISEASE = 0x008UL,
 
+		RESILLIENT = 0x200UL,
+		AIRLIFT = 0x201UL,
+		FORECAST = 0x202UL,
+		QUIETNIGHT = 0x203UL,
+		GOVTGRANT = 0x204UL,
+
 		/*
 			QUIT = 0x0F0UL,
 			REFCARD = 0x0A0UL,
 
-			--> ALL EVENT CARDS
-			
 			PEAK_PLAYER_DISCARD,
 			PEAK_INFECTION_DISCARD,
 
@@ -80,6 +84,11 @@ protected:
 	std::vector<CityList::CityID> GetShuttleFlightsFor(const uint16_t& pos);
 	std::vector<CityList::CityID> ShareKnowlegdeFor(const uint16_t& pos);
 	std::vector<CityList::CityID> DiscoverCure(const uint16_t& pos);
+	std::vector<CityList::CityID> DetermineReseilientPop(const uint16_t& pos);
+	std::vector<CityList::CityID> DetermineAirlift(const uint16_t& pos);
+	std::vector<CityList::CityID> DetermineForecast(const uint16_t& pos);
+	std::vector<CityList::CityID> DetermineQuietNight(const uint16_t& pos);
+	std::vector<CityList::CityID> DetermineGovernmentGrant(const uint16_t& pos);
 	Color DetermineCureColor(const uint16_t& pos);
 	PlayerMoves DeterminePlayerMoves(const MovesPerCity& options);
 	static std::string MoveOpToString(const MoveOptions& opt);

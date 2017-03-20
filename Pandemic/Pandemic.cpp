@@ -13,11 +13,11 @@ void PrintOpening();
 int main()
 {
 	SetConsoleTitle(L"Pandemic board Game by Chris McArthur");
-	PrintOpening(); //Generic Welcome Message
+	PrintOpening(); // Generic Welcome Message
 
-	GameEngine Game; //New Game Board
-	Game.LoadGame();
-	//Game.Initialize();
+	GameEngine Game; // New Game Board
+	//Game.LoadGame();
+	Game.Initialize();
 	Game.Launch();
 
 	//Game.SaveGame();

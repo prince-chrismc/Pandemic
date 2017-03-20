@@ -99,6 +99,19 @@ void InfectionDeck::Intensify()
 	m_Discard.clear();
 }
 
+void InfectionDeck::ResiliantPopulation(const InfectionCard::CardsList& id)
+{
+	int rm = 0;
+	for each(InfectionCard::CardsList cardnum in m_Discard)
+	{
+		if (id == cardnum)
+			m_Discard.erase(m_Discard.begin() + rm)
+			break
+
+		rm += 1;
+	}
+}
+
 std::string InfectionDeck::GetSaveOutput()
 {
 	std::string result;

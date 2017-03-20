@@ -195,6 +195,7 @@ public:
 	//Prevent Assignment
 	void operator=(const ResearchCenter&) = delete;
 
+	City* GetCity() { return m_City; }
 	City::CityID GetCityID() { return m_City->GetCityID(); }
 };
 
@@ -215,6 +216,7 @@ public:
 
 	uint16_t GetNumberOfCenters() { return (uint16_t)m_Stations.size(); }
 	void AddStation(City* city) { if (validate()) m_Stations.emplace_back(ResearchCenter(city)); }
+	void RemoveStation(const uint16_t& pos) { m_Stations.erase(m_Stations.begin() + pos); }
 	std::vector<ResearchCenter> GetCenters() { return m_Stations; }
 };
 

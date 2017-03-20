@@ -306,6 +306,9 @@ bool GameEngine::IsQuarentineSpecialistNearBy(City * city)
 // Outbreak ---------------------------------------------------------------------------------------
 void GameEngine::Outbreak(City * city)
 {
+	if (IsQuarentineSpecialistNearBy(city))
+		return;
+
 	std::cout << " --- OUTBREAK --- " << city->GetCityName() << std::endl;
 	m_Board.m_OutBreak.IncreaseRate();
 	std::cout << "Outbreak Marker: " << m_Board.m_OutBreak.getMarker() << std::endl;
@@ -412,6 +415,36 @@ GameEngine::MovesPerCity GameEngine::CalculatePlayerOpt(const uint16_t & pos)
 	for each(CityList::CityID id in DiscoverCure(pos))
 	{
 		options.insert(std::make_pair(GameEngine::CUREDISEASE, id));
+	}
+
+	// EventCard Airlift---------------------------------------------------------------------------
+	for each(CityList::CityID id in DetermineAirlift(pos))
+	{
+		options.insert(std::make_pair(GameEngine::AIRLIFT, id));
+	}
+
+	// EventCard Resiliant Population -------------------------------------------------------------
+	for each(CityList::CityID id in DetermineReseilientPop(pos))
+	{
+		options.insert(std::make_pair(GameEngine::RESILLIENT, id));
+	}
+
+	// EventCard Forecast -------------------------------------------------------------------------
+	for each(CityList::CityID id in DetermineForecast(pos))
+	{
+		options.insert(std::make_pair(GameEngine::FORECAST, id));
+	}
+
+	// EventCard QuietNight -----------------------------------------------------------------------
+	for each(CityList::CityID id in DetermineQuietNight(pos))
+	{
+		options.insert(std::make_pair(GameEngine::QUIETNIGHT, id));
+	}
+
+	// EventCard Government Grant -----------------------------------------------------------------
+	for each(CityList::CityID id in DetermineGovernmentGrant(pos))
+	{
+		options.insert(std::make_pair(GameEngine::GOVTGRANT, id));
 	}
 
 	return options;
@@ -556,6 +589,125 @@ std::vector<CityList::CityID> GameEngine::DiscoverCure(const uint16_t& pos)
 	return result;
 }
 // DiscoverCure -----------------------------------------------------------------------------------
+
+// DetermineReseilientPop -------------------------------------------------------------------------
+std::vector<CityList::CityID> GameEngine::DetermineReseilientPop(const uint16_t& pos)
+{
+	std::vector<CityList::CityID> result;
+
+	for each(PlayerCard* pc in m_Players.at(pos)->m_Hand)
+	{
+		if (PlayerCardFactory::IsaEventCard(pc->GetNumID()))
+		{
+			if(pc->GetNumID() == EventCard::RESILLIENT)
+			{
+				for each(InfectionCard::CardsList icID in m_Board.m_InfecDeck.GetDiscardPile())
+				{
+					result.emplace_back((CityList::CityID)(icID - InfectionCard::INFECTIONCARD_MIN));
+				}
+				return result;
+			}
+		}
+	}
+
+	return result;
+}
+// DetermineReseilientPop -------------------------------------------------------------------------
+
+// DetermineAirlift -------------------------------------------------------------------------------
+std::vector<CityList::CityID> GameEngine::DetermineAirlift(const uint16_t & pos)
+{
+	std::vector<CityList::CityID> result;
+
+	for each(PlayerCard* pc in m_Players.at(pos)->m_Hand)
+	{
+		if (PlayerCardFactory::IsaEventCard(pc->GetNumID()))
+		{
+			if (pc->GetNumID() == EventCard::AIRLIFT)
+			{
+				result.emplace_back(m_Players.at(pos)->GetCityID());
+				return result;
+			}
+		}
+	}
+
+	return result;
+}
+// DetermineAirlift -------------------------------------------------------------------------------
+
+// DetermineForecast ------------------------------------------------------------------------------
+std::vector<CityList::CityID> GameEngine::DetermineForecast(const uint16_t & pos)
+{
+	std::vector<CityList::CityID> result;
+
+	for each(PlayerCard* pc in m_Players.at(pos)->m_Hand)
+	{
+		if (PlayerCardFactory::IsaEventCard(pc->GetNumID()))
+		{
+			if (pc->GetNumID() == EventCard::FORECAST)
+			{
+				result.emplace_back(m_Players.at(pos)->GetCityID());
+				return result;
+			}
+		}
+	}
+
+	return result;
+}
+// DetermineForecast ------------------------------------------------------------------------------
+
+// DetermineQuietNight ----------------------------------------------------------------------------
+std::vector<CityList::CityID> GameEngine::DetermineQuietNight(const uint16_t & pos)
+{
+	std::vector<CityList::CityID> result;
+
+	for each(PlayerCard* pc in m_Players.at(pos)->m_Hand)
+	{
+		if (PlayerCardFactory::IsaEventCard(pc->GetNumID()))
+		{
+			if (pc->GetNumID() == EventCard::QUIETNIGHT)
+			{
+				result.emplace_back(m_Players.at(pos)->GetCityID());
+				return result;
+			}
+		}
+	}
+
+	return result;
+}
+// DetermineQuietNight ----------------------------------------------------------------------------
+
+// DetermineGovernmentGrant -----------------------------------------------------------------------
+std::vector<CityList::CityID> GameEngine::DetermineGovernmentGrant(const uint16_t & pos)
+{
+	std::vector<CityList::CityID> result;
+
+	for each(PlayerCard* pc in m_Players.at(pos)->m_Hand)
+	{
+		if (PlayerCardFactory::IsaEventCard(pc->GetNumID()))
+		{
+			if (pc->GetNumID() == EventCard::GOVTGRANT)
+			{
+				for each(City* city in m_Board.m_Map.GetAllCities())
+				{
+					CityList::CityID cid = city->GetCityID();
+					result.emplace_back(cid);
+					for each(ResearchCenter rc in m_Board.m_Centers.GetCenters())
+					{
+						if (rc.GetCityID() == cid)
+						{
+							result.erase(result.end());
+							break;
+						}
+					}
+				}
+				return result;
+			}
+		}
+	}
+	return result;
+}
+// DetermineGovernmentGrant -----------------------------------------------------------------------
 
 // DetermineCureColor -----------------------------------------------------------------------------
 Color GameEngine::DetermineCureColor(const uint16_t& pos)
@@ -713,6 +865,84 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 			std::cout << "  " << i << " - To " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
 		}
 	}
+
+
+	// EventCard Airlift---------------------------------------------------------------------------
+	if (options.count(GameEngine::AIRLIFT) > 0)
+	{
+		std::cout << std::endl << "I. Airlift" << std::endl;
+		auto low = options.lower_bound(GameEngine::AIRLIFT);
+		auto high = options.upper_bound(GameEngine::AIRLIFT);
+
+		for (auto it = low; it != high; it++)
+		{
+			moves.insert(std::make_pair(++i, *it));
+			City* city = m_Board.m_Map.GetCityWithID(it->second);
+			std::cout << "  " << i << " - To " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
+		}
+	}
+
+	// EventCard Resiliant Population -------------------------------------------------------------
+	if (options.count(GameEngine::RESILLIENT) > 0)
+	{
+		std::cout << std::endl << "J. Resiliant Population" << std::endl;
+		auto low = options.lower_bound(GameEngine::RESILLIENT);
+		auto high = options.upper_bound(GameEngine::RESILLIENT);
+
+		for (auto it = low; it != high; it++)
+		{
+			moves.insert(std::make_pair(++i, *it));
+			City* city = m_Board.m_Map.GetCityWithID(it->second);
+			std::cout << "  " << i << " - To " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
+		}
+	}
+
+	// EventCard Forecast -------------------------------------------------------------------------
+	if (options.count(GameEngine::FORECAST) > 0)
+	{
+		std::cout << std::endl << "I. Forecast" << std::endl;
+		auto low = options.lower_bound(GameEngine::FORECAST);
+		auto high = options.upper_bound(GameEngine::FORECAST);
+
+		for (auto it = low; it != high; it++)
+		{
+			moves.insert(std::make_pair(++i, *it));
+			City* city = m_Board.m_Map.GetCityWithID(it->second);
+			std::cout << "  " << i << " - To " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
+		}
+	}
+
+	// EventCard QuietNight -----------------------------------------------------------------------
+	if (options.count(GameEngine::QUIETNIGHT) > 0)
+	{
+		std::cout << std::endl << "I. Quiet Night" << std::endl;
+		auto low = options.lower_bound(GameEngine::QUIETNIGHT);
+		auto high = options.upper_bound(GameEngine::QUIETNIGHT);
+
+		for (auto it = low; it != high; it++)
+		{
+			moves.insert(std::make_pair(++i, *it));
+			City* city = m_Board.m_Map.GetCityWithID(it->second);
+			std::cout << "  " << i << " - To " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
+		}
+	}
+
+	// EventCard Government Grant -----------------------------------------------------------------
+	if (options.count(GameEngine::GOVTGRANT) > 0)
+	{
+		std::cout << std::endl << "I. Government Grant" << std::endl;
+		auto low = options.lower_bound(GameEngine::GOVTGRANT);
+		auto high = options.upper_bound(GameEngine::GOVTGRANT);
+
+		for (auto it = low; it != high; it++)
+		{
+			moves.insert(std::make_pair(++i, *it));
+			City* city = m_Board.m_Map.GetCityWithID(it->second);
+			std::cout << "  " << i << " - To " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
+		}
+	}
+
+
 	return moves;
 }
 // DeterminePlayerMoves ---------------------------------------------------------------------------
@@ -749,6 +979,7 @@ void GameEngine::ExecuteMove(const uint16_t& pos, const MoveOptions & opt, const
 {
 	std::stringstream ss;
 	Color cc;
+	std::map<int, CityList::CityID> secondary;
 	City* city = nullptr;
 	switch (opt)
 	{
@@ -791,10 +1022,36 @@ void GameEngine::ExecuteMove(const uint16_t& pos, const MoveOptions & opt, const
 		CheckIfGameOver();
 		break;
 	case BUILDRC:
-		m_Board.m_Centers.AddStation(m_Board.m_Map.GetCityWithID(cityID));
 		m_Board.m_PlayerDeck.DiscardCard(m_Players.at(pos)->RemoveCard(cityID));
-		std::cout << "New Research Center in: ";
-		m_Board.m_Map.GetCityWithID(cityID)->PrintInformation();
+		if (m_Board.m_Centers.GetCenters().size() < 7)
+		{
+			m_Board.m_Centers.AddStation(m_Board.m_Map.GetCityWithID(cityID));
+			std::cout << "New Research Center in: " << m_Board.m_Map.GetCityWithID(cityID)->GetCityName() << std::endl;
+		}
+		else
+		{
+			std::cout << "Remove Existing Center..." << std::endl;
+			int i = 0;
+			for each(ResearchCenter rc in m_Board.m_Centers.GetCenters())
+			{
+				std::cout << i << ": ";
+				rc.GetCity()->PrintInformation();
+			}
+
+			uint16_t selection = 0;
+			do
+			{
+				std::cout << "Selection: ";
+				std::string input;
+				std::getline(std::cin, input); // select rc to remove
+				ss << input;
+				ss >> selection;
+			} while (selection < 0 || selection >= i);
+
+			m_Board.m_Centers.RemoveStation(selection);
+			m_Board.m_Centers.AddStation(m_Board.m_Map.GetCityWithID(cityID));
+			std::cout << "New Research Center in: " << m_Board.m_Map.GetCityWithID(cityID)->GetCityName() << std::endl;
+		}
 		break;
 	case SHARECARD:
 		if (m_Players.at(pos)->GetRoleID() == RoleList::RESEARCHER)
@@ -852,6 +1109,57 @@ void GameEngine::ExecuteMove(const uint16_t& pos, const MoveOptions & opt, const
 			}
 		}
 		break;
+	case AIRLIFT:
+		std::cout << "Note: All players involved must agree!" << std::endl;
+		std::cout << "Select the player to move..." << std::endl; // who do  you want to move
+		int i = 0;
+		for each(Player* joeur in m_Players)
+		{
+			std::cout << i++ << ": ";
+			joeur->PrintInfo();
+		}
+
+		uint16_t selection = 0;
+		do
+		{
+			std::cout << "Selection: ";
+			std::string input;
+			std::getline(std::cin, input); // select player to move
+			ss << input;
+			ss >> selection;
+		} while (selection < 0 || selection >= i);
+
+		int j = 0;
+		std::cout << "Which city would you like to move " << m_Players.at(selection)->m_Name << " to..." << std::endl;
+		for each(City* ville in m_Board.m_Map.GetAllCities())
+		{
+			if (ville->GetCityID() == m_Players.at(selection)->GetCityID())
+				continue;
+
+			std::cout << j << ": ";
+			ville->PrintInformation();
+			secondary.insert(std::make_pair(j++, ville->GetCityID())); // map of every other city + pick number
+		}
+
+		uint16_t pick = 0;
+		do
+		{
+			std::cout << "Selection: ";
+			std::string input;
+			std::getline(std::cin, input);
+			ss << input;
+			ss >> pick;
+		} while (pick < 0 || pick >= j);
+
+		m_Players.at(selection)->ChangeCity(std::stringstream(secondary.at(pick)).str()); // move them to desired city
+		break;
+	case RESILLIENT:
+		city = m_Board.m_Map.GetCityWithID(cityID);
+
+	case FORECAST:
+	case QUIETNIGHT:
+	case GOVTGRANT:
+
 	default:
 		break;
 	}

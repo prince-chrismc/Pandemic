@@ -28,9 +28,12 @@ public:
 	InfectionDeck(const InfectionDeck&) = delete;
 	void operator=(const InfectionDeck&) = delete;
 
+	std::deque<InfectionCard::CardsList> GetDiscardPile() { return m_Discard; }
 	InfectionCard* DrawCard();
 	InfectionCard* DrawCardForEpidemic();
 	void Intensify();
+	void ResiliantPopulation(const InfectionCard::CardsList& id);
+	void Forecast();
 	std::string GetSaveOutput();  //FilePrint
 	void InputLoadedGame(std::deque<InfectionCard::CardsList> deck, std::deque<InfectionCard::CardsList> discard);
 };
@@ -49,6 +52,7 @@ public:
 	PlayerDeck(const PlayerDeck&) = delete;
 	void operator=(const PlayerDeck&) = delete;
 
+	std::deque<PlayerCard::CardsList> GetDiscardPile() { return m_Discard; }
 	bool IsDeckEmpty() { return (m_Deck.size() == 0); }
 	PlayerCard* DrawCard();
 	void DiscardCard(PlayerCard* pc);
