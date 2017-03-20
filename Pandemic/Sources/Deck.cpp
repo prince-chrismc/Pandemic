@@ -105,11 +105,23 @@ void InfectionDeck::ResiliantPopulation(const InfectionCard::CardsList& id)
 	for each(InfectionCard::CardsList cardnum in m_Discard)
 	{
 		if (id == cardnum)
-			m_Discard.erase(m_Discard.begin() + rm)
-			break
+		{
+			m_Discard.erase(m_Discard.begin() + rm);
+			break;
+		}
 
 		rm += 1;
 	}
+}
+
+std::vector<InfectionCard*> InfectionDeck::GetForecast()
+{
+	//for(int i =0; i < 6; i += 1)
+}
+
+void InfectionDeck::SetForecast(std::vector<InfectionCard*> top)
+{
+
 }
 
 std::string InfectionDeck::GetSaveOutput()

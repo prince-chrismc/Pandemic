@@ -20,6 +20,7 @@ private:
 	InfectionLog m_Log;
 	std::vector<Player*> m_Players;
 	bool m_PreGameComplete;
+	bool m_SkipNextInfectionPhase;
 
 protected:
 	std::string MakeFileName(); // used in save
@@ -98,7 +99,7 @@ protected:
 
 
 public:
-	GameEngine() : m_Board(), m_Players(), m_PreGameComplete(false) {}
+	GameEngine() : m_Board(), m_Players(), m_PreGameComplete(false), m_SkipNextInfectionPhase(false) {}
 	~GameEngine();
 
 	void SaveGame();

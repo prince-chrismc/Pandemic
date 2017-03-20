@@ -33,7 +33,8 @@ public:
 	InfectionCard* DrawCardForEpidemic();
 	void Intensify();
 	void ResiliantPopulation(const InfectionCard::CardsList& id);
-	void Forecast();
+	std::vector<InfectionCard*> GetForecast();
+	void SetForecast(std::vector<InfectionCard*> top);
 	std::string GetSaveOutput();  //FilePrint
 	void InputLoadedGame(std::deque<InfectionCard::CardsList> deck, std::deque<InfectionCard::CardsList> discard);
 };

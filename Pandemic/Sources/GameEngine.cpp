@@ -216,6 +216,12 @@ void GameEngine::TurnDrawPhase(const uint16_t& pos)
 // TurnInfectPhase --------------------------------------------------------------------------------
 void GameEngine::TurnInfectPhase()
 {
+	if (m_SkipNextInfectionPhase) // for event card quiet night
+	{
+		m_SkipNextInfectionPhase = false;
+		return;
+	}
+
 	for (size_t i = 0; i < m_Board.m_InfectRate.GetRate(); i++)
 	{
 		InfectCity();
@@ -1154,12 +1160,43 @@ void GameEngine::ExecuteMove(const uint16_t& pos, const MoveOptions & opt, const
 		m_Players.at(selection)->ChangeCity(std::stringstream(secondary.at(pick)).str()); // move them to desired city
 		break;
 	case RESILLIENT:
-		city = m_Board.m_Map.GetCityWithID(cityID);
-
+		m_Board.m_InfecDeck.ResiliantPopulation((InfectionCard::CardsList)(cityID + InfectionCard::INFECTIONCARD_MIN));
+		m_Board.m_Map.GetCityWithID(cityID);
 	case FORECAST:
+		/*
+			TODO: Implement
+		*/
 	case QUIETNIGHT:
+		m_SkipNextInfectionPhase = true;
 	case GOVTGRANT:
+		if (m_Board.m_Centers.GetCenters().size() < 7)
+		{
+			m_Board.m_Centers.AddStation(m_Board.m_Map.GetCityWithID(cityID));
+			std::cout << "New Research Center in: " << m_Board.m_Map.GetCityWithID(cityID)->GetCityName() << std::endl;
+		}
+		else
+		{
+			std::cout << "Remove Existing Center..." << std::endl;
+			int i = 0;
+			for each(ResearchCenter rc in m_Board.m_Centers.GetCenters())
+			{
+				std::cout << i << ": ";
+				rc.GetCity()->PrintInformation();
+			}
 
+			uint16_t selection = 0;
+			do
+			{
+				std::cout << "Selection: ";
+				std::string input;
+				std::getline(std::cin, input); // select rc to remove
+				ss << input;
+				ss >> selection;
+			} while (selection < 0 || selection >= i);
+
+			m_Board.m_Centers.RemoveStation(selection);
+			m_Board.m_Centers.AddStation(m_Board.m_Map.GetCityWithID(cityID));
+			std::cout << "New Research Center in: " << m_Board.m_Map.GetCityWithID(cityID)->GetCityName() << std::endl;
 	default:
 		break;
 	}
