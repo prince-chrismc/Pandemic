@@ -165,3 +165,8 @@ bool CureMakers::IsNotEradicated(const Color & color)
 		return false;
 	}
 }
+
+bool CureMakers::IsAllCuresDiscovered()
+{
+	return m_Red.IsCured() && m_Yellow.IsCured() && m_Blue.IsCured() && m_Black.IsCured();
+}

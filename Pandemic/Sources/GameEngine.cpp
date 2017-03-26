@@ -283,6 +283,7 @@ void GameEngine::InfectCity(const uint16_t& cubesToAdd)
 			city->AddCube(m_Board.m_Cubes.TakeCube(city->GetCityColor()));
 			cubesActuallyAdded += 1;
 		}
+		CheckIfGameOver();
 	}
 
 	m_Log.Notify(city->GetCityName(), cubesActuallyAdded);
@@ -330,8 +331,8 @@ void GameEngine::Outbreak(City * city)
 			connected->AddCube(m_Board.m_Cubes.TakeCube(city->GetCityColor()));
 			m_Log.Notify(connected->GetCityName());
 		}
-	}
 	CheckIfGameOver();
+	}
 }
 // Outbreak ---------------------------------------------------------------------------------------
 
@@ -345,23 +346,26 @@ void GameEngine::Epidemic()
 
 	// 2. Infect Last Card of InfectionDeck with at most 3 Cubes
 	InfectionCard* ic = m_Board.m_InfecDeck.DrawCardForEpidemic();
-	Color c = ic->GetCityColor();
-	if (m_Board.m_Cures.IsNotEradicated(c))
+	Color citycolor = ic->GetCityColor();
+	if (m_Board.m_Cures.IsNotEradicated(citycolor))
 	{
 		City::CityID cid = (City::CityID)(ic->GetNumID() - InfectionCard::INFECTIONCARD_MIN);
 		delete ic; ic = nullptr;
 
 		City* city = m_Board.m_Map.GetCityWithID(cid);
-
+		std::cout << "Occurring in: " << city->GetCityName() << std::endl;
 		uint16_t i = 0;
 		for (; i < 3; i += 1)
 		{
 			// 2.1. Otbreaks if Need be
-			if (city->GetNumberOfCubes(city->GetCityColor()) == 3)
+			if (city->GetNumberOfCubes(citycolor) == 3)
 			{
 				Outbreak(city);
 				break;
-			}			
+			}
+
+			city->AddCube(m_Board.m_Cubes.TakeCube(citycolor));
+			CheckIfGameOver();
 		}
 		m_Log.Notify(city->GetCityName(), i);
 
@@ -419,7 +423,7 @@ GameEngine::MovesPerCity GameEngine::CalculatePlayerOpt(const uint16_t & pos)
 	}
 
 	// Discover Cure ------------------------------------------------------------------------------
-	for each(CityList::CityID id in DiscoverCure(pos))
+	for each(CityList::CityID id in DetermineDiscoverCure(pos))
 	{
 		options.insert(std::make_pair(GameEngine::CUREDISEASE, id));
 	}
@@ -568,8 +572,8 @@ std::vector<CityList::CityID> GameEngine::ShareKnowlegdeFor(const uint16_t& pos)
 }
 // ShareKnowlegdeFor ------------------------------------------------------------------------------
 
-// DiscoverCure -----------------------------------------------------------------------------------
-std::vector<CityList::CityID> GameEngine::DiscoverCure(const uint16_t& pos)
+// DetermineDiscoverCure --------------------------------------------------------------------------
+std::vector<CityList::CityID> GameEngine::DetermineDiscoverCure(const uint16_t& pos)
 {
 	std::vector<CityList::CityID> result;
 	for each(ResearchCenter rc in m_Board.m_Centers.GetCenters())
@@ -595,7 +599,7 @@ std::vector<CityList::CityID> GameEngine::DiscoverCure(const uint16_t& pos)
 	}
 	return result;
 }
-// DiscoverCure -----------------------------------------------------------------------------------
+// DetermineDiscoverCure --------------------------------------------------------------------------
 
 // DetermineReseilientPop -------------------------------------------------------------------------
 std::vector<CityList::CityID> GameEngine::DetermineReseilientPop(const uint16_t& pos)
@@ -1091,6 +1095,7 @@ void GameEngine::ExecuteMove(const uint16_t& pos, const MoveOptions & opt, const
 						m_Board.m_PlayerDeck.DiscardCard(m_Players.at(pos)->RemoveCardAt((uint16_t)k));
 			}
 		}
+		CheckIfGameWon();
 		break;
 	case AIRLIFT:
 		for (size_t l = 0; l < m_Players.at(pos)->m_Hand.size(); l += 1)
@@ -1248,13 +1253,20 @@ void GameEngine::AddResearchCenter(const CityList::CityID& id)
 // CheckIfGameOver --------------------------------------------------------------------------------
 void GameEngine::CheckIfGameOver()
 {
-	if (m_Board.m_Cubes.IsAnyEmpty()) throw GameOverException();
-	if (m_Board.m_OutBreak.getMarker() == 8) throw GameOverException();
-	if (m_Board.m_PlayerDeck.IsDeckEmpty()) throw GameOverException();
+	if (m_Board.m_Cubes.IsAnyEmpty()) throw GameOverException("a cube pile is empty!");
+	if (m_Board.m_OutBreak.getMarker() == 8) throw GameOverException("maximum outbreaks has been reached");
+	if (m_Board.m_PlayerDeck.IsDeckEmpty()) throw GameOverException("the player deck is empty!");
 }
 // CheckIfGameOver --------------------------------------------------------------------------------
 
-// ExecuteAirLift ----------------------------------------------------------------------------------------
+// CheckIfGameWon ---------------------------------------------------------------------------------
+void GameEngine::CheckIfGameWon()
+{
+	if (m_Board.m_Cures.IsAllCuresDiscovered()) throw GameWonException("all Cures have been discovered!");
+}
+// CheckIfGameWon ---------------------------------------------------------------------------------
+
+// ExecuteAirLift ---------------------------------------------------------------------------------
 void GameEngine::ExecuteAirLift()
 {
 	std::stringstream ss;
@@ -1277,6 +1289,10 @@ void GameEngine::ExecuteAirLift()
 		std::getline(std::cin, input); // select player to move
 		ss = std::stringstream(input);
 		ss >> selection;
+
+		if (selection < 0 || selection >= i)
+			std::cout << "Invalid input! please try again." << std::endl;
+
 	} while (selection < 0 || selection >= i);
 
 	int j = 0;
@@ -1300,10 +1316,13 @@ void GameEngine::ExecuteAirLift()
 		ss = std::stringstream(input);
 		ss >> pick;
 	} while (pick < 0 || pick >= j);
-
-	m_Players.at(selection)->ChangeCity(std::stringstream(secondary.at(pick)).str()); // move them to desired city
+	
+	ss = std::stringstream();
+	ss << std::hex << secondary.at(pick);
+	m_Players.at(selection)->ChangeCity(ss.str()); // move them to desired city
+	m_Players.at(selection)->PrintInfo();
 }
-// ExecuteAirLift ----------------------------------------------------------------------------------------
+// ExecuteAirLift ---------------------------------------------------------------------------------
 
 // SaveGame ---------------------------------------------------------------------------------------
 void GameEngine::SaveGame()
@@ -1568,9 +1587,8 @@ void GameEngine::LoadGame()
 					break;
 				}
 			}
-
+			CheckIfGameOver();
 		}
-
 	}
 
 	// Players ------------------------------------------------------------------------------------
@@ -1781,15 +1799,19 @@ void GameEngine::Launch()
 
 	try
 	{
-		for (int i = 0; /* no limit */; i += 1)
+		for (uint16_t i = 0; /* no limit */; i += 1)
 		{
-			TurnSequence(i % 2);
-			//TurnSequence(i % m_Players.size());
+			TurnSequence(i % (uint16_t)m_Players.size());
 		}
 	}
-	catch (const GameOverException)
+	catch (const GameOverException& e)
 	{
-		std::cout << "\n\n Game OVer !!!!!!!!!\n\n";
+		std::cout << "\n\n ---- GAME OVER! ----\n  You lost due to: " << e.what() << std::endl;
 	}
+	catch (const GameWonException& e)
+	{
+		std::cout << "\n\n ---- Congradulations! ----\n  You won due to: " << e.what() << std::endl;
+	}
+	
 }
 // Launch -----------------------------------------------------------------------------------------

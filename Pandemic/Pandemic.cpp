@@ -16,12 +16,9 @@ int main()
 	PrintOpening(); // Generic Welcome Message
 
 	GameEngine Game; // New Game Board
-	//Game.LoadGame();
 	Game.Initialize();
 	Game.Launch();
-
-	//Game.SaveGame();
-
+	
 	std::cout << "\n\nDemontration finished press 'enter' key to exit...";
 	std::cin.get();
 	return 0;

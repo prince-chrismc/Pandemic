@@ -11,8 +11,6 @@
 #include "Player.h"
 #include "InfectionLog.h"
 
-class GameOverException final : public std::exception {};
-
 class GameEngine final
 {
 private:
@@ -30,6 +28,17 @@ protected:
 	void PlayersSetup();
 	void DifficultySetup();
 	void BoardSetup();
+	
+	/*
+		TODO: Improve SameGame
+		- Engine make file name on ctor
+		- auto save every turn
+	*/
+	void SaveGame();
+	/*
+		TODO: Add load to initialize
+	*/
+	void LoadGame();
 
 	// game play
 	enum MoveOptions
@@ -80,7 +89,7 @@ protected:
 				std::vector<CityList::CityID> GetCharterFlightsFor(const uint16_t& pos);
 				std::vector<CityList::CityID> GetShuttleFlightsFor(const uint16_t& pos);
 				std::vector<CityList::CityID> ShareKnowlegdeFor(const uint16_t& pos);
-				std::vector<CityList::CityID> DiscoverCure(const uint16_t& pos);
+				std::vector<CityList::CityID> DetermineDiscoverCure(const uint16_t& pos);
 					Color DetermineCureColor(const uint16_t& pos);
 				std::vector<CityList::CityID> DetermineReseilientPop(const uint16_t& pos);
 				std::vector<CityList::CityID> DetermineAirlift(const uint16_t& pos);
@@ -88,11 +97,12 @@ protected:
 				std::vector<CityList::CityID> DetermineQuietNight(const uint16_t& pos);
 				std::vector<CityList::CityID> DetermineGovernmentGrant(const uint16_t& pos);
 			PlayerMoves DeterminePlayerMoves(const MovesPerCity& options);
-				std::string MoveOpToString(const MoveOptions & opt);
+				//std::string MoveOpToString(const MoveOptions & opt);
 			void ExecuteMove(const uint16_t& pos, const MoveOptions& opt, const CityList::CityID& cityID);
 				void AddResearchCenter(const CityList::CityID& id);
 				void ExecuteAirLift();
 				void CheckIfGameOver();
+				void CheckIfGameWon();
 		void TurnDrawPhase(const uint16_t& pos);
 		void TurnInfectPhase();
 			void InfectCity(const uint16_t& cubesToAdd = 1);
@@ -106,10 +116,25 @@ public:
 	GameEngine() : m_Board(), m_Players(), m_PreGameComplete(false), m_SkipNextInfectionPhase(false) {}
 	~GameEngine();
 
-	void SaveGame();
-	void LoadGame();
-
 	void Initialize();
 	void Launch();
 };
 
+
+class GameOverException final : public std::exception
+{
+private:
+	std::string m_What;
+public:
+	GameOverException(const std::string& reason) : m_What(reason) {}
+	const char* what() const { const char* what = m_What.c_str(); return what; }
+};
+
+class GameWonException final : public std::exception
+{
+private:
+	std::string m_What;
+public:
+	GameWonException(const std::string& reason) : m_What(reason) {}
+	const char* what() const { const char* what = m_What.c_str(); return what; }
+};
