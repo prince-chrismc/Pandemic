@@ -144,7 +144,6 @@ public:
 	CityCard(const CardsList& id) : PlayerCard(id, GetCardName(id), GetCardDesc(id)) {}
 
 	Color GetCityColor();
-
 };
 
 

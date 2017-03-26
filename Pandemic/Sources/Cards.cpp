@@ -97,7 +97,7 @@ const char* Card::GetCardName(const uint64_t& id)
 	case CityCard::MONTREAL: name = "Montreal"; break;
 	case CityCard::MOSCOW: name = "Moscow"; break;
 	case CityCard::MUMBAI: name = "Mumbai"; break;
-	case CityCard::NEWYORK: name = "NewYork"; break;
+	case CityCard::NEWYORK: name = "New York"; break;
 	case CityCard::OSAKA: name = "Osaka"; break;
 	case CityCard::PARIS: name = "Paris"; break;
 	case CityCard::RIYADH: name = "Riyadh"; break;
@@ -128,6 +128,7 @@ const char* Card::GetCardName(const uint64_t& id)
 	case RoleCard::CONTIGENCY: name = "Contingency Planner"; break;
 	case RoleCard::DISPATCHER: name = "Dispatcher"; break;
 	case RoleCard::MEDIC: name = "Medic"; break;
+	case RoleCard::OPERATIONS: name = "Operations Expert"; break;
 	case RoleCard::QUARANTINE: name = "Quarantine Specalist"; break;
 	case RoleCard::RESEARCHER: name = "Reseacher"; break;
 	case RoleCard::SCIENTIST: name = "Scientist"; break;
@@ -165,7 +166,7 @@ const char* Card::GetCardName(const uint64_t& id)
 	case InfectionCard::MONTREAL: name = "Montreal"; break;
 	case InfectionCard::MOSCOW: name = "Moscow"; break;
 	case InfectionCard::MUMBAI: name = "Mumbai"; break;
-	case InfectionCard::NEWYORK: name = "NewYork"; break;
+	case InfectionCard::NEWYORK: name = "New York"; break;
 	case InfectionCard::OSAKA: name = "Osaka"; break;
 	case InfectionCard::PARIS: name = "Paris"; break;
 	case InfectionCard::RIYADH: name = "Riyadh"; break;
@@ -212,7 +213,7 @@ const char* CityCard::GetCardDesc(const uint64_t & id)
 	case CityCard::KHARTOUM: desc = "The city of Khartoum"; break;
 	case CityCard::KINSHASA: desc = "The city of Kinshasa"; break;
 	case CityCard::KOLKATA: desc = "The city of Kolkata"; break;
-	case CityCard::LAGOS: desc = "Lagos"; break;
+	case CityCard::LAGOS: desc = "The city of Lagos"; break;
 	case CityCard::LIMA: desc = "The city of Lima"; break;
 	case CityCard::LONDON: desc = "The city of London"; break;
 	case CityCard::LOSANGELES: desc = "The city of Los Angeles"; break;
@@ -224,7 +225,7 @@ const char* CityCard::GetCardDesc(const uint64_t & id)
 	case CityCard::MONTREAL: desc = "The city of Montreal"; break;
 	case CityCard::MOSCOW: desc = "The city of Moscow"; break;
 	case CityCard::MUMBAI: desc = "The city of Mumbai"; break;
-	case CityCard::NEWYORK: desc = "The city of NewYork"; break;
+	case CityCard::NEWYORK: desc = "The city of New York"; break;
 	case CityCard::OSAKA: desc = "The city of Osaka"; break;
 	case CityCard::PARIS: desc = "The city of Paris"; break;
 	case CityCard::RIYADH: desc = "The city of Riyadh"; break;
@@ -342,7 +343,7 @@ const char* InfectionCard::GetCardDesc(const uint64_t & id)
 	case InfectionCard::MONTREAL: desc = "Infect the city of Montreal"; break;
 	case InfectionCard::MOSCOW: desc = "Infect the city of Moscow"; break;
 	case InfectionCard::MUMBAI: desc = "Infect the city of Mumbai"; break;
-	case InfectionCard::NEWYORK: desc = "Infect the city of NewYork"; break;
+	case InfectionCard::NEWYORK: desc = "Infect the city of New York"; break;
 	case InfectionCard::OSAKA: desc = "Infect the city of Osaka"; break;
 	case InfectionCard::PARIS: desc = "Infect the city of Paris"; break;
 	case InfectionCard::RIYADH: desc = "Infect the city of Riyadh"; break;
