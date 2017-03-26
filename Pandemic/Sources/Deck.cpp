@@ -248,6 +248,7 @@ void PlayerDeck::IncreaseDifficulty(const Difficulty::DIFFICULTY& dif)
 {
 	if (dif <= m_Difficulty) return; //restrict to increasing only
 
+	m_Difficulty = dif;
 	switch (dif)
 	{
 	case Difficulty::HARD:

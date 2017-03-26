@@ -111,9 +111,26 @@ class Difficulty
 public:
 	enum DIFFICULTY //Game Setting
 	{
-		INVALID = -1,
+		INVALID,
 		EASY,
 		MEDIUM,
 		HARD
 	};
 };
+
+//const char* GetColorName(const Color& color)
+//{
+//	switch (color)
+//	{
+//	case RED:
+//		return "RED";
+//	case BLUE:
+//		return "BLUE";
+//	case YELLOW:
+//		return "YELLOW";
+//	case BLACK:
+//		return "BLACK";
+//	default:
+//		return "INVALID";
+//	}
+//}
