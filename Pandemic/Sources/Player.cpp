@@ -60,6 +60,7 @@ PlayerCard* Player::RemoveCard(const CityList::CityID& id)
 		}
 		++counter;
 	}
+	return nullptr;
 }
 
 CityList::CityID Player::GetCityID()
