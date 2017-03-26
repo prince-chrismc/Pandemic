@@ -381,25 +381,25 @@ GameEngine::MovesPerCity GameEngine::CalculatePlayerOpt(const uint16_t & pos)
 	MovesPerCity options;
 
 	// Drive --------------------------------------------------------------------------------------
-	for each(CityList::CityID id in GetDriveCitiesFor(pos))
+	for each(CityList::CityID id in CalculateDriveCitiesFor(pos))
 	{
 		options.insert(std::make_pair(GameEngine::DRIVE_FERRY, id));
 	}
 
 	// Flight --------------------------------------------------------------------------------------
-	for each(CityList::CityID id in GetFlightCitiesFor(pos))
+	for each(CityList::CityID id in CalculateFlightCitiesFor(pos))
 	{
 		options.insert(std::make_pair(GameEngine::FLIGHT, id));
 	}
 
 	// Charter ------------------------------------------------------------------------------------
-	for each(CityList::CityID id in GetCharterFlightsFor(pos))
+	for each(CityList::CityID id in CalculateCharterFlightsFor(pos))
 	{
 		options.insert(std::make_pair(GameEngine::CHARTER, id));
 	}
 
 	// Shuttle ------------------------------------------------------------------------------------
-	for each(CityList::CityID id in GetShuttleFlightsFor(pos))
+	for each(CityList::CityID id in CalculateShuttleFlightsFor(pos))
 	{
 		options.insert(std::make_pair(GameEngine::SHUTTLE, id));
 	}
@@ -417,43 +417,43 @@ GameEngine::MovesPerCity GameEngine::CalculatePlayerOpt(const uint16_t & pos)
 	}
 
 	// Share Knowledge --------–-------------------------------------------------------------------
-	for each(CityList::CityID id in ShareKnowlegdeFor(pos))
+	for each(CityList::CityID id in CalculateShareKnowlegdeFor(pos))
 	{
 		options.insert(std::make_pair(GameEngine::SHARECARD, id));
 	}
 
 	// Discover Cure ------------------------------------------------------------------------------
-	for each(CityList::CityID id in DetermineDiscoverCure(pos))
+	for each(CityList::CityID id in CalculateDiscoverCureFor(pos))
 	{
 		options.insert(std::make_pair(GameEngine::CUREDISEASE, id));
 	}
 
 	// EventCard Airlift---------------------------------------------------------------------------
-	for each(CityList::CityID id in DetermineAirlift(pos))
+	for each(CityList::CityID id in CalculateAirliftFor(pos))
 	{
 		options.insert(std::make_pair(GameEngine::AIRLIFT, id));
 	}
 
 	// EventCard Resiliant Population -------------------------------------------------------------
-	for each(CityList::CityID id in DetermineReseilientPop(pos))
+	for each(CityList::CityID id in CalculateReseilientPopFor(pos))
 	{
 		options.insert(std::make_pair(GameEngine::RESILLIENT, id));
 	}
 
 	// EventCard Forecast -------------------------------------------------------------------------
-	for each(CityList::CityID id in DetermineForecast(pos))
+	for each(CityList::CityID id in CalculateForecastFor(pos))
 	{
 		options.insert(std::make_pair(GameEngine::FORECAST, id));
 	}
 
 	// EventCard QuietNight -----------------------------------------------------------------------
-	for each(CityList::CityID id in DetermineQuietNight(pos))
+	for each(CityList::CityID id in CalculateQuietNightFor(pos))
 	{
 		options.insert(std::make_pair(GameEngine::QUIETNIGHT, id));
 	}
 
 	// EventCard Government Grant -----------------------------------------------------------------
-	for each(CityList::CityID id in DetermineGovernmentGrant(pos))
+	for each(CityList::CityID id in CalculateGovernmentGrantFor(pos))
 	{
 		options.insert(std::make_pair(GameEngine::GOVTGRANT, id));
 	}
@@ -462,8 +462,8 @@ GameEngine::MovesPerCity GameEngine::CalculatePlayerOpt(const uint16_t & pos)
 }
 // CalculatePlayerOpt -----------------------------------------------------------------------------
 
-// GetDriveCitiesFor ------------------------------------------------------------------------------
-std::vector<CityList::CityID> GameEngine::GetDriveCitiesFor(const uint16_t& pos)
+// CalculateDriveCitiesFor ------------------------------------------------------------------------
+std::vector<CityList::CityID> GameEngine::CalculateDriveCitiesFor(const uint16_t& pos)
 {
 	std::vector<CityList::CityID> result;
 	for each(City* city in m_Board.m_Map.GetCitiesConnectedTo(m_Players.at(pos)->GetCityID()))
@@ -472,10 +472,10 @@ std::vector<CityList::CityID> GameEngine::GetDriveCitiesFor(const uint16_t& pos)
 	}
 	return result;
 }
-// GetDriveCitiesFor ------------------------------------------------------------------------------
+// CalculateDriveCitiesFor ------------------------------------------------------------------------
 
-// GetFlightCitiesFor -----------------------------------------------------------------------------
-std::vector<CityList::CityID> GameEngine::GetFlightCitiesFor(const uint16_t& pos)
+// CalculateFlightCitiesFor -----------------------------------------------------------------------
+std::vector<CityList::CityID> GameEngine::CalculateFlightCitiesFor(const uint16_t& pos)
 {
 	std::vector<CityList::CityID> result;
 	for each (PlayerCard* pc in m_Players.at(pos)->m_Hand)
@@ -487,10 +487,10 @@ std::vector<CityList::CityID> GameEngine::GetFlightCitiesFor(const uint16_t& pos
 	}
 	return result;
 }
-// GetFlightCitiesFor -----------------------------------------------------------------------------
+// CalculateFlightCitiesFor -----------------------------------------------------------------------
 
-// GetCharterFlightsFor ---------------------------------------------------------------------------
-std::vector<CityList::CityID> GameEngine::GetCharterFlightsFor(const uint16_t& pos)
+// CalculateCharterFlightsFor ---------------------------------------------------------------------
+std::vector<CityList::CityID> GameEngine::CalculateCharterFlightsFor(const uint16_t& pos)
 {
 	std::vector<CityList::CityID> result;
 	if (m_Players.at(pos)->HasCurrentCityCard())
@@ -505,10 +505,10 @@ std::vector<CityList::CityID> GameEngine::GetCharterFlightsFor(const uint16_t& p
 	}
 	return result;
 }
-// GetCharterFlightsFor ---------------------------------------------------------------------------
+// CalculateCharterFlightsFor ---------------------------------------------------------------------
 
-// GetShuttleFlightsFor ---------------------------------------------------------------------------
-std::vector<CityList::CityID> GameEngine::GetShuttleFlightsFor(const uint16_t& pos)
+// CalculateShuttleFlightsFor ---------------------------------------------------------------------
+std::vector<CityList::CityID> GameEngine::CalculateShuttleFlightsFor(const uint16_t& pos)
 {
 	bool IsInACityWithAResearchCEnter = false;
 	std::vector<CityList::CityID> flights;
@@ -532,10 +532,10 @@ std::vector<CityList::CityID> GameEngine::GetShuttleFlightsFor(const uint16_t& p
 	}
 	return flights;
 }
-// GetShuttleFlightsFor ---------------------------------------------------------------------------
+// CalculateShuttleFlightsFor ---------------------------------------------------------------------
 
-// ShareKnowlegdeFor ------------------------------------------------------------------------------
-std::vector<CityList::CityID> GameEngine::ShareKnowlegdeFor(const uint16_t& pos)
+// CalculateShareKnowlegdeFor ---------------------------------------------------------------------
+std::vector<CityList::CityID> GameEngine::CalculateShareKnowlegdeFor(const uint16_t& pos)
 {
 	std::vector<CityList::CityID> result;
 
@@ -570,10 +570,10 @@ std::vector<CityList::CityID> GameEngine::ShareKnowlegdeFor(const uint16_t& pos)
 	}
 	return result;
 }
-// ShareKnowlegdeFor ------------------------------------------------------------------------------
+// CalculateShareKnowlegdeFor ---------------------------------------------------------------------
 
-// DetermineDiscoverCure --------------------------------------------------------------------------
-std::vector<CityList::CityID> GameEngine::DetermineDiscoverCure(const uint16_t& pos)
+// CalculateDiscoverCureFor -----------------------------------------------------------------------
+std::vector<CityList::CityID> GameEngine::CalculateDiscoverCureFor(const uint16_t& pos)
 {
 	std::vector<CityList::CityID> result;
 	for each(ResearchCenter rc in m_Board.m_Centers.GetCenters())
@@ -599,10 +599,10 @@ std::vector<CityList::CityID> GameEngine::DetermineDiscoverCure(const uint16_t& 
 	}
 	return result;
 }
-// DetermineDiscoverCure --------------------------------------------------------------------------
+// CalculateDiscoverCureFor -----------------------------------------------------------------------
 
-// DetermineReseilientPop -------------------------------------------------------------------------
-std::vector<CityList::CityID> GameEngine::DetermineReseilientPop(const uint16_t& pos)
+// CalculateReseilientPopFor ----------------------------------------------------------------------
+std::vector<CityList::CityID> GameEngine::CalculateReseilientPopFor(const uint16_t& pos)
 {
 	std::vector<CityList::CityID> result;
 
@@ -623,10 +623,10 @@ std::vector<CityList::CityID> GameEngine::DetermineReseilientPop(const uint16_t&
 
 	return result;
 }
-// DetermineReseilientPop -------------------------------------------------------------------------
+// CalculateReseilientPopFor ----------------------------------------------------------------------
 
-// DetermineAirlift -------------------------------------------------------------------------------
-std::vector<CityList::CityID> GameEngine::DetermineAirlift(const uint16_t & pos)
+// CalculateAirliftFor ----------------------------------------------------------------------------
+std::vector<CityList::CityID> GameEngine::CalculateAirliftFor(const uint16_t & pos)
 {
 	std::vector<CityList::CityID> result;
 
@@ -644,10 +644,10 @@ std::vector<CityList::CityID> GameEngine::DetermineAirlift(const uint16_t & pos)
 
 	return result;
 }
-// DetermineAirlift -------------------------------------------------------------------------------
+// CalculateAirliftFor ----------------------------------------------------------------------------
 
-// DetermineForecast ------------------------------------------------------------------------------
-std::vector<CityList::CityID> GameEngine::DetermineForecast(const uint16_t & pos)
+// CalculateForecastFor ---------------------------------------------------------------------------
+std::vector<CityList::CityID> GameEngine::CalculateForecastFor(const uint16_t & pos)
 {
 	std::vector<CityList::CityID> result;
 
@@ -665,10 +665,10 @@ std::vector<CityList::CityID> GameEngine::DetermineForecast(const uint16_t & pos
 
 	return result;
 }
-// DetermineForecast ------------------------------------------------------------------------------
+// CalculateForecastFor ---------------------------------------------------------------------------
 
-// DetermineQuietNight ----------------------------------------------------------------------------
-std::vector<CityList::CityID> GameEngine::DetermineQuietNight(const uint16_t & pos)
+// CalculateQuietNightFor -------------------------------------------------------------------------
+std::vector<CityList::CityID> GameEngine::CalculateQuietNightFor(const uint16_t & pos)
 {
 	std::vector<CityList::CityID> result;
 
@@ -686,10 +686,10 @@ std::vector<CityList::CityID> GameEngine::DetermineQuietNight(const uint16_t & p
 
 	return result;
 }
-// DetermineQuietNight ----------------------------------------------------------------------------
+// CalculateQuietNightFor -------------------------------------------------------------------------
 
-// DetermineGovernmentGrant -----------------------------------------------------------------------
-std::vector<CityList::CityID> GameEngine::DetermineGovernmentGrant(const uint16_t & pos)
+// CalculateGovernmentGrantFor --------------------------------------------------------------------
+std::vector<CityList::CityID> GameEngine::CalculateGovernmentGrantFor(const uint16_t & pos)
 {
 	std::vector<CityList::CityID> result;
 
@@ -718,7 +718,7 @@ std::vector<CityList::CityID> GameEngine::DetermineGovernmentGrant(const uint16_
 	}
 	return result;
 }
-// DetermineGovernmentGrant -----------------------------------------------------------------------
+// CalculateGovernmentGrantFor --------------------------------------------------------------------
 
 // DetermineCureColor -----------------------------------------------------------------------------
 Color GameEngine::DetermineCureColor(const uint16_t& pos)
