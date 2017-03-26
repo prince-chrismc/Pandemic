@@ -192,9 +192,6 @@ private:
 public:
 	ResearchCenter(City* city) : m_City(city) {}
 
-	//Prevent Assignment
-	void operator=(const ResearchCenter&) = delete;
-
 	City* GetCity() { return m_City; }
 	City::CityID GetCityID() { return m_City->GetCityID(); }
 };

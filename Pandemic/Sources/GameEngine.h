@@ -67,35 +67,39 @@ protected:
 
 		MAX = 0xFFFUL
 	};
+
+	// Game Play Functions ------------------------------------------------------------------------
 	typedef std::multimap<MoveOptions, City::CityID> MovesPerCity;
 	typedef std::map<uint16_t, std::pair<const MoveOptions, CityList::CityID>> PlayerMoves;
 
 	void TurnSequence(const uint16_t& pos);
-	void TurnActionsPhase(const uint16_t& pos);
-	void TurnDrawPhase(const uint16_t& pos);
-	void TurnInfectPhase();
-	void InfectCity(const uint16_t& cubesToAdd = 1);
-	bool IsQuarentineSpecialistNearBy(City* city);
-	void Outbreak(City* city);
-	void Epidemic();
-	MovesPerCity CalculatePlayerOpt(const uint16_t& pos);
-	std::vector<CityList::CityID> GetDriveCitiesFor(const uint16_t& pos);
-	std::vector<CityList::CityID> GetFlightCitiesFor(const uint16_t& pos);
-	std::vector<CityList::CityID> GetCharterFlightsFor(const uint16_t& pos);
-	std::vector<CityList::CityID> GetShuttleFlightsFor(const uint16_t& pos);
-	std::vector<CityList::CityID> ShareKnowlegdeFor(const uint16_t& pos);
-	std::vector<CityList::CityID> DiscoverCure(const uint16_t& pos);
-	std::vector<CityList::CityID> DetermineReseilientPop(const uint16_t& pos);
-	std::vector<CityList::CityID> DetermineAirlift(const uint16_t& pos);
-	std::vector<CityList::CityID> DetermineForecast(const uint16_t& pos);
-	std::vector<CityList::CityID> DetermineQuietNight(const uint16_t& pos);
-	std::vector<CityList::CityID> DetermineGovernmentGrant(const uint16_t& pos);
-	Color DetermineCureColor(const uint16_t& pos);
-	PlayerMoves DeterminePlayerMoves(const MovesPerCity& options);
-	static std::string MoveOpToString(const MoveOptions& opt);
-	void ExecuteMove(const uint16_t& pos, const MoveOptions& opt, const CityList::CityID& cityID);
-	void AddResearchCenter(const CityList::CityID& id);
-	void CheckIfGameOver();
+		void TurnActionsPhase(const uint16_t& pos);
+			MovesPerCity CalculatePlayerOpt(const uint16_t& pos);
+				std::vector<CityList::CityID> GetDriveCitiesFor(const uint16_t& pos);
+				std::vector<CityList::CityID> GetFlightCitiesFor(const uint16_t& pos);
+				std::vector<CityList::CityID> GetCharterFlightsFor(const uint16_t& pos);
+				std::vector<CityList::CityID> GetShuttleFlightsFor(const uint16_t& pos);
+				std::vector<CityList::CityID> ShareKnowlegdeFor(const uint16_t& pos);
+				std::vector<CityList::CityID> DiscoverCure(const uint16_t& pos);
+					Color DetermineCureColor(const uint16_t& pos);
+				std::vector<CityList::CityID> DetermineReseilientPop(const uint16_t& pos);
+				std::vector<CityList::CityID> DetermineAirlift(const uint16_t& pos);
+				std::vector<CityList::CityID> DetermineForecast(const uint16_t& pos);
+				std::vector<CityList::CityID> DetermineQuietNight(const uint16_t& pos);
+				std::vector<CityList::CityID> DetermineGovernmentGrant(const uint16_t& pos);
+			PlayerMoves DeterminePlayerMoves(const MovesPerCity& options);
+				std::string MoveOpToString(const MoveOptions & opt);
+			void ExecuteMove(const uint16_t& pos, const MoveOptions& opt, const CityList::CityID& cityID);
+				void AddResearchCenter(const CityList::CityID& id);
+				void ExecuteAirLift();
+				void CheckIfGameOver();
+		void TurnDrawPhase(const uint16_t& pos);
+		void TurnInfectPhase();
+			void InfectCity(const uint16_t& cubesToAdd = 1);
+			bool IsQuarentineSpecialistNearBy(City* city);
+			void Outbreak(City* city);
+			void Epidemic();
+	// Game Play Functions ------------------------------------------------------------------------
 
 
 public:

@@ -114,14 +114,23 @@ void InfectionDeck::ResiliantPopulation(const InfectionCard::CardsList& id)
 	}
 }
 
-std::vector<InfectionCard*> InfectionDeck::GetForecast()
+std::deque<InfectionCard*> InfectionDeck::GetForecast()
 {
-	//for(int i =0; i < 6; i += 1)
+	std::deque<InfectionCard*> topsix;
+	for (int i = 0; i < 6; i += 1)
+	{
+		topsix.emplace_front(DrawCard());
+	}
 }
 
-void InfectionDeck::SetForecast(std::vector<InfectionCard*> top)
+void InfectionDeck::SetForecast(std::deque<InfectionCard*> top)
 {
-
+	for each(InfectionCard* ic in top)
+	{
+		m_Deck.emplace_front(ic->GetNumID());
+		delete ic;
+		ic = nullptr;
+	}
 }
 
 std::string InfectionDeck::GetSaveOutput()
