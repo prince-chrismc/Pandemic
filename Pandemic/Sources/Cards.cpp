@@ -188,7 +188,7 @@ const char* Card::GetCardName(const uint64_t& id)
 
 const char* CityCard::GetCardDesc(const uint64_t & id)
 {
-	const char* desc;
+	const char* desc = "";
 	switch (id)
 	{
 	case CityCard::ALGIERS: desc = "The city of Algiers"; break;
@@ -306,7 +306,7 @@ const char* ReferenceCard::GetCardDesc()
 
 const char* InfectionCard::GetCardDesc(const uint64_t & id)
 {
-	const char* desc;
+	const char* desc = "";
 	switch (id)
 	{
 	case InfectionCard::ALGIERS: desc = "Infect the city of Algiers"; break;

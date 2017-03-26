@@ -575,7 +575,7 @@ std::vector<CityList::CityID> GameEngine::DiscoverCure(const uint16_t& pos)
 	{
 		if (rc.GetCityID() == m_Players.at(pos)->GetCityID())
 		{
-			int NumOfCardsNeeded = m_Players.at(pos)->GetNumOfCardToDiscoverCure();
+			uint16_t NumOfCardsNeeded = m_Players.at(pos)->GetNumOfCardToDiscoverCure();
 			if (m_Players.at(pos)->m_Hand.size() >= NumOfCardsNeeded)
 			{
 				switch (DetermineCureColor(pos))
@@ -718,7 +718,7 @@ std::vector<CityList::CityID> GameEngine::DetermineGovernmentGrant(const uint16_
 // DetermineCureColor -----------------------------------------------------------------------------
 Color GameEngine::DetermineCureColor(const uint16_t& pos)
 {
-	int NumOfCardsNeeded = m_Players.at(pos)->GetNumOfCardToDiscoverCure();
+	uint16_t NumOfCardsNeeded = m_Players.at(pos)->GetNumOfCardToDiscoverCure();
 	if (m_Players.at(pos)->m_Hand.size() >= NumOfCardsNeeded)
 	{
 		int red = 0, blue = 0, yellow = 0, black = 0;
@@ -1012,14 +1012,13 @@ void GameEngine::ExecuteMove(const uint16_t& pos, const MoveOptions & opt, const
 		else
 		{
 			std::cout << "Remove Existing Center..." << std::endl;
-			int i = 0;
+			int j = 0;
 			for each(ResearchCenter rc in m_Board.m_Centers.GetCenters())
 			{
-				std::cout << i << ": ";
+				std::cout << j << ": ";
 				rc.GetCity()->PrintInformation();
 			}
 
-			uint16_t selection = 0;
 			do
 			{
 				std::cout << "Selection: ";
@@ -1037,7 +1036,6 @@ void GameEngine::ExecuteMove(const uint16_t& pos, const MoveOptions & opt, const
 	case SHARECARD:
 		if (m_Players.at(pos)->GetRoleID() == RoleList::RESEARCHER)
 		{
-			uint16_t selection = 0;
 			do
 			{
 				std::cout << "Which card would you like to share...";
@@ -1082,64 +1080,59 @@ void GameEngine::ExecuteMove(const uint16_t& pos, const MoveOptions & opt, const
 		if (cc != Color::INVALID)
 		{
 			m_Board.m_Cures.CureDiscover(cc);
-			for (size_t i = 0; i < m_Players.at(pos)->m_Hand.size(); i += 1)
+			for (size_t k = 0; k < m_Players.at(pos)->m_Hand.size(); k += 1)
 			{
-				if (PlayerCardFactory::IsaCityCard(m_Players.at(pos)->m_Hand.at(i)->GetNumID()))
-					if (static_cast<CityCard*>(m_Players.at(pos)->m_Hand.at(i))->GetCityColor() == cc)
-						m_Board.m_PlayerDeck.DiscardCard(m_Players.at(pos)->RemoveCardAt((uint16_t)i));
+				if (PlayerCardFactory::IsaCityCard(m_Players.at(pos)->m_Hand.at(k)->GetNumID()))
+					if (static_cast<CityCard*>(m_Players.at(pos)->m_Hand.at(k))->GetCityColor() == cc)
+						m_Board.m_PlayerDeck.DiscardCard(m_Players.at(pos)->RemoveCardAt((uint16_t)k));
 			}
 		}
 		break;
 	case AIRLIFT:
-		for (size_t i = 0; i < m_Players.at(pos)->m_Hand.size(); i += 1)
+		for (size_t l = 0; l < m_Players.at(pos)->m_Hand.size(); l += 1)
 		{
-			if (PlayerCardFactory::IsaEventCard(m_Players.at(pos)->m_Hand.at(i)->GetNumID()))
-				if (m_Players.at(pos)->m_Hand.at(i)->GetNumID() == EventCard::AIRLIFT)
+			if (PlayerCardFactory::IsaEventCard(m_Players.at(pos)->m_Hand.at(l)->GetNumID()))
+				if (m_Players.at(pos)->m_Hand.at(l)->GetNumID() == EventCard::AIRLIFT)
 				{
-					m_Board.m_PlayerDeck.DiscardCard(m_Players.at(pos)->RemoveCardAt((uint16_t)i));
+					m_Board.m_PlayerDeck.DiscardCard(m_Players.at(pos)->RemoveCardAt((uint16_t)l));
 					break;
 				}
 		}
 		ExecuteAirLift();
 		break;
 	case RESILLIENT:
-		for (size_t i = 0; i < m_Players.at(pos)->m_Hand.size(); i += 1)
+		for (size_t m = 0; m < m_Players.at(pos)->m_Hand.size(); m += 1)
 		{
-			if (PlayerCardFactory::IsaEventCard(m_Players.at(pos)->m_Hand.at(i)->GetNumID()))
-				if (m_Players.at(pos)->m_Hand.at(i)->GetNumID() == EventCard::RESILLIENT)
+			if (PlayerCardFactory::IsaEventCard(m_Players.at(pos)->m_Hand.at(m)->GetNumID()))
+				if (m_Players.at(pos)->m_Hand.at(m)->GetNumID() == EventCard::RESILLIENT)
 				{
-					m_Board.m_PlayerDeck.DiscardCard(m_Players.at(pos)->RemoveCardAt((uint16_t)i));
+					m_Board.m_PlayerDeck.DiscardCard(m_Players.at(pos)->RemoveCardAt((uint16_t)m));
 					break;
 				}
 		}
 		m_Board.m_InfecDeck.ResiliantPopulation((InfectionCard::CardsList)(cityID + InfectionCard::INFECTIONCARD_MIN));
-		m_Board.m_Map.GetCityWithID(cityID);
-		/*
-			TODO check to c if needs more
-		*/
 	case FORECAST:
-		for (size_t i = 0; i < m_Players.at(pos)->m_Hand.size(); i += 1)
+		for (size_t n = 0; n < m_Players.at(pos)->m_Hand.size(); n += 1)
 		{
-			if (PlayerCardFactory::IsaEventCard(m_Players.at(pos)->m_Hand.at(i)->GetNumID()))
-				if (m_Players.at(pos)->m_Hand.at(i)->GetNumID() == EventCard::FORECAST)
+			if (PlayerCardFactory::IsaEventCard(m_Players.at(pos)->m_Hand.at(n)->GetNumID()))
+				if (m_Players.at(pos)->m_Hand.at(n)->GetNumID() == EventCard::FORECAST)
 				{
-					m_Board.m_PlayerDeck.DiscardCard(m_Players.at(pos)->RemoveCardAt((uint16_t)i));
+					m_Board.m_PlayerDeck.DiscardCard(m_Players.at(pos)->RemoveCardAt((uint16_t)n));
 					break;
 				}
 		}
 		std::cout << "Change forecast..." << std::endl;
 		forecast = m_Board.m_InfecDeck.GetForecast();
-		uint16_t selection = 0;
 		do
 		{
 			do
 			{
 				std::cout << "NOTE: Enter 0 as a selection to quit." << std::endl;
 				std::cout << " - TOP - " << std::endl;
-				for (int i = 6; i > 0; i -= 1)
+				for (int a = 6; a > 0; a -= 1)
 				{
-					std::cout << i << ": ";
-					forecast.at(i)->PrintInformation();
+					std::cout << a << ": ";
+					forecast.at(a)->PrintInformation();
 				}
 				std::cout << " - BOTTOM - " << std::endl;
 
@@ -1172,24 +1165,24 @@ void GameEngine::ExecuteMove(const uint16_t& pos, const MoveOptions & opt, const
 
 		m_Board.m_InfecDeck.SetForecast(forecast);
 	case QUIETNIGHT:
-		for (size_t i = 0; i < m_Players.at(pos)->m_Hand.size(); i += 1)
+		for (size_t o = 0; o < m_Players.at(pos)->m_Hand.size(); o += 1)
 		{
-			if (PlayerCardFactory::IsaEventCard(m_Players.at(pos)->m_Hand.at(i)->GetNumID()))
-				if (m_Players.at(pos)->m_Hand.at(i)->GetNumID() == EventCard::QUIETNIGHT)
+			if (PlayerCardFactory::IsaEventCard(m_Players.at(pos)->m_Hand.at(o)->GetNumID()))
+				if (m_Players.at(pos)->m_Hand.at(o)->GetNumID() == EventCard::QUIETNIGHT)
 				{
-					m_Board.m_PlayerDeck.DiscardCard(m_Players.at(pos)->RemoveCardAt((uint16_t)i));
+					m_Board.m_PlayerDeck.DiscardCard(m_Players.at(pos)->RemoveCardAt((uint16_t)o));
 					break;
 				}
 		}
 
 		m_SkipNextInfectionPhase = true;
 	case GOVTGRANT:
-		for (size_t i = 0; i < m_Players.at(pos)->m_Hand.size(); i += 1)
+		for (size_t p = 0; p < m_Players.at(pos)->m_Hand.size(); p += 1)
 		{
-			if (PlayerCardFactory::IsaEventCard(m_Players.at(pos)->m_Hand.at(i)->GetNumID()))
-				if (m_Players.at(pos)->m_Hand.at(i)->GetNumID() == EventCard::GOVTGRANT)
+			if (PlayerCardFactory::IsaEventCard(m_Players.at(pos)->m_Hand.at(p)->GetNumID()))
+				if (m_Players.at(pos)->m_Hand.at(p)->GetNumID() == EventCard::GOVTGRANT)
 				{
-					m_Board.m_PlayerDeck.DiscardCard(m_Players.at(pos)->RemoveCardAt((uint16_t)i));
+					m_Board.m_PlayerDeck.DiscardCard(m_Players.at(pos)->RemoveCardAt((uint16_t)p));
 					break;
 				}
 		}
@@ -1205,7 +1198,7 @@ void GameEngine::ExecuteMove(const uint16_t& pos, const MoveOptions & opt, const
 			
 			for each(ResearchCenter rc in m_Board.m_Centers.GetCenters())
 			{
-				std::cout << i << ": ";
+				std::cout << i++ << ": ";
 				rc.GetCity()->PrintInformation();
 			}
 

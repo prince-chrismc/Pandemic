@@ -121,13 +121,14 @@ std::deque<InfectionCard*> InfectionDeck::GetForecast()
 	{
 		topsix.emplace_front(DrawCard());
 	}
+	return topsix;
 }
 
 void InfectionDeck::SetForecast(std::deque<InfectionCard*> top)
 {
 	for each(InfectionCard* ic in top)
 	{
-		m_Deck.emplace_front(ic->GetNumID());
+		m_Deck.emplace_front((InfectionCard::CardsList)ic->GetNumID());
 		delete ic;
 		ic = nullptr;
 	}
