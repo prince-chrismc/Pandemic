@@ -331,6 +331,7 @@ void GameEngine::Outbreak(City * city)
 			m_Log.Notify(connected->GetCityName());
 		}
 	}
+	CheckIfGameOver();
 }
 // Outbreak ---------------------------------------------------------------------------------------
 
@@ -702,7 +703,7 @@ std::vector<CityList::CityID> GameEngine::DetermineGovernmentGrant(const uint16_
 					{
 						if (rc.GetCityID() == cid)
 						{
-							result.erase(result.end());
+							result.erase(result.end()-1);
 							break;
 						}
 					}
@@ -795,7 +796,7 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 		{
 			moves.insert(std::make_pair(++i, *it));
 			City* city = m_Board.m_Map.GetCityWithID(it->second);
-			std::cout << "  " << i << " - To " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
+			std::cout << "  " << i << " - From " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
 		}
 	}
 
@@ -825,7 +826,7 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 		{
 			moves.insert(std::make_pair(++i, *it));
 			City* city = m_Board.m_Map.GetCityWithID(it->second);
-			std::cout << "  " << i << " - To " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
+			std::cout << "  " << i << " - In " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
 		}
 	}
 
@@ -840,7 +841,7 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 		{
 			moves.insert(std::make_pair(++i, *it));
 			City* city = m_Board.m_Map.GetCityWithID(it->second);
-			std::cout << "  " << i << " - To " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
+			std::cout << "  " << i << " - In " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
 		}
 	}
 	// Share Knowledge --------–-------------------------------------------------------------------
@@ -854,7 +855,7 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 		{
 			moves.insert(std::make_pair(++i, *it));
 			City* city = m_Board.m_Map.GetCityWithID(it->second);
-			std::cout << "  " << i << " - To " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
+			std::cout << "  " << i << " - In " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
 		}
 	}
 	// Discover Cure ------------------------------------------------------------------------------
@@ -884,7 +885,7 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 		{
 			moves.insert(std::make_pair(++i, *it));
 			City* city = m_Board.m_Map.GetCityWithID(it->second);
-			std::cout << "  " << i << " - To " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
+			std::cout << "  " << i << " - From " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
 		}
 	}
 
@@ -914,7 +915,7 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 		{
 			moves.insert(std::make_pair(++i, *it));
 			City* city = m_Board.m_Map.GetCityWithID(it->second);
-			std::cout << "  " << i << " - To " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
+			std::cout << "  " << i << " - From " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
 		}
 	}
 
@@ -929,7 +930,7 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 		{
 			moves.insert(std::make_pair(++i, *it));
 			City* city = m_Board.m_Map.GetCityWithID(it->second);
-			std::cout << "  " << i << " - To " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
+			std::cout << "  " << i << " - From " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
 		}
 	}
 
@@ -960,6 +961,8 @@ void GameEngine::ExecuteMove(const uint16_t& pos, const MoveOptions & opt, const
 	Color cc;
 	City* city = nullptr;
 	uint16_t selection = 0;
+	uint16_t selectionA = 0;
+	uint16_t selectionB = 0;
 	int i = 0;
 	std::deque<InfectionCard*> forecast;
 	switch (opt)
@@ -970,18 +973,19 @@ void GameEngine::ExecuteMove(const uint16_t& pos, const MoveOptions & opt, const
 		m_Players.at(pos)->PrintInfo();
 		break;
 	case FLIGHT:
+		m_Board.m_PlayerDeck.DiscardCard(m_Players.at(pos)->RemoveCard(cityID));
 		ss << std::hex << cityID;
 		m_Players.at(pos)->ChangeCity(ss.str());
-		m_Board.m_PlayerDeck.DiscardCard(m_Players.at(pos)->RemoveCard(cityID));
 		m_Players.at(pos)->PrintInfo();
 		m_Players.at(pos)->PrintHand();
 		break;
 	case CHARTER:
+		m_Board.m_PlayerDeck.DiscardCard(m_Players.at(pos)->RemoveCard(m_Players.at(pos)->GetCityID()));
 		ss << std::hex << cityID;
 		m_Players.at(pos)->ChangeCity(ss.str());
 		m_Players.at(pos)->PrintInfo();
-		m_Board.m_PlayerDeck.DiscardCard(m_Players.at(pos)->RemoveCard(m_Players.at(pos)->GetCityID()));
 		m_Players.at(pos)->PrintHand();
+		break;
 	case SHUTTLE:
 		ss << std::hex << cityID;
 		m_Players.at(pos)->ChangeCity(ss.str());
@@ -1024,7 +1028,7 @@ void GameEngine::ExecuteMove(const uint16_t& pos, const MoveOptions & opt, const
 				std::cout << "Selection: ";
 				std::string input;
 				std::getline(std::cin, input); // select rc to remove
-				ss << input;
+				ss = std::stringstream(input);
 				ss >> selection;
 			} while (selection < 0 || selection >= i);
 
@@ -1038,11 +1042,11 @@ void GameEngine::ExecuteMove(const uint16_t& pos, const MoveOptions & opt, const
 		{
 			do
 			{
-				std::cout << "Which card would you like to share...";
 				m_Players.at(pos)->PrintHand();
+				std::cout << "Which card would you like to share...";
 				std::string input;
 				std::getline(std::cin, input);
-				ss << input;
+				ss = std::stringstream(input);
 				ss >> selection;
 			} while (selection < 0 || selection >= m_Players.at(pos)->m_Hand.size());
 
@@ -1111,6 +1115,7 @@ void GameEngine::ExecuteMove(const uint16_t& pos, const MoveOptions & opt, const
 				}
 		}
 		m_Board.m_InfecDeck.ResiliantPopulation((InfectionCard::CardsList)(cityID + InfectionCard::INFECTIONCARD_MIN));
+		break;
 	case FORECAST:
 		for (size_t n = 0; n < m_Players.at(pos)->m_Hand.size(); n += 1)
 		{
@@ -1132,38 +1137,47 @@ void GameEngine::ExecuteMove(const uint16_t& pos, const MoveOptions & opt, const
 				for (int a = 6; a > 0; a -= 1)
 				{
 					std::cout << a << ": ";
-					forecast.at(a)->PrintInformation();
+					forecast.at(a-1)->PrintInformation();
 				}
 				std::cout << " - BOTTOM - " << std::endl;
 
 				std::cout << "Which card would you like to move? ";
 				std::string input;
 				std::getline(std::cin, input);
-				ss << input;
-				ss >> selection;
+				ss = std::stringstream(input);
+				ss >> selectionA;
 
-				if (selection == 0)
+				if (selectionA == 0)
 					break;
-				if (selection > 6)
+				if (selectionA > 6)
 					std::cout << "Invalid input try again..." << std::endl;
 
-			} while (selection <= 0 || selection > 6);
+			} while (selectionA <= 0 || selectionA > 6);
+
+			if (selectionA == 0)
+				break;
 
 			do
 			{
-				std::cout << "Which card would you like to swap with? " << std::endl;
+				std::cout << "Which card would you like to swap with? ";
 				std::string input;
 				std::getline(std::cin, input);
-				ss << input;
-				ss >> selection;
+				ss = std::stringstream(input);
+				ss >> selectionB;
 
-				if (selection < 1 || selection > 6)
+				if (selectionB < 1 || selectionB > 6)
 					std::cout << "Invalid input try again..." << std::endl;
 
-			} while (selection < 1 || selection > 6);
-		} while (selection != 0);
+			} while (selectionB < 1 || selectionB > 6);
+
+			InfectionCard* move = forecast.at(selectionA - 1);
+			InfectionCard* swap = forecast.at(selectionB - 1);
+			forecast.at(selectionA - 1) = swap;
+			forecast.at(selectionB - 1) = move;
+		} while (selectionA != 0);
 
 		m_Board.m_InfecDeck.SetForecast(forecast);
+		break;
 	case QUIETNIGHT:
 		for (size_t o = 0; o < m_Players.at(pos)->m_Hand.size(); o += 1)
 		{
@@ -1176,6 +1190,7 @@ void GameEngine::ExecuteMove(const uint16_t& pos, const MoveOptions & opt, const
 		}
 
 		m_SkipNextInfectionPhase = true;
+		break;
 	case GOVTGRANT:
 		for (size_t p = 0; p < m_Players.at(pos)->m_Hand.size(); p += 1)
 		{
@@ -1208,13 +1223,14 @@ void GameEngine::ExecuteMove(const uint16_t& pos, const MoveOptions & opt, const
 				std::cout << "Selection: ";
 				std::string input;
 				std::getline(std::cin, input); // select rc to remove
-				ss << input;
+				ss = std::stringstream(input);
 				ss >> selection;
 			} while (selection < 0 || selection >= i);
 
 			m_Board.m_Centers.RemoveStation(selection);
 			m_Board.m_Centers.AddStation(m_Board.m_Map.GetCityWithID(cityID));
 			std::cout << "New Research Center in: " << m_Board.m_Map.GetCityWithID(cityID)->GetCityName() << std::endl;
+			break;
 	default:
 		break;
 		}
@@ -1259,7 +1275,7 @@ void GameEngine::ExecuteAirLift()
 		std::cout << "Selection: ";
 		std::string input;
 		std::getline(std::cin, input); // select player to move
-		ss << input;
+		ss = std::stringstream(input);
 		ss >> selection;
 	} while (selection < 0 || selection >= i);
 
@@ -1281,7 +1297,7 @@ void GameEngine::ExecuteAirLift()
 		std::cout << "Selection: ";
 		std::string input;
 		std::getline(std::cin, input);
-		ss << input;
+		ss = std::stringstream(input);
 		ss >> pick;
 	} while (pick < 0 || pick >= j);
 
