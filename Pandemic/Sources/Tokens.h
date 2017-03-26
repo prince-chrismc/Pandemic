@@ -94,28 +94,28 @@ class RedDiseaseCubePile final : public CubePile
 {
 public:
 	RedDiseaseCubePile() {}
-	DiseaseCube* TakeCube() { m_CubesLeft -= 1; return new RedDiseaseCube(); }
+	DiseaseCube* TakeCube() { if (m_CubesLeft == 0) { return nullptr; } m_CubesLeft -= 1; return new RedDiseaseCube(); }
 };
 
 class YellowDiseaseCubePile final : public CubePile
 {
 public:
 	YellowDiseaseCubePile() {}
-	DiseaseCube* TakeCube() { m_CubesLeft -= 1; return new YellowDiseaseCube(); }
+	DiseaseCube* TakeCube() { if (m_CubesLeft == 0) { return nullptr; } m_CubesLeft -= 1; return new YellowDiseaseCube(); }
 };
 
 class BlueDiseaseCubePile final : public CubePile
 {
 public:
 	BlueDiseaseCubePile() {}
-	DiseaseCube* TakeCube() { m_CubesLeft -= 1; return new BlueDiseaseCube(); }
+	DiseaseCube* TakeCube() { if (m_CubesLeft == 0) { return nullptr; } m_CubesLeft -= 1; return new BlueDiseaseCube(); }
 };
 
 class BlackDiseaseCubePile final : public CubePile
 {
 public:
 	BlackDiseaseCubePile() {}
-	DiseaseCube* TakeCube() { m_CubesLeft -= 1; return new BlackDiseaseCube(); }
+	DiseaseCube* TakeCube() { if (m_CubesLeft == 0) { return nullptr; } m_CubesLeft -= 1; return new BlackDiseaseCube(); }
 };
 
 class DiseaseCubePile final
@@ -163,7 +163,8 @@ public:
 	
 	uint16_t GetNumberOfCubes() { return (uint16_t)m_Cubes.size(); }
 	uint16_t GetNumberOfCubes(const Color& color);
-	void AddCube(DiseaseCube* cube) { m_Cubes.emplace_back(cube); }
+	void AddCube(DiseaseCube* cube) { if (cube == nullptr) { return; } m_Cubes.emplace_back(cube); }
+
 	void RemoveCube() { m_Cubes.erase(m_Cubes.begin(), m_Cubes.begin() + 1); }
 	void RemoveAllCubes() { m_Cubes.clear(); }
 
