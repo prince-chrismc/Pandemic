@@ -10,14 +10,14 @@ void InfectionLog::Update()
 	{
 		for (auto itor = m_Log.rbegin(); itor < (m_Log.rbegin() + 10); itor++)
 		{
-			std::cout << ++i << ": City " << itor->first << " gained " << itor->second << " cubes." << std::endl;
+			std::cout << ++i << ": " << itor->first << " gained " << itor->second << " cubes." << std::endl;
 		}
 	}
 	else
 	{
 		for (auto itor = m_Log.rbegin(); itor != m_Log.rend(); itor++)
 		{
-			std::cout << ++i << ": City " << itor->first << " gained " << itor->second << " cubes." << std::endl;
+			std::cout << ++i << ": " << itor->first << " gained " << itor->second << " cubes." << std::endl;
 		}
 	}
 	std::cout << std::endl;
