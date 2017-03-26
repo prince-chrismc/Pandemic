@@ -82,6 +82,7 @@ protected:
 	typedef std::map<uint16_t, std::pair<const MoveOptions, CityList::CityID>> PlayerMoves;
 
 	void TurnSequence(const uint16_t& pos);
+		const uint16_t GetUserInput(const uint16_t& lower, const uint16_t& upper);
 		void TurnActionsPhase(const uint16_t& pos);
 			MovesPerCity CalculatePlayerOpt(const uint16_t& pos);
 				std::vector<CityList::CityID> CalculateDriveCitiesFor(const uint16_t& pos);
@@ -98,9 +99,22 @@ protected:
 				std::vector<CityList::CityID> CalculateGovernmentGrantFor(const uint16_t& pos);
 			PlayerMoves DeterminePlayerMoves(const MovesPerCity& options);
 				//std::string MoveOpToString(const MoveOptions & opt);
-			void ExecuteMove(const uint16_t& pos, const MoveOptions& opt, const CityList::CityID& cityID);
-				void AddResearchCenter(const CityList::CityID& id);
-				void ExecuteAirLift();
+			uint16_t ExecuteMove(const uint16_t& pos, const MoveOptions& opt, const CityList::CityID& cityID);
+				uint16_t ExecuteDriveFerry(const uint16_t& pos, const CityList::CityID& cityID);
+				uint16_t ExecuteDirectFlight(const uint16_t& pos, const CityList::CityID& cityID);
+				uint16_t ExecuteCharterFlight(const uint16_t& pos, const CityList::CityID& cityID);
+				uint16_t ExecuteShuttleFlight(const uint16_t& pos, const CityList::CityID& cityID);
+				uint16_t ExecuteTreateDisease(const uint16_t& pos, const CityList::CityID& cityID);
+				uint16_t ExecuteBuildResearchCenter(const uint16_t& pos, const CityList::CityID& cityID);
+					void AddResearchCenter(const uint16_t& pos, const CityList::CityID& cityID);
+				uint16_t ExecuteShareKnowledge(const uint16_t& pos, const CityList::CityID& cityID);
+					void ExecuteShareKnowledgeAsResearcher(const uint16_t& pos);
+				uint16_t ExecuteCureDisease(const uint16_t& pos, const CityList::CityID& cityID);
+				uint16_t ExecuteAirLift(const uint16_t& pos, const CityList::CityID& cityID);
+				uint16_t ExecuteResillentPopulation(const uint16_t& pos, const CityList::CityID& cityID);
+				uint16_t ExecuteForecast(const uint16_t& pos, const CityList::CityID& cityID);
+				uint16_t ExecuteQuietNight(const uint16_t& pos, const CityList::CityID& cityID);
+				uint16_t ExecuteGovernmentGrant(const uint16_t& pos, const CityList::CityID& cityID);
 				void CheckIfGameOver();
 				void CheckIfGameWon();
 		void TurnDrawPhase(const uint16_t& pos);
