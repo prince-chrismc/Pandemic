@@ -155,6 +155,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Sources\Cure.cpp" />
+    <ClCompile Include="Sources\DiseaseCubes.cpp" />
     <ClCompile Include="Sources\GameEngine.cpp" />
     <ClCompile Include="Pandemic.cpp" />
     <ClCompile Include="Sources\Cards.cpp" />
@@ -166,10 +168,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\Board.h" />
+    <ClInclude Include="Sources\Cure.h" />
+    <ClInclude Include="Sources\DiseaseCubes.h" />
     <ClInclude Include="Sources\GameEngine.h" />
     <ClInclude Include="Sources\Cards.h" />
     <ClInclude Include="Sources\Deck.h" />
     <ClInclude Include="Sources\InfectionLog.h" />
+    <ClInclude Include="Sources\Markers.h" />
     <ClInclude Include="Sources\Tokens.h" />
     <ClInclude Include="Sources\Pandemic.h" />
     <ClInclude Include="Sources\Player.h" />
