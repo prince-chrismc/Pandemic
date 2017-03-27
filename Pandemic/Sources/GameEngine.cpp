@@ -58,7 +58,7 @@ void GameEngine::PlayersSetup()
 	std::cout << "How many players will there be?" << std::endl;
 	uint16_t num = GetUserInput(2, 4);
 
-	for (int i = 0; i < num; i += 1)
+	for (uint16_t i = 0; i < num; i += 1)
 	{
 		std::cout << "Welcome Player " << i + 1 << " Enter your name: "; // get cetain players name
 		std::string input;
@@ -173,7 +173,7 @@ void GameEngine::TurnActionsPhase(const uint16_t & pos)
 // TurnDrawPhase ----------------------------------------------------------------------------------
 void GameEngine::TurnDrawPhase(const uint16_t& pos)
 {
-	for (int i = 0; i < 2; i += 1)
+	for (uint16_t i = 0; i < 2; i += 1)
 	{
 		CheckIfGameOver();
 		if (m_Players.at(pos)->m_Hand.size() >= 7) // if hand is full
@@ -305,7 +305,7 @@ void GameEngine::Outbreak(City * city)
 
 	std::cout << " --- OUTBREAK --- " << city->GetCityName() << std::endl;
 	m_Board.m_OutBreak.IncreaseRate();
-	std::cout << "Outbreak Marker: " << m_Board.m_OutBreak.getMarker() << std::endl;
+	std::cout << "Outbreak Marker: " << m_Board.m_OutBreak.GetMarker() << std::endl;
 
 	for each(City* connected in city->GetNearByCities())
 	{
@@ -713,7 +713,7 @@ Color GameEngine::DetermineCureColor(const uint16_t& pos)
 	uint16_t NumOfCardsNeeded = m_Players.at(pos)->GetNumOfCardToDiscoverCure();
 	if (m_Players.at(pos)->m_Hand.size() >= NumOfCardsNeeded)
 	{
-		int red = 0, blue = 0, yellow = 0, black = 0;
+		uint16_t red = 0, blue = 0, yellow = 0, black = 0;
 		for each (PlayerCard* pc in m_Players.at(pos)->m_Hand)
 		{
 			if (PlayerCardFactory::IsaCityCard(pc->GetNumID()))
@@ -977,7 +977,7 @@ uint16_t GameEngine::ExecuteMove(const uint16_t& pos, const MoveOptions & opt, c
 	case GOVTGRANT:
 		return ExecuteGovernmentGrant(pos, cityID);
 	default:
-		break;
+		return 1;
 	}
 }
 // ExecuteMove ------------------------------------------------------------------------------------
@@ -1104,7 +1104,7 @@ uint16_t GameEngine::ExecuteShareKnowledge(const uint16_t & pos, const CityList:
 				m_Players.at(index)->AddCard(m_Players.at(pos)->RemoveCard(cityID));
 				m_Players.at(index)->PrintHand();
 				m_Players.at(pos)->PrintHand();
-				return;
+				return 1;
 			}
 		}
 	}
@@ -1173,11 +1173,11 @@ uint16_t GameEngine::ExecuteAirLift(const uint16_t& pos, const CityList::CityID&
 				break;
 			}
 	}
-	std::map<int, CityList::CityID> secondary;
+	std::map<uint16_t, CityList::CityID> secondary;
 
 	std::cout << "Note: All players involved must agree!" << std::endl;
 	std::cout << "Select the player to move..." << std::endl; // who do  you want to move
-	int i = 0;
+	uint16_t i = 0;
 	for each(Player* joeur in m_Players)
 	{
 		std::cout << i++ << ": ";
@@ -1186,7 +1186,7 @@ uint16_t GameEngine::ExecuteAirLift(const uint16_t& pos, const CityList::CityID&
 
 	uint16_t selection = GetUserInput(0,i-1);
 
-	int j = 0;
+	uint16_t j = 0;
 	std::cout << "Which city would you like to move " << m_Players.at(selection)->m_Name << " to..." << std::endl;
 	for each(City* ville in m_Board.m_Map.GetAllCities())
 	{
@@ -1229,6 +1229,7 @@ uint16_t GameEngine::ExecuteResillentPopulation(const uint16_t & pos, const City
 // ExecuteForecast --------------------------------------------------------------------------------
 uint16_t GameEngine::ExecuteForecast(const uint16_t & pos, const CityList::CityID & cityID)
 {
+	cityID; // unused, keept for normalization
 	for (size_t n = 0; n < m_Players.at(pos)->m_Hand.size(); n += 1)
 	{
 		if (PlayerCardFactory::IsaEventCard(m_Players.at(pos)->m_Hand.at(n)->GetNumID()))
@@ -1245,7 +1246,7 @@ uint16_t GameEngine::ExecuteForecast(const uint16_t & pos, const CityList::CityI
 	{
 		std::cout << "NOTE: Enter 0 as a selection to quit." << std::endl;
 		std::cout << " - TOP - " << std::endl;
-		for (int a = 6; a > 0; a -= 1)
+		for (uint16_t a = 6; a > 0; a -= 1)
 		{
 			std::cout << a << ": ";
 			forecast.at(a - 1)->PrintInformation();
@@ -1276,6 +1277,7 @@ uint16_t GameEngine::ExecuteForecast(const uint16_t & pos, const CityList::CityI
 // ExecuteQuietNight ------------------------------------------------------------------------------
 uint16_t GameEngine::ExecuteQuietNight(const uint16_t & pos, const CityList::CityID & cityID)
 {
+	cityID; // unused, keept for normalization
 	for (size_t o = 0; o < m_Players.at(pos)->m_Hand.size(); o += 1)
 	{
 		if (PlayerCardFactory::IsaEventCard(m_Players.at(pos)->m_Hand.at(o)->GetNumID()))
@@ -1304,7 +1306,7 @@ uint16_t GameEngine::ExecuteGovernmentGrant(const uint16_t & pos, const CityList
 void GameEngine::CheckIfGameOver()
 {
 	if (m_Board.m_Cubes.IsAnyEmpty()) throw GameOverException("a cube pile is empty!");
-	if (m_Board.m_OutBreak.getMarker() == 8) throw GameOverException("maximum outbreaks has been reached");
+	if (m_Board.m_OutBreak.GetMarker() == 8) throw GameOverException("maximum outbreaks has been reached");
 	if (m_Board.m_PlayerDeck.IsDeckEmpty()) throw GameOverException("the player deck is empty!");
 }
 // CheckIfGameOver --------------------------------------------------------------------------------
@@ -1387,8 +1389,8 @@ void GameEngine::LoadGame()
 		std::cout << "AutoSave Completed" << std::endl;
 	}
 
-	int i = 0;
-	std::map<int, bfs::directory_entry> files;
+	uint16_t i = 0;
+	std::map<uint16_t, bfs::directory_entry> files;
 	bfs::path p("bin");
 	if (bfs::exists(p)) // does p exist
 	{
@@ -1445,7 +1447,7 @@ void GameEngine::LoadGame()
 		std::string infecdiscard = infec.substr(sep + 2); // and discard
 
 		std::deque<InfectionCard::CardsList> deckLoaded;
-		for (int a = 0; a < 48; a += 1)
+		for (uint16_t a = 0; a < 48; a += 1)
 		{
 			size_t space = infecdeck.find(" ");
 			if (space == std::string::npos) break;
@@ -1457,7 +1459,7 @@ void GameEngine::LoadGame()
 		}
 
 		std::deque<InfectionCard::CardsList> discardLoaded;
-		for (int b = 0; b < 48; b += 1)
+		for (uint16_t b = 0; b < 48; b += 1)
 		{
 			size_t space = infecdiscard.find(" ");
 			if (space == std::string::npos) break;
@@ -1484,7 +1486,7 @@ void GameEngine::LoadGame()
 		std::string playdiscard = play.substr(sep + 2); // and discard
 
 		std::deque<PlayerCard::CardsList> deckLoaded;
-		for (int z = 0; z < 59; z += 1)
+		for (uint16_t z = 0; z < 59; z += 1)
 		{
 			size_t space = playdeck.find(" ");
 			if (space == std::string::npos) break;
@@ -1496,7 +1498,7 @@ void GameEngine::LoadGame()
 		}
 
 		std::deque<PlayerCard::CardsList> discardLoaded;
-		for (int j = 0; j < 59; j += 1)
+		for (uint16_t j = 0; j < 59; j += 1)
 		{
 			size_t space = playdiscard.find(" ");
 			if (space == std::string::npos) break;
@@ -1519,7 +1521,7 @@ void GameEngine::LoadGame()
 		buffer = nullptr;
 
 		std::deque<RoleCard::Roles> deckLoaded;
-		for (int x = 0; x < 7; x += 1)
+		for (uint16_t x = 0; x < 7; x += 1)
 		{
 			size_t space = role.find(" ");
 			if (space == std::string::npos) break;
@@ -1584,7 +1586,7 @@ void GameEngine::LoadGame()
 		buffer = nullptr;
 
 		std::vector<Player*> gamers;
-		for (int r = 0; r < 4; r += 1)
+		for (uint16_t r = 0; r < 4; r += 1)
 		{
 			size_t slash = players.find("/");
 			if (slash == std::string::npos) break;
@@ -1609,7 +1611,7 @@ void GameEngine::LoadGame()
 			play = play.substr(space + 1);
 			joeur->ChangeCity(city);
 
-			for (int s = 0; s < 7; s += 1)
+			for (uint16_t s = 0; s < 7; s += 1)
 			{
 				ss = std::stringstream();
 				space = play.find(" ");
@@ -1739,7 +1741,7 @@ void GameEngine::LoadGame()
 			buffer = nullptr;
 
 			std::vector<std::pair<std::string, uint16_t>> infectlog;
-			for (int e = 0; e < 99; e += 1)
+			for (uint16_t e = 0; e < 99; e += 1)
 			{
 				size_t slash = log.find("/");
 				if (slash == std::string::npos) break;

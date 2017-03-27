@@ -338,7 +338,7 @@ WorldMap::WorldMap()
 
 WorldMap::~WorldMap()
 {
-	for (int i = 0; i < 48; i += 1)
+	for (uint16_t i = 0; i < 48; i += 1)
 	{
 		delete m_Cities[i];
 		m_Cities[i] = nullptr;
@@ -347,9 +347,9 @@ WorldMap::~WorldMap()
 
 std::vector<City*> WorldMap::GetCitiesConnectedTo(const City::CityID& id)
 {
-	for (int i = 0; i < 48; i += 1)
+	for (uint16_t i = 0; i < 48; i += 1)
 	{
-		if (m_Cities[i]->CompareCityID(id))
+		if (m_Cities[i]->GetCityID() == id)
 		{
 			return m_Cities[i]->GetNearByCities();
 		}
@@ -370,9 +370,9 @@ std::vector<City*> WorldMap::GetAllCities()
 
 City* WorldMap::GetCityWithID(const City::CityID & id)
 {
-	for (int i = 0; i < 48; i += 1)
+	for (uint16_t i = 0; i < 48; i += 1)
 	{
-		if (m_Cities[i]->CompareCityID(id))
+		if (m_Cities[i]->GetCityID() == id)
 		{
 			return m_Cities[i];
 		}
@@ -391,7 +391,7 @@ std::string WorldMap::GetSaveOutput()
 void WorldMap::PrintCitiesStatus()
 {
 	printf("\n");
-	for (int i = 0; i < 48; i += 1)
+	for (uint16_t i = 0; i < 48; i += 1)
 	{
 		m_Cities[i]->PrintInformation();
 	}

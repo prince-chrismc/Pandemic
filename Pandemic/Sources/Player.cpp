@@ -116,7 +116,7 @@ void Player::PrintHand()
 
 	for (size_t s = 0; s < m_Hand.size(); s += 1)
 	{
-		printf("Card %d: ", (int)s);
+		printf("Card %d: ", (uint16_t)s);
 		m_Hand.at(s)->PrintInformation();
 	}
 }

@@ -101,7 +101,7 @@ void InfectionDeck::Intensify()
 
 void InfectionDeck::ResiliantPopulation(const InfectionCard::CardsList& id)
 {
-	int rm = 0;
+	uint16_t rm = 0;
 	for each(InfectionCard::CardsList cardnum in m_Discard)
 	{
 		if (id == cardnum)
@@ -117,7 +117,7 @@ void InfectionDeck::ResiliantPopulation(const InfectionCard::CardsList& id)
 std::deque<InfectionCard*> InfectionDeck::GetForecast()
 {
 	std::deque<InfectionCard*> topsix;
-	for (int i = 0; i < 6; i += 1)
+	for (uint16_t i = 0; i < 6; i += 1)
 	{
 		topsix.emplace_front(DrawCard());
 	}

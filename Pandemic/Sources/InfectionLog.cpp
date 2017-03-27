@@ -5,7 +5,7 @@
 void InfectionLog::Update()
 {
 	std::cout << std::endl << "Infection log updated..." << std::endl;
-	int i = 0;
+	uint16_t i = 0;
 	if (m_Log.size() >= 10)
 	{
 		for (auto itor = m_Log.rbegin(); itor < (m_Log.rbegin() + 10); itor++)
