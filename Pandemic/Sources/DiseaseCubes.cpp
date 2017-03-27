@@ -5,16 +5,16 @@ DiseaseCube* DiseaseCubePile::TakeCube(const Color& color)
 	DiseaseCube* dc = nullptr;
 	switch (color)
 	{
-	case RED:
+	case Color::RED:
 		dc = m_Red.TakeCube();
 		break;
-	case YELLOW:
+	case Color::YELLOW:
 		dc = m_Yellow.TakeCube();
 		break;
-	case BLUE:
+	case Color::BLUE:
 		dc = m_Blue.TakeCube();
 		break;
-	case BLACK:
+	case Color::BLACK:
 		dc = m_Black.TakeCube();
 		break;
 	}
@@ -25,16 +25,16 @@ void DiseaseCubePile::PlaceCube(DiseaseCube* dc)
 {
 	switch (dc->GetColor())
 	{
-	case RED:
+	case Color::RED:
 		m_Red.PlaceCube(dc);
 		break;
-	case YELLOW:
+	case Color::YELLOW:
 		m_Yellow.PlaceCube(dc);
 		break;
-	case BLUE:
+	case Color::BLUE:
 		m_Blue.PlaceCube(dc);
 		break;
-	case BLACK:
+	case Color::BLACK:
 		m_Black.PlaceCube(dc);
 		break;
 	}

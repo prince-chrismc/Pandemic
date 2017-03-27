@@ -247,11 +247,11 @@ const char* CityCard::GetCardDesc(const uint64_t & id)
 Color CityCard::GetCityColor()
 {
 	uint64_t id = GetNumID();
-	if (IsaRedCity(id)) return RED;
-	else if (IsaYellowCity(id)) return YELLOW;
-	else if (IsaBlueCity(id)) return BLUE;
-	else if (IsaBlackCity(id)) return BLACK;
-	else return INVALID;
+	if (IsaRedCity(id)) return Color::RED;
+	else if (IsaYellowCity(id)) return Color::YELLOW;
+	else if (IsaBlueCity(id)) return Color::BLUE;
+	else if (IsaBlackCity(id)) return Color::BLACK;
+	else return Color::INVALID;
 }
 
 const char* EventCard::GetCardDesc(const uint64_t& id)
@@ -365,11 +365,11 @@ const char* InfectionCard::GetCardDesc(const uint64_t & id)
 Color InfectionCard::GetCityColor()
 {
 	uint64_t id = GetNumID();
-	if (IsaRedCity(id)) return RED;
-	else if (IsaYellowCity(id)) return YELLOW;
-	else if (IsaBlueCity(id)) return BLUE;
-	else if (IsaBlackCity(id)) return BLACK;
-	else return INVALID;
+	if (IsaRedCity(id)) return Color::RED;
+	else if (IsaYellowCity(id)) return Color::YELLOW;
+	else if (IsaBlueCity(id)) return Color::BLUE;
+	else if (IsaBlackCity(id)) return Color::BLACK;
+	else return Color::INVALID;
 }
 
 PlayerCard* PlayerCardFactory::MakeCard(const uint64_t& id)

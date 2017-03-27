@@ -6,7 +6,7 @@
 
 #pragma once
 
-enum Color //Four base colors
+enum class Color //Four base colors
 {
 	INVALID = -1,
 	RED,
@@ -105,32 +105,3 @@ public:
 		ROLECARD_MAX = 0x2EFFFFFUL,    //"Invalid"
 	};
 };
-
-class Difficulty
-{
-public:
-	enum DIFFICULTY //Game Setting
-	{
-		INVALID,
-		EASY,
-		MEDIUM,
-		HARD
-	};
-};
-
-//const char* GetColorName(const Color& color)
-//{
-//	switch (color)
-//	{
-//	case RED:
-//		return "RED";
-//	case BLUE:
-//		return "BLUE";
-//	case YELLOW:
-//		return "YELLOW";
-//	case BLACK:
-//		return "BLACK";
-//	default:
-//		return "INVALID";
-//	}
-//}

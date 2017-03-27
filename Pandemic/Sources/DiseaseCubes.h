@@ -18,10 +18,10 @@ public:
 	Color GetColor() { return m_Color; }
 };
 
-class RedDiseaseCube final : public DiseaseCube { public: RedDiseaseCube() : DiseaseCube(RED) {} };
-class YellowDiseaseCube final : public DiseaseCube { public: YellowDiseaseCube() : DiseaseCube(YELLOW) {} };
-class BlueDiseaseCube final : public DiseaseCube { public: BlueDiseaseCube() : DiseaseCube(BLUE) {} };
-class BlackDiseaseCube final : public DiseaseCube { public: BlackDiseaseCube() : DiseaseCube(BLACK) {} };
+class RedDiseaseCube final : public DiseaseCube { public: RedDiseaseCube() : DiseaseCube(Color::RED) {} };
+class YellowDiseaseCube final : public DiseaseCube { public: YellowDiseaseCube() : DiseaseCube(Color::YELLOW) {} };
+class BlueDiseaseCube final : public DiseaseCube { public: BlueDiseaseCube() : DiseaseCube(Color::BLUE) {} };
+class BlackDiseaseCube final : public DiseaseCube { public: BlackDiseaseCube() : DiseaseCube(Color::BLACK) {} };
 
 class CubePile abstract
 {

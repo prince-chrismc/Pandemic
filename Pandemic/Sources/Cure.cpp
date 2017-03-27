@@ -4,16 +4,16 @@ void CureMakers::CureDiscover(const Color & color)
 {
 	switch (color)
 	{
-	case RED:
+	case Color::RED:
 		m_Red.CureDiscover();
 		break;
-	case YELLOW:
+	case Color::YELLOW:
 		m_Yellow.CureDiscover();
 		break;
-	case BLUE:
+	case Color::BLUE:
 		m_Blue.CureDiscover();
 		break;
-	case BLACK:
+	case Color::BLACK:
 		m_Black.CureDiscover();
 		break;
 	}
@@ -23,16 +23,16 @@ void CureMakers::EradicateDisease(const Color& color)
 {
 	switch (color)
 	{
-	case RED:
+	case Color::RED:
 		m_Red.EradicateDisease();
 		break;
-	case YELLOW:
+	case Color::YELLOW:
 		m_Yellow.EradicateDisease();
 		break;
-	case BLUE:
+	case Color::BLUE:
 		m_Blue.EradicateDisease();
 		break;
-	case BLACK:
+	case Color::BLACK:
 		m_Black.EradicateDisease();
 		break;
 	}
@@ -42,13 +42,13 @@ bool CureMakers::IsCured(const Color& color)
 {
 	switch (color)
 	{
-	case RED:
+	case Color::RED:
 		return m_Red.IsCured();
-	case YELLOW:
+	case Color::YELLOW:
 		return m_Yellow.IsCured();
-	case BLUE:
+	case Color::BLUE:
 		return m_Blue.IsCured();
-	case BLACK:
+	case Color::BLACK:
 		return m_Black.IsCured();
 	default:
 		return false;
@@ -59,13 +59,13 @@ bool CureMakers::IsNotEradicated(const Color & color)
 {
 	switch (color)
 	{
-	case RED:
+	case Color::RED:
 		return m_Red.IsNotEradicated();
-	case YELLOW:
+	case Color::YELLOW:
 		return m_Yellow.IsNotEradicated();
-	case BLUE:
+	case Color::BLUE:
 		return m_Blue.IsNotEradicated();
-	case BLACK:
+	case Color::BLACK:
 		return m_Black.IsNotEradicated();
 	default:
 		return false;

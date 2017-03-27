@@ -42,9 +42,17 @@ public:
 class PlayerDeck final : public Deck, private PlayerCardFactory //PlayerCards Factory
 {
 private:
+	enum class Difficulty
+	{
+		INVALID,
+		EASY,
+		MEDIUM,
+		HARD
+	};
+
 	std::deque<PlayerCard::CardsList> m_Deck;
 	std::deque<PlayerCard::CardsList> m_Discard;
-	Difficulty::DIFFICULTY m_Difficulty;
+	Difficulty m_Difficulty;
 
 public:
 	PlayerDeck();
@@ -57,7 +65,7 @@ public:
 	bool IsDeckEmpty() { return (m_Deck.size() == 0); }
 	PlayerCard* DrawCard();
 	void DiscardCard(PlayerCard* pc);
-	void IncreaseDifficulty(const Difficulty::DIFFICULTY& dif);
+	void IncreaseDifficulty(const uint16_t& dif);
 	std::string GetSaveOutput();  //FilePrint
 	void InputLoadedGame(std::deque<PlayerCard::CardsList> deck, std::deque<PlayerCard::CardsList> discard);
 };

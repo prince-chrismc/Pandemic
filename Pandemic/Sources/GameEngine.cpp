@@ -5,6 +5,7 @@
 #include <ctime> //time
 #include "boost\filesystem.hpp" //dir
 #include "GameEngine.h"
+#include "Pandemic.h"
 namespace bfs = boost::filesystem;
 
 GameEngine::~GameEngine()
@@ -95,10 +96,10 @@ void GameEngine::PlayersSetup()
 // DifficultySetup --------------------------------------------------------------------------------
 void GameEngine::DifficultySetup()
 {
-	std::cout << "1. Easy 2. Medium 3. Hard\nChoose your difficulty... ";
+	std::cout << "1. Introductory 2. Standard 3. Heroic\nChoose your difficulty... ";
 	uint16_t dif = GetUserInput(1, 3);
 
-	m_Board.m_PlayerDeck.IncreaseDifficulty((Difficulty::DIFFICULTY)dif);
+	m_Board.m_PlayerDeck.IncreaseDifficulty(dif);
 }
 // DifficultySetup --------------------------------------------------------------------------------
 
@@ -572,10 +573,10 @@ std::vector<CityList::CityID> GameEngine::CalculateDiscoverCureFor(const uint16_
 			{
 				switch (DetermineCureColor(pos))
 				{
-				case RED:
-				case BLUE:
-				case YELLOW:
-				case BLACK:
+				case Color::RED:
+				case Color::BLUE:
+				case Color::YELLOW:
+				case Color::BLACK:
 					result.emplace_back(rc.GetCityID());
 				default:
 					break;
@@ -720,21 +721,21 @@ Color GameEngine::DetermineCureColor(const uint16_t& pos)
 			{
 				switch (static_cast<CityCard*>(pc)->GetCityColor())
 				{
-				case RED: red++; break;
-				case BLUE: blue++; break;
-				case YELLOW: yellow++; break;
-				case BLACK: black++; break;
+				case Color::RED: red++; break;
+				case Color::BLUE: blue++; break;
+				case Color::YELLOW: yellow++; break;
+				case Color::BLACK: black++; break;
 				}
 			}
 		}
 		if (red >= NumOfCardsNeeded)
-			return RED;
+			return Color::RED;
 		else if (blue >= NumOfCardsNeeded)
-			return BLUE;
+			return Color::BLUE;
 		else if (yellow >= NumOfCardsNeeded)
-			return YELLOW;
+			return Color::YELLOW;
 		else if (black >= NumOfCardsNeeded)
-			return BLACK;
+			return Color::BLACK;
 	}
 	return Color::INVALID;
 }
@@ -1558,16 +1559,16 @@ void GameEngine::LoadGame()
 				switch (c)
 				{
 				case '0':
-					city->AddCube(m_Board.m_Cubes.TakeCube(RED));
+					city->AddCube(m_Board.m_Cubes.TakeCube(Color::RED));
 					break;
 				case '1':
-					city->AddCube(m_Board.m_Cubes.TakeCube(BLUE));
+					city->AddCube(m_Board.m_Cubes.TakeCube(Color::BLUE));
 					break;
 				case '2':
-					city->AddCube(m_Board.m_Cubes.TakeCube(YELLOW));
+					city->AddCube(m_Board.m_Cubes.TakeCube(Color::YELLOW));
 					break;
 				case '3':
-					city->AddCube(m_Board.m_Cubes.TakeCube(BLACK));
+					city->AddCube(m_Board.m_Cubes.TakeCube(Color::BLACK));
 					break;
 				default:
 					break;

@@ -29,10 +29,10 @@ public:
 	bool IsNotEradicated() { return (m_State != ERADICATED); }
 };
 
-class RedCure final : public Cure { public: RedCure() : Cure(RED) {} };
-class YellowCure final : public Cure { public: YellowCure() : Cure(YELLOW) {} };
-class BlueCure final : public Cure { public: BlueCure() : Cure(BLUE) {} };
-class BlackCure final : public Cure { public: BlackCure() : Cure(BLACK) {} };
+class RedCure final : public Cure { public: RedCure() : Cure(Color::RED) {} };
+class YellowCure final : public Cure { public: YellowCure() : Cure(Color::YELLOW) {} };
+class BlueCure final : public Cure { public: BlueCure() : Cure(Color::BLUE) {} };
+class BlackCure final : public Cure { public: BlackCure() : Cure(Color::BLACK) {} };
 
 class CureMakers final
 {

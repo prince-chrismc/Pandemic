@@ -22,11 +22,11 @@ uint16_t City::GetNumberOfCubes(const Color & color)
 
 Color City::GetCityColor()
 {
-	if (IsaRedCity()) return RED;
-	else if (IsaYellowCity()) return YELLOW;
-	else if (IsaBlueCity()) return BLUE;
-	else if (IsaBlackCity()) return BLACK;
-	else return INVALID;
+	if (IsaRedCity()) return Color::RED;
+	else if (IsaYellowCity()) return Color::YELLOW;
+	else if (IsaBlueCity()) return Color::BLUE;
+	else if (IsaBlackCity()) return Color::BLACK;
+	else return Color::INVALID;
 }
 
 void City::PrintInformation()
@@ -42,7 +42,7 @@ std::string City::GetSaveOutput()
 	{
 		for each (DiseaseCube* cube in m_Cubes)
 		{
-			result += std::to_string(cube->GetColor()) + " ";
+			result += std::to_string((uint16_t)cube->GetColor()) + " ";
 		}
 	}
 

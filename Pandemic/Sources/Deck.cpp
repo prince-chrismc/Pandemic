@@ -244,12 +244,12 @@ void PlayerDeck::DiscardCard(PlayerCard* pc)
 	delete pc;
 }
 
-void PlayerDeck::IncreaseDifficulty(const Difficulty::DIFFICULTY& dif)
+void PlayerDeck::IncreaseDifficulty(const uint16_t& dif)
 {
-	if (dif <= m_Difficulty) return; //restrict to increasing only
+	if ((Difficulty)dif <= m_Difficulty) return; //restrict to increasing only
 
-	m_Difficulty = dif;
-	switch (dif)
+	m_Difficulty = (Difficulty)dif;
+	switch ((Difficulty)dif)
 	{
 	case Difficulty::HARD:
 		m_Deck.emplace_back((PlayerCard::CardsList)EpidemicCard::EPIDEMICCARDSIX);
