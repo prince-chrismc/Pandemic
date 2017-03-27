@@ -299,7 +299,7 @@ bool GameEngine::IsQuarentineSpecialistNearBy(City * city)
 // IsQuarentineSpecialistNearBy -------------------------------------------------------------------
 
 // Outbreak ---------------------------------------------------------------------------------------
-void GameEngine::Outbreak(City * city)
+void GameEngine::Outbreak(City* city, City* skip)
 {
 	if (IsQuarentineSpecialistNearBy(city))
 		return;
@@ -310,9 +310,12 @@ void GameEngine::Outbreak(City * city)
 
 	for each(City* connected in city->GetNearByCities())
 	{
+		if (connected->GetCityID() == skip->GetCityID())
+			continue;
+
 		if (connected->GetNumberOfCubes(city->GetCityColor()) == 3)
 		{
-			Outbreak(connected);
+			Outbreak(connected, city);
 		}
 		else
 		{

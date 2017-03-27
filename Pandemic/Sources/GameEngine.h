@@ -121,7 +121,7 @@ protected:
 		void TurnInfectPhase();
 			void InfectCity(const uint16_t& cubesToAdd = 1);
 			bool IsQuarentineSpecialistNearBy(City* city);
-			void Outbreak(City* city);
+			void Outbreak(City* city, City* skip = nullptr);
 			void Epidemic();
 	// Game Play Functions ------------------------------------------------------------------------
 
