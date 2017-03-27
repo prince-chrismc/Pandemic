@@ -286,6 +286,7 @@ WorldMap::WorldMap()
 	Washington->AddNearByCity(Atlanta);
 	Washington->AddNearByCity(Montreal);
 
+	m_Cities.resize(48);
 	m_Cities[0] = Algiers;
 	m_Cities[1] = Atlanta;
 	m_Cities[2] = Baghdad;
