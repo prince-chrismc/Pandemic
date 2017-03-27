@@ -377,3 +377,39 @@ std::string WorldMap::GetSaveOutput()
 		ss << city->GetSaveOutput() << "/ ";
 	return ss.str();
 }
+
+std::string WorldMap::GetMapDiagram()
+{
+	std::stringstream ss;
+	ss << "  ----------------------------------------------------------------------------------------------------------------------------\n" <<
+		"  |                                                                                                                          |\n" <<
+		"  |                                                                                                                          |\n" <<
+		"  |                                                        St. Petersburg                                                    |\n" <<
+		"  |                                                          /     |    \\                                                    |\n" <<
+		"  |                                     _______London-----Essen    |     \\                                                   |\n" <<
+		"  |                                    /         |   \\   /    |    |   Moscow                                                |\n" <<
+		"  |          Chicago---Montreal--New York        |   Paris--Milan  |   /   \\                           Biejing----Seoul      |\n" <<
+		"  |         /   | | \\        \\   /      \\        |   /   |     \\   |  /     Theran                         |     /    \\      |\n" <<
+		"  |-San Fransico| |  \\       Washington  \\______Madrid   |    Istanboul     /  \\  \\                       Shanghai----Tokyo--|\n" <<
+		"  |/      \\     | |   \\     /    |               /    \\  |    /   |  \\     /    \\  Dehli------Kolkata       |           |    |\n" <<
+		"  |        \\    | |    Atlanta   |              /      \\ |   /    |   \\   /      \\  /   \\       |    \\      |           |   /|\n" <<
+		"  |         \\   | |         \\    |             /       Algeris    |  Baghdad---Karachi   \\      |    Hong Kong_     Okasa  / |\n" <<
+		"  |   Los Angeles |       ___Miami            /               \\   | /     \\   /    |      \\     |    /   |  \\  \\    /     /  |\n" <<
+		"  |  /         \\  |      /     /             /                 Cario-----Ryadh     |      |     Bangkok  |   \\  Tapie    /   |\n" <<
+		"  | /         Mexico city     /             /                      \\            Mumbia    |    /  |  \\   |    \\   |     /    |\n" <<
+		"  |/           \\       \\     /             /                        \\                 \\   |   /   |   \\  |     \\  |   _/     |\n" <<
+		"  |             \\       \\   /             /                    ___Khartom              Chennia    | HoChiMinh   Manila      /|\n" <<
+		"  |              \\      Bogota           /       _____Lagos___/    /   |                      \\   |   /         |          / |\n" <<
+		"  |               \\     /  | \\          /       /        \\        /    |                       Jakarta          |         /  |\n" <<
+		"  |                \\   /   |  \\        /       /          \\      /     |                              \\         |        /   |\n" <<
+		"  |                Lima    |   \\      /       /          Kinsenea      |                               \\        |       /    |\n" <<
+		"  |                   |    |    Sao Paulo____/                \\        |                                \\       |      /     |\n" <<
+		"  |                   |    |     /                             \\       |                                 \\      |     /      |\n" <<
+		"  |                   |  Beuno Aires                            \\      |                                  \\     |    /       |\n" <<
+		"  |                   |                                       Johannesburg                                 \\    |   /        |\n" <<
+		"  |                Santiago                                                                                 \\   |  /         |\n" <<
+		"  |                                                                                                          Sydney          |\n" <<
+		"  |                                                                                                                          |\n" <<
+		"  ----------------------------------------------------------------------------------------------------------------------------\n";
+	return ss.str();
+}

@@ -1775,6 +1775,7 @@ void GameEngine::LoadGame()
 // Initialize -------------------------------------------------------------------------------------
 void GameEngine::Initialize()
 {
+	std::cout << m_Board.m_Map.GetMapDiagram() << std::endl;
 	BoardSetup();			 //DO NOT TOUCH ORDER !
 	PlayersSetup();			 //DO NOT TOUCH ORDER !
 	DifficultySetup();		 //DO NOT TOUCH ORDER !

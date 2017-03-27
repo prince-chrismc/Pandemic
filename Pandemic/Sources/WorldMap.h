@@ -24,5 +24,7 @@ public:
 	std::vector<City*> GetCitiesConnectedTo(const City::CityID& id);
 	std::vector<City*> GetAllCities() { return m_Cities; }
 	
+	std::string GetMapDiagram();
+
 	std::string GetSaveOutput();
 };
