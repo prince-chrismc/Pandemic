@@ -8,6 +8,11 @@
 #include "Pandemic.h"
 namespace bfs = boost::filesystem;
 
+GameEngine::GameEngine() : m_Board(), m_Players(), m_PreGameComplete(false), m_SkipNextInfectionPhase(false)
+{
+	std::cout << "\n          --------- PANDEMIC --------\nDo you have what it takes to save humanity ? As\nskilled members of a disease - fighting team,\nyou must keep four deadly diseases at bay while\ndiscovering their cures.\nYou and your teammates will travel across the\nglobe, treating infections while finding\nresources for cures. You must work together,\nusing your individual strengths, to succeed.The\nclock is ticking as outbreaks and epidemics fuel\nthe spreading plagues.\n Can you find all four\ncures in time ? The fate of humanity is in your\nhands!\n\n" << std::endl;
+}
+
 GameEngine::~GameEngine()
 {
 	for (size_t pos = 0; pos < m_Players.size(); pos += 1)

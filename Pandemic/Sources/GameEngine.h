@@ -127,7 +127,7 @@ protected:
 
 
 public:
-	GameEngine() : m_Board(), m_Players(), m_PreGameComplete(false), m_SkipNextInfectionPhase(false) {}
+	GameEngine();
 	~GameEngine();
 
 	void Initialize();
