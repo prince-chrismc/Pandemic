@@ -10,7 +10,7 @@
 class WorldMap final //The Connected Cities
 {
 private:
-	City* m_Cities[48];
+	std::vector<City*> m_Cities;
 
 public:
 	WorldMap();
@@ -22,8 +22,7 @@ public:
 	
 	City* GetCityWithID(const City::CityID& id);
 	std::vector<City*> GetCitiesConnectedTo(const City::CityID& id);
-	std::vector<City*> GetAllCities();
-	void PrintCitiesStatus();
+	std::vector<City*> GetAllCities() { return m_Cities; }
 	
 	std::string GetSaveOutput();
 };

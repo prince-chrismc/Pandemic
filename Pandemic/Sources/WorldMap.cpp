@@ -338,43 +338,32 @@ WorldMap::WorldMap()
 
 WorldMap::~WorldMap()
 {
-	for (uint16_t i = 0; i < 48; i += 1)
+	for each(City* city in m_Cities)
 	{
-		delete m_Cities[i];
-		m_Cities[i] = nullptr;
+		delete city;
+		city = nullptr;
 	}
 }
 
 std::vector<City*> WorldMap::GetCitiesConnectedTo(const City::CityID& id)
 {
-	for (uint16_t i = 0; i < 48; i += 1)
+	for each(City* city in m_Cities)
 	{
-		if (m_Cities[i]->GetCityID() == id)
+		if (city->GetCityID() == id)
 		{
-			return m_Cities[i]->GetNearByCities();
+			return city->GetNearByCities();
 		}
 	}
-	std::vector<City*> result;
-	return  result;
-}
-
-std::vector<City*> WorldMap::GetAllCities()
-{
-	std::vector<City*> all;
-	for each (City* icity in m_Cities)
-	{
-		all.emplace_back(icity);
-	}
-	return all;
+	return  std::vector<City*>();
 }
 
 City* WorldMap::GetCityWithID(const City::CityID & id)
 {
-	for (uint16_t i = 0; i < 48; i += 1)
+	for each(City* city in m_Cities)
 	{
-		if (m_Cities[i]->GetCityID() == id)
+		if (city->GetCityID() == id)
 		{
-			return m_Cities[i];
+			return city;
 		}
 	}
 	return nullptr;
@@ -386,13 +375,4 @@ std::string WorldMap::GetSaveOutput()
 	for each(City* city in m_Cities)
 		ss << city->GetSaveOutput() << "/ ";
 	return ss.str();
-}
-
-void WorldMap::PrintCitiesStatus()
-{
-	printf("\n");
-	for (uint16_t i = 0; i < 48; i += 1)
-	{
-		m_Cities[i]->PrintInformation();
-	}
 }
