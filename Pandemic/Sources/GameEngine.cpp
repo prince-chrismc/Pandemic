@@ -172,6 +172,7 @@ void GameEngine::TurnActionsPhase(const uint16_t & pos)
 		uint16_t selection = GetUserInput(1, (uint16_t)moves.size());
 
 		i += ExecuteMove(pos, moves.at(selection).first, moves.at(selection).second);
+		std::cout << m_Board.m_Map.GetMapDiagram() << std::endl;
 	}
 }
 // TurnActionsPhase -------------------------------------------------------------------------------
@@ -1018,7 +1019,7 @@ uint16_t GameEngine::ExecuteDirectFlight(const uint16_t & pos, const CityList::C
 // ExecuteCharterFlight ---------------------------------------------------------------------------
 uint16_t GameEngine::ExecuteCharterFlight(const uint16_t & pos, const CityList::CityID & cityID)
 {
-	m_Board.m_PlayerDeck.DiscardCard(m_Players.at(pos)->RemoveCard(cityID));
+	m_Board.m_PlayerDeck.DiscardCard(m_Players.at(pos)->RemoveCard(m_Players.at(pos)->GetCityID()));
 	std::stringstream ss;
 	ss << std::hex << cityID;
 	m_Players.at(pos)->ChangeCity(ss.str());
@@ -1779,6 +1780,7 @@ void GameEngine::Initialize()
 	BoardSetup();			 //DO NOT TOUCH ORDER !
 	PlayersSetup();			 //DO NOT TOUCH ORDER !
 	DifficultySetup();		 //DO NOT TOUCH ORDER !
+	std::cout << m_Board.m_Map.GetMapDiagram() << std::endl;
 
 	m_PreGameComplete = true;
 }
