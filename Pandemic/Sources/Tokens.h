@@ -34,21 +34,20 @@ public:
 	City(const City&) = delete;
 	void operator=(const City&) = delete;
 
-	void AddNearByCity(City* nearby) { m_NearBy.emplace_back(nearby); }
+	void AddNearByCity(City* nearby) { m_NearBy.emplace_back(nearby); } //strictly for world map
 	
 	uint16_t GetNumberOfCubes() { return (uint16_t)m_Cubes.size(); }
 	uint16_t GetNumberOfCubes(const Color& color);
 	void AddCube(DiseaseCube* cube) { if (cube == nullptr) { return; } m_Cubes.emplace_back(cube); }
-
 	void RemoveCube() { m_Cubes.erase(m_Cubes.begin(), m_Cubes.begin() + 1); }
 	void RemoveAllCubes() { m_Cubes.clear(); }
 
 	Color GetCityColor();
-
 	CityID GetCityID() { return m_CityID; }
 	std::vector<City*> GetNearByCities() { return m_NearBy; }
-
 	std::string GetCityName() { return m_Name; }
+
+	std::string GetMapOutput();
 
 	void PrintInformation();
 	std::string GetSaveOutput(); //For FilePrint

@@ -29,6 +29,11 @@ Color City::GetCityColor()
 	else return Color::INVALID;
 }
 
+std::string City::GetMapOutput()
+{
+	return "[" + std::to_string(GetNumberOfCubes(Color::RED)) + "," + std::to_string(GetNumberOfCubes(Color::BLUE)) + "," + std::to_string(GetNumberOfCubes(Color::YELLOW)) + "," + std::to_string(GetNumberOfCubes(Color::BLACK)) + "]";
+}
+
 void City::PrintInformation()
 {
 	printf("City: %s has %d DiseaseCubes.\n", m_Name.c_str(), (uint16_t)m_Cubes.size());

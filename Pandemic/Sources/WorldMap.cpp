@@ -380,36 +380,86 @@ std::string WorldMap::GetSaveOutput()
 
 std::string WorldMap::GetMapDiagram()
 {
+	std::string alg = GetCityWithID(CityList::ALGIERS)->GetMapOutput();
+	std::string Atl = GetCityWithID(CityList::ATLANTA)->GetMapOutput();
+	std::string Bag = GetCityWithID(CityList::BAGHDAD)->GetMapOutput();
+	std::string Ban = GetCityWithID(CityList::BANGKOK)->GetMapOutput();
+	std::string Bei = GetCityWithID(CityList::BEIJING)->GetMapOutput();
+	std::string Bog = GetCityWithID(CityList::BOGOTA )->GetMapOutput();
+	std::string Bue = GetCityWithID(CityList::BUENOSAIRES )->GetMapOutput();
+	std::string Cai = GetCityWithID(CityList::CAIRO )->GetMapOutput();
+	std::string Che = GetCityWithID(CityList::CHENNAI )->GetMapOutput();
+	std::string Chi = GetCityWithID(CityList::CHICAGO )->GetMapOutput();
+	std::string Del = GetCityWithID(CityList::DELHI )->GetMapOutput();
+	std::string Ess = GetCityWithID(CityList::ESSEN )->GetMapOutput();
+	std::string HoC = GetCityWithID(CityList::HOCHIMINH )->GetMapOutput();
+	std::string Hon = GetCityWithID(CityList::HONGKONG )->GetMapOutput();
+	std::string Ist = GetCityWithID(CityList::ISTANBUL )->GetMapOutput();
+	std::string Jak = GetCityWithID(CityList::JAKARTA )->GetMapOutput();
+	std::string Joh = GetCityWithID(CityList::JOHANNESBURG )->GetMapOutput();
+	std::string Kar = GetCityWithID(CityList::KARACHI )->GetMapOutput();
+	std::string Kha = GetCityWithID(CityList::KHARTOUM )->GetMapOutput();
+	std::string Kin = GetCityWithID(CityList::KINSHASA )->GetMapOutput();
+	std::string Kol = GetCityWithID(CityList::KOLKATA )->GetMapOutput();
+	std::string Lag = GetCityWithID(CityList::LAGOS )->GetMapOutput();
+	std::string Lim = GetCityWithID(CityList::LIMA )->GetMapOutput();
+	std::string Lon = GetCityWithID(CityList::LONDON )->GetMapOutput();
+	std::string Los = GetCityWithID(CityList::LOSANGELES )->GetMapOutput();
+	std::string Mad = GetCityWithID(CityList::MADRID )->GetMapOutput();
+	std::string Man = GetCityWithID(CityList::MANILA )->GetMapOutput();
+	std::string Mex = GetCityWithID(CityList::MEXICO )->GetMapOutput();
+	std::string Mia = GetCityWithID(CityList::MIAMI )->GetMapOutput();
+	std::string Mil = GetCityWithID(CityList::MILAN )->GetMapOutput();
+	std::string Mon = GetCityWithID(CityList::MONTREAL )->GetMapOutput();
+	std::string Mos = GetCityWithID(CityList::MOSCOW )->GetMapOutput();
+	std::string Mum = GetCityWithID(CityList::MUMBAI )->GetMapOutput();
+	std::string New = GetCityWithID(CityList::NEWYORK )->GetMapOutput();
+	std::string Osa = GetCityWithID(CityList::OSAKA )->GetMapOutput();
+	std::string Par = GetCityWithID(CityList::PARIS )->GetMapOutput();
+	std::string Riy = GetCityWithID(CityList::RIYADH )->GetMapOutput();
+	std::string fra = GetCityWithID(CityList::SANFRAN )->GetMapOutput();
+	std::string tia = GetCityWithID(CityList::SANTIAGO )->GetMapOutput();
+	std::string Sao = GetCityWithID(CityList::SAOPAULO )->GetMapOutput();
+	std::string Seo = GetCityWithID(CityList::SEOUL )->GetMapOutput();
+	std::string Sha = GetCityWithID(CityList::SHANGHAI )->GetMapOutput();
+	std::string StP = GetCityWithID(CityList::STPETER )->GetMapOutput();
+	std::string Syd = GetCityWithID(CityList::SYDNEY )->GetMapOutput();
+	std::string Tai = GetCityWithID(CityList::TAIPEI )->GetMapOutput();
+	std::string Teh = GetCityWithID(CityList::TEHRAN )->GetMapOutput();
+	std::string Tok = GetCityWithID(CityList::TOKYO )->GetMapOutput();
+	std::string Was = GetCityWithID(CityList::WASHINGTON )->GetMapOutput();
 	std::stringstream ss;
 	ss << "  ----------------------------------------------------------------------------------------------------------------------------\n" <<
 		"  |                                                                                                                          |\n" <<
-		"  |                                                                                                                          |\n" <<
+		"  |                                                           " << StP << "                                                      |\n" <<
 		"  |                                                        St. Petersburg                                                    |\n" <<
-		"  |                                                          /     |    \\                                                    |\n" <<
-		"  |                                     _______London-----Essen    |     \\                                                   |\n" <<
-		"  |                                    /         |   \\   /    |    |   Moscow                                                |\n" <<
-		"  |          Chicago---Montreal--New York        |   Paris--Milan  |   /   \\                           Biejing----Seoul      |\n" <<
-		"  |         /   | | \\        \\   /      \\        |   /   |     \\   |  /     Theran                         |     /    \\      |\n" <<
-		"  |-San Fransico| |  \\       Washington  \\______Madrid   |    Istanboul     /  \\  \\                       Shanghai----Tokyo--|\n" <<
-		"  |/      \\     | |   \\     /    |               /    \\  |    /   |  \\     /    \\  Dehli------Kolkata       |           |    |\n" <<
-		"  |        \\    | |    Atlanta   |              /      \\ |   /    |   \\   /      \\  /   \\       |    \\      |           |   /|\n" <<
-		"  |         \\   | |         \\    |             /       Algeris    |  Baghdad---Karachi   \\      |    Hong Kong_     Okasa  / |\n" <<
-		"  |   Los Angeles |       ___Miami            /               \\   | /     \\   /    |      \\     |    /   |  \\  \\    /     /  |\n" <<
-		"  |  /         \\  |      /     /             /                 Cario-----Ryadh     |      |     Bangkok  |   \\  Tapie    /   |\n" <<
-		"  | /         Mexico city     /             /                      \\            Mumbia    |    /  |  \\   |    \\   |     /    |\n" <<
-		"  |/           \\       \\     /             /                        \\                 \\   |   /   |   \\  |     \\  |   _/     |\n" <<
-		"  |             \\       \\   /             /                    ___Khartom              Chennia    | HoChiMinh   Manila      /|\n" <<
-		"  |              \\      Bogota           /       _____Lagos___/    /   |                      \\   |   /         |          / |\n" <<
+		"  |                                       " << Lon << " " << Ess << "/     |    \\                                                    |\n" <<
+		"  |                                       _____London-----Essen    |     \\                                                   |\n" <<
+		"  |      " << Chi << "   " << Mon << "  " << New << "/       |   \\   /    |    |   Moscow" << Mos << "                " << Bei << "   " << Seo << "  |\n" <<
+		"  |          Chicago---Montreal--New York        |   Paris--Milan  |   /   \\                           Beijing----Seoul      |\n" <<
+		"  |" << fra << "/   | | \\        \\   /      \\        |   /   |     \\   |  /     Tehran" << Teh << "                |     /    \\      |\n" <<
+		"  |-San Fransico| |  \\       Washington  \\______Madrid   |    Istanboul     /  \\  \\  " << Del << " " << Kol << "  Shanghai----Tokyo--|\n" <<
+		"  |/      \\     | |   \\     /    |" << Was << "      /    \\  |    /   |  \\     /    \\  Dehli------Kolkata       |" << Sha << "  |    |\n" <<
+		"  |        \\    | |    Atlanta   |              /      \\ |   /    |   \\   /      \\  /   \\       |    \\      |  " << Osa << "|   /|\n" <<
+		"  |" << Los << "\\   | |" << Atl << "\\    |             /       Algeris    |  Baghdad---Karachi   \\      |    Hong Kong_     Osaka  / |\n" <<
+		"  |   Los Angeles |       ___Miami" << Mia << "   /     " << alg << " \\   | /     \\   /    |      \\     |    /   |  \\  \\    /     /  |\n" <<
+		"  |  /         \\  |      /     /             /                 Cairo-----Riyadh    |      |     Bangkok  |   \\  Taipe    /   |\n" <<
+		"  | /" << Mex << "Mexico city     /             /             " << Cai << "\\   " << Riy << "  Mumbia  |    /  |  \\   |    \\   |     /    |\n" <<
+		"  |/           \\       \\     /             /                        \\        " << Mum << "\\   |   /   |   \\  |     \\  |   _/     |\n" <<
+		"  |             \\       \\   /             /        " << Lag << "   ___Khartom              Chennia    | HoChiMinh   Manila      /|\n" <<
+		"  |              \\      Bogota" << Bog << "  /       _____Lagos___/    /   |" << Kha << "    " << Che << "\\   |   /" << HoC << "|" << Man << " / |\n" <<
 		"  |               \\     /  | \\          /       /        \\        /    |                       Jakarta          |         /  |\n" <<
-		"  |                \\   /   |  \\        /       /          \\      /     |                              \\         |        /   |\n" <<
+		"  |                \\   /   |  \\        /       /          \\      /     |                    " << Jak << " \\         |        /   |\n" <<
 		"  |                Lima    |   \\      /       /          Kinsenea      |                               \\        |       /    |\n" <<
-		"  |                   |    |    Sao Paulo____/                \\        |                                \\       |      /     |\n" <<
-		"  |                   |    |     /                             \\       |                                 \\      |     /      |\n" <<
-		"  |                   |  Beuno Aires                            \\      |                                  \\     |    /       |\n" <<
-		"  |                   |                                       Johannesburg                                 \\    |   /        |\n" <<
-		"  |                Santiago                                                                                 \\   |  /         |\n" <<
-		"  |                                                                                                          Sydney          |\n" <<
-		"  |                                                                                                                          |\n" <<
-		"  ----------------------------------------------------------------------------------------------------------------------------\n";
+		"  |          " << Lim << "|    |    Sao Paulo____/      " << Kin << " \\        |                                \\       |      /     |\n" <<
+		"  |                   |    |     / " << Sao << "                   \\       |                                 \\      |     /      |\n" <<
+		"  |                   |  Bueno Aires                            \\      |                                  \\     |    /       |\n" <<
+		"  |                   |    " << Bue << "                          Johannesburg                                 \\    |   /        |\n" <<
+		"  |                Santiago                                     " << Joh << "                                   \\   |  /         |\n" <<
+		"  |                " << tia << "                                                                                 Sydney          |\n" <<
+		"  |                                                                                                         " << Syd << "        |\n" <<
+		"  ----------------------------------------------------------------------------------------------------------------------------\n" <<
+		"[ red, blue, yellow, black ]\n" <<
+		"Madrid    - " << Mad << "\tParis  - " << Par << "\tMilan   - " << Mil << "\nIstanboul - " << Ist << "\tBagoto - " << Bag << "\tKarachi - " << Kar << "\nHong Kong - " << Hon << "\tTaipe  - " << Tai << "\tTokoyo  - " << Tok << "\n";
 	return ss.str();
 }
