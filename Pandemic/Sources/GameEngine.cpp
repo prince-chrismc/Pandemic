@@ -1074,6 +1074,7 @@ uint16_t GameEngine::ExecuteBuildResearchCenter(const uint16_t & pos, const City
 // AddResearchCenter ------------------------------------------------------------------------------
 void GameEngine::AddResearchCenter(const uint16_t& pos, const CityList::CityID& cityID)
 {
+	pos; // unused but kept for formality
 	if (m_Board.m_Centers.GetCenters().size() < 7)
 	{
 		m_Board.m_Centers.AddStation(m_Board.m_Map.GetCityWithID(cityID));
