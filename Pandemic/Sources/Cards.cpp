@@ -12,16 +12,16 @@ uint64_t Card::GetNumID()
 	return num;
 }
 
+std::string Card::GetCardInfo()
+{
+	return "ID: " + m_ID + "\tName: " + m_Name + "\t\tDesc: " + m_Description;
+}
+
 Card::Card(const uint64_t& id, const char* name, const char* desc) : m_Name(name), m_Description(desc)
 {
 	std::stringstream ss;
 	ss << std::hex << id;
 	m_ID = ss.str();
-}
-
-void Card::PrintInformation()
-{
-	printf("ID: %s \t Name: %s \t Desc: %s\n", m_ID.c_str(), m_Name.c_str(), m_Description.c_str());
 }
 
 // In here lies very bad OOP but all definitions are public so for convience this is an easy out
@@ -254,6 +254,19 @@ Color CityCard::GetCityColor()
 	else return Color::INVALID;
 }
 
+std::string CityCard::GetCardInfo()
+{
+	std::string result = Card::GetCardInfo() + "\t\tColor: ";
+	switch (GetCityColor())
+	{
+	case Color::RED: result += "RED"; break;
+	case Color::BLUE: result += "BLUE"; break;
+	case Color::YELLOW: result += "YELLOW"; break;
+	case Color::BLACK: result += "BLACK"; break;
+	}
+	return result;
+}
+
 const char* EventCard::GetCardDesc(const uint64_t& id)
 {
 	const char* desc = "";
@@ -266,6 +279,11 @@ const char* EventCard::GetCardDesc(const uint64_t& id)
 	case EventCard::GOVTGRANT: desc = "build a research station in any city"; break;
 	}
 	return desc;
+}
+
+std::string EventCard::GetCardInfo()
+{
+	return Card::GetCardInfo();
 }
 
 const char* EpidemicCard::GetCardDesc(const uint64_t& id)
@@ -282,6 +300,11 @@ const char* EpidemicCard::GetCardDesc(const uint64_t& id)
 		desc = "A. Increase infection rate -- B. Infect last card of infection deck with 3 cubes -- C. Suffle discarded infection cards and readded to the top of the deck"; break;
 	}
 	return desc;
+}
+
+std::string EpidemicCard::GetCardInfo()
+{
+	return Card::GetCardInfo();
 }
 
 const char* RoleCard::GetCardDesc(const uint64_t & id)

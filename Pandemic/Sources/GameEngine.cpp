@@ -163,7 +163,8 @@ void GameEngine::TurnActionsPhase(const uint16_t & pos)
 	std::cout << std::endl;
 	for (size_t i = 0; i < 4; /* no itor, determined by ExecuteMove() */)
 	{
-		m_Players.at(pos)->PrintInfo();
+		std::cout << m_Board.m_Map.GetMapDiagram() << std::endl;
+		m_Players.at(pos)->PrintHand();
 		MovesPerCity options = CalculatePlayerOpt(pos);
 
 		std::cout << "Select your desired move from the list below... (#)" << std::endl;
@@ -171,8 +172,7 @@ void GameEngine::TurnActionsPhase(const uint16_t & pos)
 		
 		uint16_t selection = GetUserInput(1, (uint16_t)moves.size());
 
-		i += ExecuteMove(pos, moves.at(selection).first, moves.at(selection).second);
-		std::cout << m_Board.m_Map.GetMapDiagram() << std::endl;
+		i += ExecuteMove(pos, moves.at(selection).first, moves.at(selection).second);		
 	}
 }
 // TurnActionsPhase -------------------------------------------------------------------------------
@@ -1260,8 +1260,7 @@ uint16_t GameEngine::ExecuteForecast(const uint16_t & pos, const CityList::CityI
 		std::cout << " - TOP - " << std::endl;
 		for (uint16_t a = 6; a > 0; a -= 1)
 		{
-			std::cout << a << ": ";
-			forecast.at(a - 1)->PrintInformation();
+			std::cout << a << ": " << forecast.at(a - 1)->GetCardInfo() << std::endl;
 		}
 		std::cout << " - BOTTOM - " << std::endl;
 
@@ -1787,11 +1786,9 @@ void GameEngine::LoadGame()
 // Initialize -------------------------------------------------------------------------------------
 void GameEngine::Initialize()
 {
-	std::cout << m_Board.m_Map.GetMapDiagram() << std::endl;
 	BoardSetup();			 //DO NOT TOUCH ORDER !
 	PlayersSetup();			 //DO NOT TOUCH ORDER !
 	DifficultySetup();		 //DO NOT TOUCH ORDER !
-	std::cout << m_Board.m_Map.GetMapDiagram() << std::endl;
 
 	m_PreGameComplete = true;
 }

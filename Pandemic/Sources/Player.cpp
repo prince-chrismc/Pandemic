@@ -107,7 +107,7 @@ void Player::PrintInfo()
 void Player::PrintHand()
 {
 	printf("\n");
-	printf("Player %s: \n", m_Name.c_str());
+	PrintInfo();
 	if (m_Hand.size() == 0)
 	{
 		printf(" Hand is empty\n");
@@ -116,16 +116,13 @@ void Player::PrintHand()
 
 	for (size_t s = 0; s < m_Hand.size(); s += 1)
 	{
-		printf("Card %d: ", (uint16_t)s);
-		m_Hand.at(s)->PrintInformation();
+		printf("Card %d: %s\n", (uint16_t)s, m_Hand.at(s)->GetCardInfo().c_str());
 	}
 }
 
 void Player::PrintRefCard()
 {
-	printf("Reference Card:\n--------------------------------------------------\n");
-	m_RefCard.PrintInformation();
-	printf("--------------------------------------------------\n\n");
+	printf("Reference Card:\n--------------------------------------------------\n%s\n--------------------------------------------------\n\n", m_RefCard.GetCardInfo().c_str());
 }
 
 std::string Player::GetSaveOutput()

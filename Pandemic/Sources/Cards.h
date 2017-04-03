@@ -30,7 +30,7 @@ public:
 
 	static const char* GetCardName(const uint64_t& id);
 	uint64_t GetNumID();
-	void PrintInformation();
+	std::string GetCardInfo();
 };
 
 
@@ -46,6 +46,7 @@ public:
 		PLAYERCARD_MIN = 0x2000000UL, //"Invalid"
 		PLAYERCARD_MAX = 0x2FFFFFFUL, //"Invalid"
 	};
+	virtual std::string GetCardInfo() = 0;
 };
 
 
@@ -144,6 +145,8 @@ public:
 	CityCard(const CardsList& id) : PlayerCard(id, GetCardName(id), GetCardDesc(id)) {}
 
 	Color GetCityColor();
+
+	std::string GetCardInfo();
 };
 
 
@@ -172,6 +175,8 @@ public:
 	};
 
 	EventCard(const CardsList& id) : PlayerCard(id, GetCardName(id), GetCardDesc(id)) {}
+
+	std::string GetCardInfo();
 };
 
 
@@ -199,6 +204,8 @@ public:
 	};
 
 	EpidemicCard(const CardsList& id) : PlayerCard(id, GetCardName(id), GetCardDesc(id)) {}
+
+	std::string GetCardInfo();
 };
 
 
