@@ -459,7 +459,7 @@ std::string WorldMap::GetMapDiagram()
 		"  |                " << tia << "                                                                                 Sydney          |\n" <<
 		"  |                                                                                                         " << Syd << "        |\n" <<
 		"  ----------------------------------------------------------------------------------------------------------------------------\n" <<
-		"[ red, blue, yellow, black ]\n" <<
-		"Madrid    - " << Mad << "\tParis  - " << Par << "\tMilan   - " << Mil << "\nIstanboul - " << Ist << "\tBagoto - " << Bag << "\tKarachi - " << Kar << "\nHong Kong - " << Hon << "\tTaipe  - " << Tai << "\tTokoyo  - " << Tok << "\n";
+		"  [ red, blue, yellow, black ]\n" <<
+		"  Madrid    - " << Mad << "\tParis  - " << Par << "\tMilan   - " << Mil << "\n  Istanboul - " << Ist << "\tBagoto - " << Bag << "\tKarachi - " << Kar << "\n  Hong Kong - " << Hon << "\tTaipe  - " << Tai << "\tTokoyo  - " << Tok << "\n";
 	return ss.str();
 }
