@@ -10,7 +10,7 @@ namespace bfs = boost::filesystem;
 
 GameEngine::GameEngine() : m_Board(), m_Players(), m_PreGameComplete(false), m_SkipNextInfectionPhase(false)
 {
-	std::cout << "\n          --------- PANDEMIC --------\nDo you have what it takes to save humanity ? As\nskilled members of a disease - fighting team,\nyou must keep four deadly diseases at bay while\ndiscovering their cures.\nYou and your teammates will travel across the\nglobe, treating infections while finding\nresources for cures. You must work together,\nusing your individual strengths, to succeed.The\nclock is ticking as outbreaks and epidemics fuel\nthe spreading plagues.\n Can you find all four\ncures in time ? The fate of humanity is in your\nhands!\n\n" << std::endl;
+	std::cout << "\n               -------------- PANDEMIC -------------\nDo you have what it takes to save humanity? As skilled members of a disease - fighting team, you must\nkeep four deadly diseases at bay while discovering their cures.\nYou and your teammates will travel across the globe, treating infections while finding resources for\ncures. You must work together, using your individual strengths, to succeed.The clock is ticking as\noutbreaks and epidemics fuel the spreading plagues.\nCan you find all four cures in time? The fate of humanity is in your hands!\n\n" << std::endl;
 }
 
 GameEngine::~GameEngine()
