@@ -148,10 +148,10 @@ const uint16_t GameEngine::GetUserInput(const uint16_t & lower, const uint16_t &
 		std::stringstream ss(input);
 		ss >> selection;
 
-		if (lower < 1 || selection > upper)
+		if (selection < lower || selection > upper)
 			std::cout << "Invalid option. Please Try again..." << std::endl;
 
-	} while (lower < 1 || selection > upper );
+	} while (selection < lower || selection > upper );
 
 	return selection;
 }
