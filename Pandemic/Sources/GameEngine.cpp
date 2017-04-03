@@ -1064,6 +1064,7 @@ uint16_t GameEngine::ExecuteTreateDisease(const uint16_t & pos, const CityList::
 // ExecuteBuildResearchCenter ---------------------------------------------------------------------
 uint16_t GameEngine::ExecuteBuildResearchCenter(const uint16_t & pos, const CityList::CityID & cityID)
 {
+	m_Board.m_PlayerDeck.DiscardCard(m_Players.at(pos)->RemoveCard(cityID));
 	AddResearchCenter(pos, cityID);
 	return 1;
 }
@@ -1072,7 +1073,6 @@ uint16_t GameEngine::ExecuteBuildResearchCenter(const uint16_t & pos, const City
 // AddResearchCenter ------------------------------------------------------------------------------
 void GameEngine::AddResearchCenter(const uint16_t& pos, const CityList::CityID& cityID)
 {
-	m_Board.m_PlayerDeck.DiscardCard(m_Players.at(pos)->RemoveCard(cityID));
 	if (m_Board.m_Centers.GetCenters().size() < 7)
 	{
 		m_Board.m_Centers.AddStation(m_Board.m_Map.GetCityWithID(cityID));
@@ -1307,6 +1307,15 @@ uint16_t GameEngine::ExecuteQuietNight(const uint16_t & pos, const CityList::Cit
 // ExecuteGovernmentGrant -------------------------------------------------------------------------
 uint16_t GameEngine::ExecuteGovernmentGrant(const uint16_t & pos, const CityList::CityID & cityID)
 {
+	for (size_t o = 0; o < m_Players.at(pos)->m_Hand.size(); o += 1)
+	{
+		if (PlayerCardFactory::IsaEventCard(m_Players.at(pos)->m_Hand.at(o)->GetNumID()))
+			if (m_Players.at(pos)->m_Hand.at(o)->GetNumID() == EventCard::GOVTGRANT)
+			{
+				m_Board.m_PlayerDeck.DiscardCard(m_Players.at(pos)->RemoveCardAt((uint16_t)o));
+				break;
+			}
+	}
 	AddResearchCenter(pos, cityID);
 	return 0;
 }
