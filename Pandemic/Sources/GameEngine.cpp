@@ -316,8 +316,9 @@ void GameEngine::Outbreak(City* city, City* skip)
 
 	for each(City* connected in city->GetNearByCities())
 	{
-		if (connected->GetCityID() == skip->GetCityID())
-			continue;
+		if(skip != nullptr)
+			if (connected->GetCityID() == skip->GetCityID())
+				continue;
 
 		if (connected->GetNumberOfCubes(city->GetCityColor()) == 3)
 		{
