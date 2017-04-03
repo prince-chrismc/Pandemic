@@ -28,7 +28,7 @@ public:
 	InfectionDeck(const InfectionDeck&) = delete;
 	void operator=(const InfectionDeck&) = delete;
 
-	std::deque<InfectionCard::CardsList> GetDiscardPile() { return m_Discard; }
+	std::deque<InfectionCard::CardsList> GetDiscardPile() const { return m_Discard; }
 	InfectionCard* DrawCard();
 	InfectionCard* DrawCardForEpidemic();
 	void Intensify();

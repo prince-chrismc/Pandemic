@@ -43,6 +43,7 @@ protected:
 	// game play
 	enum MoveOptions
 	{
+		// game actions
 		INVALID = 0x000UL,
 		DRIVE_FERRY = 0x001UL,
 		FLIGHT = 0x002UL,
@@ -53,18 +54,19 @@ protected:
 		SHARECARD = 0x007UL,
 		CUREDISEASE = 0x008UL,
 
+		// Event cards
 		RESILLIENT = 0x200UL,
 		AIRLIFT = 0x201UL,
 		FORECAST = 0x202UL,
 		QUIETNIGHT = 0x203UL,
 		GOVTGRANT = 0x204UL,
 
+		// basics
+		QUIT = 0x0F0UL,
+		REFCARD = 0x0A0UL,
+		PEAK_PLAYER_DISCARD,
+		PEAK_INFECTION_DISCARD,
 		/*
-			QUIT = 0x0F0UL,
-			REFCARD = 0x0A0UL,
-
-			PEAK_PLAYER_DISCARD,
-			PEAK_INFECTION_DISCARD,
 
 			CONTIN_PLANNER_DRAW_EVENT,
 			DISPATCH_MOVE_OTHERS_PAWN,
@@ -100,6 +102,10 @@ protected:
 			PlayerMoves DeterminePlayerMoves(const MovesPerCity& options);
 				//std::string MoveOpToString(const MoveOptions & opt);
 			uint16_t ExecuteMove(const uint16_t& pos, const MoveOptions& opt, const CityList::CityID& cityID);
+				uint16_t ExecuteQuit(const uint16_t& pos, const CityList::CityID& cityID);
+				uint16_t ExecuteViewRefCard(const uint16_t& pos, const CityList::CityID& cityID);
+				uint16_t ExecutePeakInfectionDiscard(const uint16_t& pos, const CityList::CityID& cityID);
+				uint16_t ExecutePeakPlayerDiscard(const uint16_t& pos, const CityList::CityID& cityID);
 				uint16_t ExecuteDriveFerry(const uint16_t& pos, const CityList::CityID& cityID);
 				uint16_t ExecuteDirectFlight(const uint16_t& pos, const CityList::CityID& cityID);
 				uint16_t ExecuteCharterFlight(const uint16_t& pos, const CityList::CityID& cityID);
@@ -135,20 +141,29 @@ public:
 };
 
 
-class GameOverException final : public std::exception
+class GameException abstract : public std::exception
 {
 private:
 	std::string m_What;
 public:
-	GameOverException(const std::string& reason) : m_What(reason) {}
+	GameException(const std::string& reason) : m_What(reason) {}
 	const char* what() const { const char* what = m_What.c_str(); return what; }
 };
 
-class GameWonException final : public std::exception
+class GameOverException final : public GameException 
 {
-private:
-	std::string m_What;
 public:
-	GameWonException(const std::string& reason) : m_What(reason) {}
-	const char* what() const { const char* what = m_What.c_str(); return what; }
+	GameOverException(const std::string& reason) : GameException(reason) {}
+};
+
+class GameWonException final : public GameException
+{
+public:
+	GameWonException(const std::string& reason) : GameException(reason) {}
+};
+
+class GameQuitException final : public GameException
+{
+public:
+	GameQuitException() : GameException("Thank you for playing, come back soon!") {}
 };

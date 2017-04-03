@@ -183,7 +183,7 @@ void GameEngine::TurnDrawPhase(const uint16_t& pos)
 	for (uint16_t i = 0; i < 2; i += 1)
 	{
 		CheckIfGameOver();
-		if (m_Players.at(pos)->m_Hand.size() >= 7) // if hand is full
+		if (m_Players.at(pos)->m_Hand.size() > 6) // if hand is full
 		{
 			m_Players.at(pos)->PrintHand();
 			std::cout << "Which card would you like discard? ";
@@ -377,6 +377,18 @@ void GameEngine::Epidemic()
 GameEngine::MovesPerCity GameEngine::CalculatePlayerOpt(const uint16_t & pos)
 {
 	MovesPerCity options;
+
+	// Quit ---------------------------------------------------------------------------------------
+	options.insert(std::make_pair(GameEngine::QUIT, m_Players.at(pos)->GetCityID()));
+
+	// View Reference Card ------------------------------------------------------------------------
+	options.insert(std::make_pair(GameEngine::REFCARD, m_Players.at(pos)->GetCityID()));
+
+	// Peak Infection Discard Pile ----------------------------------------------------------------
+	options.insert(std::make_pair(GameEngine::PEAK_INFECTION_DISCARD, m_Players.at(pos)->GetCityID()));
+
+	// Peal Player Discard Pile -------------------------------------------------------------------
+	options.insert(std::make_pair(GameEngine::PEAK_PLAYER_DISCARD, m_Players.at(pos)->GetCityID()));
 
 	// Drive --------------------------------------------------------------------------------------
 	for each(CityList::CityID id in CalculateDriveCitiesFor(pos))
@@ -755,12 +767,73 @@ Color GameEngine::DetermineCureColor(const uint16_t& pos)
 GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & options)
 {
 	PlayerMoves moves;
+	uint8_t itor = 'A';
 	uint16_t i = 0;
+
+	// Quit ---------------------------------------------------------------------------------------
+	if (options.count(GameEngine::QUIT) > 0)
+	{
+		std::cout << std::endl << itor++ << ". Quit" << std::endl;
+		auto low = options.lower_bound(GameEngine::QUIT);
+		auto high = options.upper_bound(GameEngine::QUIT);
+
+		for (auto it = low; it != high; it++)
+		{
+			moves.insert(std::make_pair(++i, *it));
+			City* city = m_Board.m_Map.GetCityWithID(it->second);
+			std::cout << "  " << i << " - Quit Game and Auto Save" << std::endl;
+		}
+	}
+
+	// View Reference Card ------------------------------------------------------------------------
+	if (options.count(GameEngine::REFCARD) > 0)
+	{
+		std::cout << std::endl << itor++ << ". Reference Card" << std::endl;
+		auto low = options.lower_bound(GameEngine::REFCARD);
+		auto high = options.upper_bound(GameEngine::REFCARD);
+
+		for (auto it = low; it != high; it++)
+		{
+			moves.insert(std::make_pair(++i, *it));
+			City* city = m_Board.m_Map.GetCityWithID(it->second);
+			std::cout << "  " << i << " - View reference card" << std::endl;
+		}
+	}
+
+	// Peak Infection Discard Pile ----------------------------------------------------------------
+	if (options.count(GameEngine::PEAK_INFECTION_DISCARD) > 0)
+	{
+		std::cout << std::endl << itor++ << ". Infection Discard Pile" << std::endl;
+		auto low = options.lower_bound(GameEngine::PEAK_INFECTION_DISCARD);
+		auto high = options.upper_bound(GameEngine::PEAK_INFECTION_DISCARD);
+
+		for (auto it = low; it != high; it++)
+		{
+			moves.insert(std::make_pair(++i, *it));
+			City* city = m_Board.m_Map.GetCityWithID(it->second);
+			std::cout << "  " << i << " - Peak the infection deck's discard pile" << std::endl;
+		}
+	}
+
+	// Peal Player Discard Pile -------------------------------------------------------------------
+	if (options.count(GameEngine::PEAK_PLAYER_DISCARD) > 0)
+	{
+		std::cout << std::endl << itor++ << ". Player Discard Pile" << std::endl;
+		auto low = options.lower_bound(GameEngine::PEAK_PLAYER_DISCARD);
+		auto high = options.upper_bound(GameEngine::PEAK_PLAYER_DISCARD);
+
+		for (auto it = low; it != high; it++)
+		{
+			moves.insert(std::make_pair(++i, *it));
+			City* city = m_Board.m_Map.GetCityWithID(it->second);
+			std::cout << "  " << i << " - Peak the player deck's discard pile" << std::endl;
+		}
+	}
 
 	// Drive --------------------------------------------------------------------------------------
 	if (options.count(GameEngine::DRIVE_FERRY) > 0)
 	{
-		std::cout << std::endl << "A. Drive/Ferry" << std::endl;
+		std::cout << std::endl << itor++ << ". Drive/Ferry" << std::endl;
 		auto low = options.lower_bound(GameEngine::DRIVE_FERRY);
 		auto high = options.upper_bound(GameEngine::DRIVE_FERRY);
 
@@ -775,7 +848,7 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 	// Direct Flight ------------------------------------------------------------------------------
 	if (options.count(GameEngine::FLIGHT) > 0)
 	{
-		std::cout << std::endl << "B. Direct Flight" << std::endl;
+		std::cout << std::endl << itor++ << ". Direct Flight" << std::endl;
 		auto low = options.lower_bound(GameEngine::FLIGHT);
 		auto high = options.upper_bound(GameEngine::FLIGHT);
 
@@ -790,7 +863,7 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 	// Charter Flight -----------------------------------------------------------------------------
 	if (options.count(GameEngine::CHARTER) > 0)
 	{
-		std::cout << std::endl << "C. Charter Flight" << std::endl;
+		std::cout << std::endl << itor++ << ". Charter Flight" << std::endl;
 		auto low = options.lower_bound(GameEngine::CHARTER);
 		auto high = options.upper_bound(GameEngine::CHARTER);
 
@@ -805,7 +878,7 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 	// Shuttle Flight -----------------------------------------------------------------------------
 	if (options.count(GameEngine::SHUTTLE) > 0)
 	{
-		std::cout << std::endl << "C. Shuttle Flight" << std::endl;
+		std::cout << std::endl << itor++ << ". Shuttle Flight" << std::endl;
 		auto low = options.lower_bound(GameEngine::SHUTTLE);
 		auto high = options.upper_bound(GameEngine::SHUTTLE);
 
@@ -820,7 +893,7 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 	// Treat Diesease -----------------------------------------------------------------------------
 	if (options.count(GameEngine::TREATDISEASE) > 0)
 	{
-		std::cout << std::endl << "E. Treat Disease" << std::endl;
+		std::cout << std::endl << itor++ << ". Treat Disease" << std::endl;
 		auto low = options.lower_bound(GameEngine::TREATDISEASE);
 		auto high = options.upper_bound(GameEngine::TREATDISEASE);
 
@@ -835,7 +908,7 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 	// Build Research Center ----------------------------------------------------------------------
 	if (options.count(GameEngine::BUILDRC) > 0)
 	{
-		std::cout << std::endl << "F. Build Research Center" << std::endl;
+		std::cout << std::endl << itor++ << ". Build Research Center" << std::endl;
 		auto low = options.lower_bound(GameEngine::BUILDRC);
 		auto high = options.upper_bound(GameEngine::BUILDRC);
 
@@ -849,7 +922,7 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 	// Share Knowledge --------–-------------------------------------------------------------------
 	if (options.count(GameEngine::SHARECARD) > 0)
 	{
-		std::cout << std::endl << "G. Share Knowledge" << std::endl;
+		std::cout << std::endl << itor++ << ". Share Knowledge" << std::endl;
 		auto low = options.lower_bound(GameEngine::SHARECARD);
 		auto high = options.upper_bound(GameEngine::SHARECARD);
 
@@ -863,7 +936,7 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 	// Discover Cure ------------------------------------------------------------------------------
 	if (options.count(GameEngine::CUREDISEASE) > 0)
 	{
-		std::cout << std::endl << "H. Discover a Cure" << std::endl;
+		std::cout << std::endl << itor++ << ". Discover a Cure" << std::endl;
 		auto low = options.lower_bound(GameEngine::CUREDISEASE);
 		auto high = options.upper_bound(GameEngine::CUREDISEASE);
 
@@ -879,7 +952,7 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 	// EventCard Airlift---------------------------------------------------------------------------
 	if (options.count(GameEngine::AIRLIFT) > 0)
 	{
-		std::cout << std::endl << "I. Airlift" << std::endl;
+		std::cout << std::endl << itor++ << ". Airlift" << std::endl;
 		auto low = options.lower_bound(GameEngine::AIRLIFT);
 		auto high = options.upper_bound(GameEngine::AIRLIFT);
 
@@ -894,7 +967,7 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 	// EventCard Resiliant Population -------------------------------------------------------------
 	if (options.count(GameEngine::RESILLIENT) > 0)
 	{
-		std::cout << std::endl << "J. Resiliant Population" << std::endl;
+		std::cout << std::endl << itor++ << ". Resiliant Population" << std::endl;
 		auto low = options.lower_bound(GameEngine::RESILLIENT);
 		auto high = options.upper_bound(GameEngine::RESILLIENT);
 
@@ -909,7 +982,7 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 	// EventCard Forecast -------------------------------------------------------------------------
 	if (options.count(GameEngine::FORECAST) > 0)
 	{
-		std::cout << std::endl << "I. Forecast" << std::endl;
+		std::cout << std::endl << itor++ << ". Forecast" << std::endl;
 		auto low = options.lower_bound(GameEngine::FORECAST);
 		auto high = options.upper_bound(GameEngine::FORECAST);
 
@@ -924,7 +997,7 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 	// EventCard QuietNight -----------------------------------------------------------------------
 	if (options.count(GameEngine::QUIETNIGHT) > 0)
 	{
-		std::cout << std::endl << "I. Quiet Night" << std::endl;
+		std::cout << std::endl << itor++ << ". Quiet Night" << std::endl;
 		auto low = options.lower_bound(GameEngine::QUIETNIGHT);
 		auto high = options.upper_bound(GameEngine::QUIETNIGHT);
 
@@ -939,7 +1012,7 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 	// EventCard Government Grant -----------------------------------------------------------------
 	if (options.count(GameEngine::GOVTGRANT) > 0)
 	{
-		std::cout << std::endl << "I. Government Grant" << std::endl;
+		std::cout << std::endl << itor++ << ". Government Grant" << std::endl;
 		auto low = options.lower_bound(GameEngine::GOVTGRANT);
 		auto high = options.upper_bound(GameEngine::GOVTGRANT);
 
@@ -951,7 +1024,6 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 		}
 	}
 
-
 	return moves;
 }
 // DeterminePlayerMoves ---------------------------------------------------------------------------
@@ -961,6 +1033,14 @@ uint16_t GameEngine::ExecuteMove(const uint16_t& pos, const MoveOptions & opt, c
 {
 	switch (opt)
 	{
+	case QUIT:
+		return ExecuteQuit(pos, cityID);
+	case REFCARD:
+		return ExecuteViewRefCard(pos, cityID);
+	case PEAK_INFECTION_DISCARD:
+		return ExecutePeakInfectionDiscard(pos, cityID);
+	case PEAK_PLAYER_DISCARD:
+		return ExecutePeakPlayerDiscard(pos, cityID);
 	case DRIVE_FERRY:
 		return ExecuteDriveFerry(pos, cityID);
 	case FLIGHT:
@@ -992,6 +1072,60 @@ uint16_t GameEngine::ExecuteMove(const uint16_t& pos, const MoveOptions & opt, c
 	}
 }
 // ExecuteMove ------------------------------------------------------------------------------------
+
+// ExecuteQuit ------------------------------------------------------------------------------------
+uint16_t GameEngine::ExecuteQuit(const uint16_t & pos, const CityList::CityID & cityID)
+{
+	pos; // unused, keept for normalization
+	cityID; // unused, keept for normalization
+	//SaveGame();
+	throw GameQuitException();
+	return 0;
+}
+// ExecuteQuit ------------------------------------------------------------------------------------
+
+// ExecuteViewRefCard -----------------------------------------------------------------------------
+uint16_t GameEngine::ExecuteViewRefCard(const uint16_t & pos, const CityList::CityID & cityID)
+{
+	cityID; // unused, keept for normalization
+	std::cout << m_Players.at(pos)->m_RefCard.GetCardInfo() << std::endl;
+	return 0;
+}
+// ExecuteViewRefCard -----------------------------------------------------------------------------
+
+// ExecutePeakInfectionDiscard --------------------------------------------------------------------
+uint16_t GameEngine::ExecutePeakInfectionDiscard(const uint16_t & pos, const CityList::CityID & cityID)
+{
+	pos; // unused, keept for normalization
+	cityID; // unused, keept for normalization
+	auto discard = m_Board.m_InfecDeck.GetDiscardPile();
+	uint16_t counter = discard.size();
+	std::cout << std::endl << "Infection deck (recent to oldest)" << std::endl;
+	for(auto itor = discard.crbegin(); itor != discard.crend(); itor++)
+	{
+		std::cout << counter-- << ": " << Card::GetCardName(*itor) << std::endl;
+	}
+	std::cout << std::endl;
+	return 0;
+}
+// ExecutePeakInfectionDiscard --------------------------------------------------------------------
+
+// ExecutePeakPlayerDiscard -----------------------------------------------------------------------
+uint16_t GameEngine::ExecutePeakPlayerDiscard(const uint16_t & pos, const CityList::CityID & cityID)
+{
+	pos; // unused, keept for normalization
+	cityID; // unused, keept for normalization
+	auto discard = m_Board.m_PlayerDeck.GetDiscardPile();
+	uint16_t counter = discard.size();
+	std::cout << std::endl << "Infection deck (recent to oldest)" << std::endl;
+	for (auto itor = discard.crbegin(); itor != discard.crend(); itor++)
+	{
+		std::cout << counter-- << ": " << Card::GetCardName(*itor) << std::endl;
+	}
+	std::cout << std::endl;
+	return 0;
+}
+// ExecutePeakPlayerDiscard -----------------------------------------------------------------------
 
 // ExecuteDriveFerry ------------------------------------------------------------------------------
 uint16_t GameEngine::ExecuteDriveFerry(const uint16_t & pos, const CityList::CityID & cityID)
@@ -1817,6 +1951,10 @@ void GameEngine::Launch()
 	catch (const GameWonException& e)
 	{
 		std::cout << "\n\n ---- Congradulations! ----\n  You won due to: " << e.what() << std::endl;
+	}
+	catch (const GameQuitException& e)
+	{
+		std::cout << "\n\n ---- Good Bye! ----\n  " << e.what() << std::endl;
 	}
 	
 }
