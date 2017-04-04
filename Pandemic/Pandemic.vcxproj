@@ -181,6 +181,7 @@
     <ClInclude Include="Sources\WorldMap.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="..\Notes\MapDiagram.txt" />
     <Text Include="..\Notes\ObjectList.txt" />
     <Text Include="..\Notes\Sequence.txt" />
   </ItemGroup>

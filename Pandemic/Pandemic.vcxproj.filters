@@ -89,5 +89,8 @@
     <Text Include="..\Notes\Sequence.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="..\Notes\MapDiagram.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>
