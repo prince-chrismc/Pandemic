@@ -9,13 +9,13 @@
 #include <exception>
 #include "Board.h"
 #include "Player.h"
-#include "InfectionLog.h"
+#include "Observers.h"
 
-class GameEngine final
+class GameEngine final : public ISubject
 {
 private:
 	Board m_Board;
-	InfectionLog m_Log;
+	InfectionLog* m_Log;
 	std::vector<Player*> m_Players;
 	bool m_PreGameComplete;
 	bool m_SkipNextInfectionPhase;
@@ -40,7 +40,9 @@ protected:
 	*/
 	void LoadGame();
 
-	// game play
+	void Notify(std::string name, uint16_t cubes = 1);
+
+	// game play ----------------------------------------------------------------------------------
 	enum MoveOptions
 	{
 		// game actions

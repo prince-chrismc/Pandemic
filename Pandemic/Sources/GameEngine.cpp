@@ -11,6 +11,9 @@ namespace bfs = boost::filesystem;
 GameEngine::GameEngine() : m_Board(), m_Players(), m_PreGameComplete(false), m_SkipNextInfectionPhase(false)
 {
 	std::cout << "\n               -------------- PANDEMIC -------------\nDo you have what it takes to save humanity? As skilled members of a disease - fighting team, you must\nkeep four deadly diseases at bay while discovering their cures.\nYou and your teammates will travel across the globe, treating infections while finding resources for\ncures. You must work together, using your individual strengths, to succeed.The clock is ticking as\noutbreaks and epidemics fuel the spreading plagues.\nCan you find all four cures in time? The fate of humanity is in your hands!\n\n" << std::endl;
+
+	m_Log = new InfectionLog();
+	RegistarObserver(m_Log);
 }
 
 GameEngine::~GameEngine()
@@ -24,6 +27,8 @@ GameEngine::~GameEngine()
 		}
 	}
 	m_Players.clear();
+
+	delete m_Log; m_Log = nullptr;
 }
 
 // MakeFileName -----------------------------------------------------------------------------------
@@ -267,7 +272,7 @@ void GameEngine::InfectCity(const uint16_t& cubesToAdd)
 		if (city->GetNumberOfCubes(city->GetCityColor()) == 3)
 		{
 			if(cubesActuallyAdded > 0) 
-				m_Log.Notify(city->GetCityName(), cubesActuallyAdded);
+				Notify(city->GetCityName(), cubesActuallyAdded);
 
 			Outbreak(city);
 			return;
@@ -280,7 +285,7 @@ void GameEngine::InfectCity(const uint16_t& cubesToAdd)
 		CheckIfGameOver();
 	}
 
-	m_Log.Notify(city->GetCityName(), cubesActuallyAdded);
+	Notify(city->GetCityName(), cubesActuallyAdded);
 }
 // InfectCity -------------------------------------------------------------------------------------
 
@@ -327,7 +332,7 @@ void GameEngine::Outbreak(City* city, City* skip)
 		else
 		{
 			connected->AddCube(m_Board.m_Cubes.TakeCube(city->GetCityColor()));
-			m_Log.Notify(connected->GetCityName());
+			Notify(connected->GetCityName());
 		}
 	CheckIfGameOver();
 	}
@@ -365,7 +370,7 @@ void GameEngine::Epidemic()
 			city->AddCube(m_Board.m_Cubes.TakeCube(citycolor));
 			CheckIfGameOver();
 		}
-		m_Log.Notify(city->GetCityName(), i);
+		Notify(city->GetCityName(), i);
 
 		// 3. Intensify reshuffle infect discard and add on top of deck
 		m_Board.m_InfecDeck.Intensify();
@@ -780,7 +785,6 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 		for (auto it = low; it != high; it++)
 		{
 			moves.insert(std::make_pair(++i, *it));
-			City* city = m_Board.m_Map.GetCityWithID(it->second);
 			std::cout << "  " << i << " - Quit Game and Auto Save" << std::endl;
 		}
 	}
@@ -795,7 +799,6 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 		for (auto it = low; it != high; it++)
 		{
 			moves.insert(std::make_pair(++i, *it));
-			City* city = m_Board.m_Map.GetCityWithID(it->second);
 			std::cout << "  " << i << " - View reference card" << std::endl;
 		}
 	}
@@ -810,7 +813,6 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 		for (auto it = low; it != high; it++)
 		{
 			moves.insert(std::make_pair(++i, *it));
-			City* city = m_Board.m_Map.GetCityWithID(it->second);
 			std::cout << "  " << i << " - Peak the infection deck's discard pile" << std::endl;
 		}
 	}
@@ -825,7 +827,6 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 		for (auto it = low; it != high; it++)
 		{
 			moves.insert(std::make_pair(++i, *it));
-			City* city = m_Board.m_Map.GetCityWithID(it->second);
 			std::cout << "  " << i << " - Peak the player deck's discard pile" << std::endl;
 		}
 	}
@@ -1080,7 +1081,7 @@ uint16_t GameEngine::ExecuteQuit(const uint16_t & pos, const CityList::CityID & 
 	cityID; // unused, keept for normalization
 	//SaveGame();
 	throw GameQuitException();
-	return 0;
+	//return 0;
 }
 // ExecuteQuit ------------------------------------------------------------------------------------
 
@@ -1099,7 +1100,7 @@ uint16_t GameEngine::ExecutePeakInfectionDiscard(const uint16_t & pos, const Cit
 	pos; // unused, keept for normalization
 	cityID; // unused, keept for normalization
 	auto discard = m_Board.m_InfecDeck.GetDiscardPile();
-	uint16_t counter = discard.size();
+	size_t counter = discard.size();
 	std::cout << std::endl << "Infection deck (recent to oldest)" << std::endl;
 	for(auto itor = discard.crbegin(); itor != discard.crend(); itor++)
 	{
@@ -1116,7 +1117,7 @@ uint16_t GameEngine::ExecutePeakPlayerDiscard(const uint16_t & pos, const CityLi
 	pos; // unused, keept for normalization
 	cityID; // unused, keept for normalization
 	auto discard = m_Board.m_PlayerDeck.GetDiscardPile();
-	uint16_t counter = discard.size();
+	size_t counter = discard.size();
 	std::cout << std::endl << "Infection deck (recent to oldest)" << std::endl;
 	for (auto itor = discard.crbegin(); itor != discard.crend(); itor++)
 	{
@@ -1526,7 +1527,7 @@ void GameEngine::SaveGame()
 	myfile << "\n";
 
 	// Infection Log ------------------------------------------------------------------------------
-	myfile << m_Log.GetSaveOutput();
+	myfile << m_Log->GetSaveOutput();
 	myfile << "\n";
 
 	myfile.close();
@@ -1909,13 +1910,23 @@ void GameEngine::LoadGame()
 				infectlog.emplace_back(std::make_pair(entry.substr(0,space), num));
 			}
 
-			m_Log.InputLoadedGame(infectlog);
+			m_Log->InputLoadedGame(infectlog);
 		}
 
 	}
 	m_PreGameComplete = true;
 }
 // LoadGame ---------------------------------------------------------------------------------------
+
+
+void GameEngine::Notify(std::string name, uint16_t cubes)
+{
+	for each(InfectionLog* obv in m_observers)
+	{
+		if (obv == nullptr) continue;
+		obv->Update(name, cubes);
+	}
+}
 
 // Initialize -------------------------------------------------------------------------------------
 void GameEngine::Initialize()

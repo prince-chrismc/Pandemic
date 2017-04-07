@@ -34,13 +34,13 @@
     <ClCompile Include="Sources\Tokens.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\InfectionLog.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\Cure.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Sources\DiseaseCubes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\InfectionLog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -69,9 +69,6 @@
     <ClInclude Include="Sources\Tokens.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\InfectionLog.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Sources\Cure.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -79,6 +76,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Markers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Observers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Subjects.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\InfectionLog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
