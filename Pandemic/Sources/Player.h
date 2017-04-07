@@ -76,6 +76,7 @@ public:
 	Player(const Player&) = delete;
 	void operator=(const Player&) = delete;
 
+	std::string GetName() const { return m_Name; }
 	//Manipulate Hand
 	void AddCard(PlayerCard* card) { m_Hand.emplace_back(card); }
 	PlayerCard* RemoveCard(const CityList::CityID& id);

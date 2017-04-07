@@ -1952,6 +1952,8 @@ void GameEngine::Launch()
 	{
 		for (uint16_t i = 0; /* no limit */; i += 1)
 		{
+			std::cout << "\n\nGet ready " << m_Players.at(i % (uint16_t)m_Players.size())->GetName() << " you're up next!\nPress 'enter' to continue...";
+			std::cin.get();
 			TurnSequence(i % (uint16_t)m_Players.size());
 		}
 	}
