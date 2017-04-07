@@ -9,7 +9,8 @@
 #include <exception>
 #include "Board.h"
 #include "Player.h"
-#include "Observers.h"
+#include "InfectionLog.h"
+#include "Subjects.h"
 
 class GameEngine final : public ISubject
 {

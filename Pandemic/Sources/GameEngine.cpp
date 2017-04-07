@@ -1079,9 +1079,14 @@ uint16_t GameEngine::ExecuteQuit(const uint16_t & pos, const CityList::CityID & 
 {
 	pos; // unused, keept for normalization
 	cityID; // unused, keept for normalization
-	//SaveGame();
-	throw GameQuitException();
-	//return 0;
+	std::cout << "Are you sure? Yes=1 No=0" << std::endl;
+	uint16_t selection = GetUserInput(0, 1);
+	if (selection == 0)
+	{
+		//SaveGame();
+		throw GameQuitException();
+	}
+	return 0;
 }
 // ExecuteQuit ------------------------------------------------------------------------------------
 
@@ -1262,7 +1267,8 @@ uint16_t GameEngine::ExecuteShareKnowledge(const uint16_t & pos, const CityList:
 // ExecuteShareKnowledgeAsResearcher --------------------------------------------------------------
 void GameEngine::ExecuteShareKnowledgeAsResearcher(const uint16_t & pos)
 {
-	std::cout << "Which card would you like to share...";
+	m_Players.at(pos)->PrintHand();
+	std::cout << "Which card would you like to share..." << std::endl;
 	uint16_t selection = GetUserInput(0 , (uint16_t)m_Players.at(pos)->m_Hand.size()-1);
 
 	for (size_t index = 0; index < m_Players.size(); index += 1)
