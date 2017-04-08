@@ -354,3 +354,99 @@ void RoleDeck::InputLoadedGame(std::deque<RoleCard::Roles> deck)
 {
 	m_Deck = deck;
 }
+
+// Builder ----------------------------------------------------------------------------------------
+InfectionDeck::Builder& InfectionDeck::Builder::ParseDeck(std::string loaded)
+{
+	for (uint16_t a = 0; a < 48; a += 1)
+	{
+		size_t space = loaded.find(" ");
+		if (space == std::string::npos) 
+			break;
+
+		std::stringstream ss(loaded.substr(0, space));
+		loaded = loaded.substr(space + 1);
+
+		uint64_t num = 0;
+		ss >> std::hex >> num;
+		AddToDeck((InfectionCard::CardsList)num);
+	}
+
+	return *this;
+}
+
+InfectionDeck::Builder& InfectionDeck::Builder::ParseDiscard(std::string loaded)
+{
+	for (uint16_t b = 0; b < 48; b += 1)
+	{
+		size_t space = loaded.find(" ");
+		if (space == std::string::npos)
+			break;
+
+		std::stringstream ss(loaded.substr(0, space));
+		loaded = loaded.substr(space + 1);
+
+		uint64_t num = 0;
+		ss >> std::hex >> num;
+		AddToDiscard((InfectionCard::CardsList)num);
+	}
+
+	return *this;
+}
+
+PlayerDeck::Builder& PlayerDeck::Builder::ParseDiscard(std::string loaded)
+{
+	for (uint16_t b = 0; b < 48; b += 1)
+	{
+		size_t space = loaded.find(" ");
+		if (space == std::string::npos) 
+				break;
+
+		std::stringstream ss(loaded.substr(0, space));
+		loaded = loaded.substr(space + 1);
+
+		uint64_t num = 0;
+		ss >> std::hex >> num;
+		AddToDiscard((PlayerCard::CardsList)num);
+	}
+
+	return *this;
+}
+
+PlayerDeck::Builder& PlayerDeck::Builder::ParseDeck(std::string loaded)
+{
+	for (uint16_t a = 0; a < 48; a += 1)
+	{
+		size_t space = loaded.find(" ");
+		if (space == std::string::npos)
+			break;
+
+		std::stringstream ss(loaded.substr(0, space));
+		loaded = loaded.substr(space + 1);
+
+		uint64_t num = 0;
+		ss >> std::hex >> num;
+		AddToDeck((PlayerCard::CardsList)num);
+	}
+
+	return *this;
+}
+
+RoleDeck::Builder& RoleDeck::Builder::ParseDeck(std::string loaded)
+{
+	for (uint16_t a = 0; a < 48; a += 1)
+	{
+		size_t space = loaded.find(" ");
+		if (space == std::string::npos)
+			break;
+
+		std::stringstream ss(loaded.substr(0, space));
+		loaded = loaded.substr(space + 1);
+
+		uint64_t num = 0;
+		ss >> std::hex >> num;
+		AddToDeck((RoleCard::Roles)num);
+	}
+
+	return *this;
+}

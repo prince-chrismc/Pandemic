@@ -1546,7 +1546,7 @@ void GameEngine::LoadGame()
 	if (m_PreGameComplete)
 	{
 		std::cout << "WARNING: Game has already started..." << std::endl;
-		SaveGame();
+		//SaveGame();
 		std::cout << "AutoSave Completed" << std::endl;
 	}
 
@@ -1607,31 +1607,10 @@ void GameEngine::LoadGame()
 		std::string infecdeck = infec.substr(0, sep); // by deck
 		std::string infecdiscard = infec.substr(sep + 2); // and discard
 
-		std::deque<InfectionCard::CardsList> deckLoaded;
-		for (uint16_t a = 0; a < 48; a += 1)
-		{
-			size_t space = infecdeck.find(" ");
-			if (space == std::string::npos) break;
-			std::stringstream ss(infecdeck.substr(0, space));
-			infecdeck = infecdeck.substr(space + 1);
-			uint64_t num = 0;
-			ss >> std::hex >> num;
-			deckLoaded.emplace_back((InfectionCard::CardsList)num);
-		}
+		InfectionDeck::Builder infecdeckbuilder;
+		infecdeckbuilder.ParseDeck(infecdeck).ParseDiscard(infecdiscard);
 
-		std::deque<InfectionCard::CardsList> discardLoaded;
-		for (uint16_t b = 0; b < 48; b += 1)
-		{
-			size_t space = infecdiscard.find(" ");
-			if (space == std::string::npos) break;
-			std::stringstream ss(infecdiscard.substr(0, space));
-			infecdiscard = infecdiscard.substr(space + 1);
-			uint64_t num = 0;
-			ss >> std::hex >> num;
-			discardLoaded.emplace_back((InfectionCard::CardsList)num);
-		}
-
-		m_Board.m_InfecDeck.InputLoadedGame(deckLoaded, discardLoaded);
+		m_Board.m_InfecDeck.InputLoadedGame(infecdeckbuilder.GetBuilderDeck(), infecdeckbuilder.GetBuilderDiscard());
 	}
 
 	// Player Cards -------------------------------------------------------------------------------
@@ -1646,31 +1625,10 @@ void GameEngine::LoadGame()
 		std::string playdeck = play.substr(0, sep); // by deck
 		std::string playdiscard = play.substr(sep + 2); // and discard
 
-		std::deque<PlayerCard::CardsList> deckLoaded;
-		for (uint16_t z = 0; z < 59; z += 1)
-		{
-			size_t space = playdeck.find(" ");
-			if (space == std::string::npos) break;
-			std::stringstream ss(playdeck.substr(0, space));
-			playdeck = playdeck.substr(space + 1);
-			uint64_t num = 0;
-			ss >> std::hex >> num;
-			deckLoaded.emplace_back((PlayerCard::CardsList)num);
-		}
+		PlayerDeck::Builder playerdeckbuilder;
+		playerdeckbuilder.ParseDeck(playdeck).ParseDiscard(playdiscard);
 
-		std::deque<PlayerCard::CardsList> discardLoaded;
-		for (uint16_t j = 0; j < 59; j += 1)
-		{
-			size_t space = playdiscard.find(" ");
-			if (space == std::string::npos) break;
-			std::stringstream ss(playdiscard.substr(0, space));
-			playdiscard = playdiscard.substr(space + 1);
-			uint64_t num = 0;
-			ss >> std::hex >> num;
-			discardLoaded.emplace_back((PlayerCard::CardsList)num);
-		}
-
-		m_Board.m_PlayerDeck.InputLoadedGame(deckLoaded, discardLoaded);
+		m_Board.m_PlayerDeck.InputLoadedGame(playerdeckbuilder.GetBuilderDeck(), playerdeckbuilder.GetBuilderDiscard());
 	}
 
 	// Role Cards ---------------------------------------------------------------------------------
@@ -1681,19 +1639,10 @@ void GameEngine::LoadGame()
 		delete[] buffer;
 		buffer = nullptr;
 
-		std::deque<RoleCard::Roles> deckLoaded;
-		for (uint16_t x = 0; x < 7; x += 1)
-		{
-			size_t space = role.find(" ");
-			if (space == std::string::npos) break;
-			std::stringstream ss(role.substr(0, space));
-			role = role.substr(space + 1);
-			uint64_t num = 0;
-			ss >> std::hex >> num;
-			deckLoaded.emplace_back((RoleCard::Roles)num);
-		}
+		RoleDeck::Builder roledeckbuilder;
+		roledeckbuilder.ParseDeck(role);
 
-		m_Board.m_RoleDeck.InputLoadedGame(deckLoaded);
+		m_Board.m_RoleDeck.InputLoadedGame(roledeckbuilder.GetBuilderDeck());
 	}
 
 	// Cities -------------------------------------------------------------------------------------

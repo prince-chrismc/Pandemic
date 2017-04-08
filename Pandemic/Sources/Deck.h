@@ -15,7 +15,7 @@ protected:
 	Deck(const uint16_t& size) : m_Size(size) {}
 };
 
-class InfectionDeck final : public Deck //InfectionCard Factory
+class InfectionDeck : public Deck //InfectionCard Factory
 {
 private:
 	std::deque<InfectionCard::CardsList> m_Deck;
@@ -26,7 +26,9 @@ public:
 
 	//Prevent Copy/Assignment
 	InfectionDeck(const InfectionDeck&) = delete;
-	void operator=(const InfectionDeck&) = delete;
+	//void operator=(const InfectionDeck&) = delete;
+	void operator=(const InfectionDeck& other) { m_Deck = other.m_Deck; m_Discard = other.m_Discard; }
+
 
 	std::deque<InfectionCard::CardsList> GetDiscardPile() const { return m_Discard; }
 	InfectionCard* DrawCard();
@@ -37,6 +39,25 @@ public:
 	void SetForecast(std::deque<InfectionCard*> top);
 	std::string GetSaveOutput();  //FilePrint
 	void InputLoadedGame(std::deque<InfectionCard::CardsList> deck, std::deque<InfectionCard::CardsList> discard);
+
+	class Builder
+	{
+	private:
+		std::deque<InfectionCard::CardsList> m_Deck;
+		std::deque<InfectionCard::CardsList> m_Discard;
+
+	public:
+		Builder() : m_Deck(), m_Discard() {}
+
+		void AddToDeck(InfectionCard::CardsList cardId) { m_Deck.emplace_back(cardId); }
+		void AddToDiscard(InfectionCard::CardsList cardId) { m_Discard.emplace_back(cardId); }
+
+		Builder& ParseDeck(std::string loaded);
+		Builder& ParseDiscard(std::string loaded);
+
+		std::deque<InfectionCard::CardsList> GetBuilderDeck() { return m_Deck; }
+		std::deque<InfectionCard::CardsList> GetBuilderDiscard() { return m_Discard; }
+	};
 };
 
 class PlayerDeck final : public Deck, private PlayerCardFactory //PlayerCards Factory
@@ -68,6 +89,25 @@ public:
 	void IncreaseDifficulty(const uint16_t& dif);
 	std::string GetSaveOutput();  //FilePrint
 	void InputLoadedGame(std::deque<PlayerCard::CardsList> deck, std::deque<PlayerCard::CardsList> discard);
+
+	class Builder
+	{
+	private:
+		std::deque<PlayerCard::CardsList> m_Deck;
+		std::deque<PlayerCard::CardsList> m_Discard;
+
+	public:
+		Builder() : m_Deck(), m_Discard() {}
+
+		void AddToDeck(PlayerCard::CardsList cardId) { m_Deck.emplace_back(cardId); }
+		void AddToDiscard(PlayerCard::CardsList cardId) { m_Discard.emplace_back(cardId); }
+
+		Builder& ParseDeck(std::string loaded);
+		Builder& ParseDiscard(std::string loaded);
+
+		std::deque<PlayerCard::CardsList> GetBuilderDeck() { return m_Deck; }
+		std::deque<PlayerCard::CardsList> GetBuilderDiscard() { return m_Discard; }
+	};
 };
 
 class RoleDeck final : public Deck //RoleCard Factory
@@ -85,4 +125,19 @@ public:
 	RoleCard* DrawCard();
 	std::string GetSaveOutput();  //FilePrint
 	void InputLoadedGame(std::deque<RoleCard::Roles> deck);
+
+	class Builder
+	{
+	private:
+		std::deque<RoleCard::Roles> m_Deck;
+
+	public:
+		Builder() : m_Deck() {}
+
+		void AddToDeck(RoleCard::Roles cardId) { m_Deck.emplace_back(cardId); }
+
+		Builder& ParseDeck(std::string loaded);
+
+		std::deque<RoleCard::Roles> GetBuilderDeck() { return m_Deck; }
+	};
 };
