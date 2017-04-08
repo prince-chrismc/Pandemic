@@ -14,6 +14,14 @@
 
 class GameEngine final : public ISubject
 {
+public:
+	GameEngine();
+	~GameEngine();
+
+	void Initialize();
+	void Launch();
+
+
 private:
 	Board m_Board;
 	InfectionLog* m_Log;
@@ -41,6 +49,7 @@ protected:
 	*/
 	void LoadGame();
 
+	//Subject to the InfectionLog
 	void Notify(std::string name, uint16_t cubes = 1);
 
 	// game play ----------------------------------------------------------------------------------
@@ -135,12 +144,7 @@ protected:
 	// Game Play Functions ------------------------------------------------------------------------
 
 
-public:
-	GameEngine();
-	~GameEngine();
 
-	void Initialize();
-	void Launch();
 };
 
 
