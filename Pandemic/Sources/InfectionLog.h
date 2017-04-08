@@ -22,7 +22,7 @@ public:
 	std::string GetSaveOutput();
 	void InputLoadedGame(std::vector<std::pair<std::string, uint16_t>> log);
 
-	class Builder
+	class Builder final
 	{
 	private:
 		std::vector<std::pair<std::string, uint16_t>> m_Log;

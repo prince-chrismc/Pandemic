@@ -97,7 +97,7 @@ public:
 
 	std::string GetSaveOutput();  //FilePrint
 
-	class Builder : private PlayerCardFactory
+	class Builder final : private PlayerCardFactory
 	{
 	private:
 		std::string m_Name;

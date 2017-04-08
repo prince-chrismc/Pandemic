@@ -26,7 +26,7 @@ public:
 	std::string GetSaveOutput() { return std::to_string(m_Position); }
 	void InputLoadedGame(const uint16_t& position) { m_Position = position; }
 
-	class Builder
+	class Builder final
 	{
 	private:
 		uint16_t m_Position;
@@ -58,7 +58,7 @@ public:
 	std::string GetSaveOutput() { return std::to_string(m_Position); }
 	void InputLoadedGame(const uint16_t& position) { m_Position = position; }
 
-	class Builder
+	class Builder final
 	{
 	private:
 		uint16_t m_Position;

@@ -12,7 +12,7 @@
 #include "InfectionLog.h"
 #include "Subjects.h"
 
-class GameEngine final : public ISubject
+class GameEngine final : private ISubject
 {
 public:
 	GameEngine();
@@ -21,6 +21,9 @@ public:
 	void Initialize();
 	void Launch();
 
+	// temp will be moved back after initial testing
+	void SaveGame();
+	void LoadGame();
 
 private:
 	Board m_Board;
@@ -43,11 +46,11 @@ protected:
 		- Engine make file name on ctor
 		- auto save every turn
 	*/
-	void SaveGame();
+	//void SaveGame();
 	/*
 		TODO: Add load to initialize
 	*/
-	void LoadGame();
+	//void LoadGame();
 
 	//Subject to the InfectionLog
 	void Notify(std::string name, uint16_t cubes = 1);

@@ -38,7 +38,7 @@ public:
 	std::string GetSaveOutput();  //FilePrint
 	void InputLoadedGame(std::deque<InfectionCard::CardsList> deck, std::deque<InfectionCard::CardsList> discard);
 
-	class Builder
+	class Builder final
 	{
 	private:
 		std::deque<InfectionCard::CardsList> m_Deck;
@@ -88,7 +88,7 @@ public:
 	std::string GetSaveOutput();  //FilePrint
 	void InputLoadedGame(std::deque<PlayerCard::CardsList> deck, std::deque<PlayerCard::CardsList> discard);
 
-	class Builder
+	class Builder final
 	{
 	private:
 		std::deque<PlayerCard::CardsList> m_Deck;
@@ -124,7 +124,7 @@ public:
 	std::string GetSaveOutput();  //FilePrint
 	void InputLoadedGame(std::deque<RoleCard::Roles> deck);
 
-	class Builder
+	class Builder final
 	{
 	private:
 		std::deque<RoleCard::Roles> m_Deck;
