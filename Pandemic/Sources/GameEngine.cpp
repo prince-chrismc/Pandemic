@@ -1610,7 +1610,7 @@ void GameEngine::LoadGame()
 		InfectionDeck::Builder infecdeckbuilder;
 		infecdeckbuilder.ParseDeck(infecdeck).ParseDiscard(infecdiscard);
 
-		m_Board.m_InfecDeck.InputLoadedGame(infecdeckbuilder.GetBuilderDeck(), infecdeckbuilder.GetBuilderDiscard());
+		m_Board.m_InfecDeck.InputLoadedGame(infecdeckbuilder.GetDeck(), infecdeckbuilder.GetDiscard());
 	}
 
 	// Player Cards -------------------------------------------------------------------------------
@@ -1628,7 +1628,7 @@ void GameEngine::LoadGame()
 		PlayerDeck::Builder playerdeckbuilder;
 		playerdeckbuilder.ParseDeck(playdeck).ParseDiscard(playdiscard);
 
-		m_Board.m_PlayerDeck.InputLoadedGame(playerdeckbuilder.GetBuilderDeck(), playerdeckbuilder.GetBuilderDiscard());
+		m_Board.m_PlayerDeck.InputLoadedGame(playerdeckbuilder.GetDeck(), playerdeckbuilder.GetDiscard());
 	}
 
 	// Role Cards ---------------------------------------------------------------------------------
@@ -1642,7 +1642,7 @@ void GameEngine::LoadGame()
 		RoleDeck::Builder roledeckbuilder;
 		roledeckbuilder.ParseDeck(role);
 
-		m_Board.m_RoleDeck.InputLoadedGame(roledeckbuilder.GetBuilderDeck());
+		m_Board.m_RoleDeck.InputLoadedGame(roledeckbuilder.GetDeck());
 	}
 
 	// Cities -------------------------------------------------------------------------------------

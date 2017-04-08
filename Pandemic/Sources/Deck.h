@@ -55,8 +55,8 @@ public:
 		Builder& ParseDeck(std::string loaded);
 		Builder& ParseDiscard(std::string loaded);
 
-		std::deque<InfectionCard::CardsList> GetBuilderDeck() { return m_Deck; }
-		std::deque<InfectionCard::CardsList> GetBuilderDiscard() { return m_Discard; }
+		std::deque<InfectionCard::CardsList> GetDeck() { return m_Deck; }
+		std::deque<InfectionCard::CardsList> GetDiscard() { return m_Discard; }
 	};
 };
 
@@ -105,8 +105,8 @@ public:
 		Builder& ParseDeck(std::string loaded);
 		Builder& ParseDiscard(std::string loaded);
 
-		std::deque<PlayerCard::CardsList> GetBuilderDeck() { return m_Deck; }
-		std::deque<PlayerCard::CardsList> GetBuilderDiscard() { return m_Discard; }
+		std::deque<PlayerCard::CardsList> GetDeck() { return m_Deck; }
+		std::deque<PlayerCard::CardsList> GetDiscard() { return m_Discard; }
 	};
 };
 
@@ -138,6 +138,6 @@ public:
 
 		Builder& ParseDeck(std::string loaded);
 
-		std::deque<RoleCard::Roles> GetBuilderDeck() { return m_Deck; }
+		std::deque<RoleCard::Roles> GetDeck() { return m_Deck; }
 	};
 };
