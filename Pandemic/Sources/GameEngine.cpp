@@ -317,6 +317,7 @@ void GameEngine::Outbreak(City* city, City* skip)
 	std::cout << " --- OUTBREAK --- " << city->GetCityName() << std::endl;
 	m_Board.m_OutBreak.IncreaseRate();
 	std::cout << "Outbreak Marker: " << m_Board.m_OutBreak.GetMarker() << std::endl;
+	CheckIfGameOver();
 
 	for each(City* connected in city->GetNearByCities())
 	{
@@ -1474,7 +1475,7 @@ void GameEngine::CheckIfGameOver()
 // CheckIfGameWon ---------------------------------------------------------------------------------
 void GameEngine::CheckIfGameWon()
 {
-	if (m_Board.m_Cures.IsAllCuresDiscovered()) throw GameWonException("All cures have been discovered!");
+	if (m_Board.m_Cures.IsAllCuresDiscovered()) throw GameWonException("all cures have been discovered!");
 }
 // CheckIfGameWon ---------------------------------------------------------------------------------
 
@@ -1683,7 +1684,6 @@ void GameEngine::LoadGame()
 					break;
 				}
 			}
-			CheckIfGameOver();
 		}
 	}
 
@@ -1789,6 +1789,7 @@ void GameEngine::LoadGame()
 		m_Log->InputLoadedGame(infectlognuilder.GetLog());
 	}
 
+	CheckIfGameOver();
 	m_PreGameComplete = true;
 }
 // LoadGame ---------------------------------------------------------------------------------------
@@ -1811,7 +1812,24 @@ void GameEngine::Initialize()
 	std::cout << "Would you like to load a game? YES=1 NO=0" << std::endl;
 	uint16_t selection = GetUserInput(0, 1);
 	if (selection == 1)
-		LoadGame();
+	{
+		try
+		{
+			LoadGame();
+		}
+		catch (GameOverException&)
+		{
+			std::cout << "That game was already lost! ";
+			bfs::path remove(m_Filename);
+			if (bfs::exists(remove))
+				if (bfs::is_regular_file(remove))
+					bfs::remove(remove);
+			if (!bfs::exists(remove))
+				std::cout << "It has been removed for you." << std::endl;
+			else
+				std::cout << "The file is in an irregular state please remove it manually." << std::endl;
+		}
+	}
 	else
 	{
 		PlayersSetup();			 //DO NOT TOUCH ORDER !
@@ -1842,6 +1860,14 @@ void GameEngine::Launch()
 	catch (const GameOverException& e)
 	{
 		std::cout << "\n\n ---- GAME OVER! ----\n  You lost due to: " << e.what() << std::endl;
+		bfs::path remove(m_Filename);
+		if (bfs::exists(remove))
+			if (bfs::is_regular_file(remove))
+				bfs::remove(remove);
+		if (!bfs::exists(remove))
+			std::cout << "The game file has been removed for you." << std::endl;
+		else
+			std::cout << "The game file is in an irregular state please remove it manually. " << m_Filename << std::endl;
 	}
 	catch (const GameWonException& e)
 	{
