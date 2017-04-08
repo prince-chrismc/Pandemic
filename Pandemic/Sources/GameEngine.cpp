@@ -1532,6 +1532,10 @@ void GameEngine::SaveGame()
 	myfile << m_Board.m_OutBreak.GetSaveOutput();
 	myfile << "\n";
 
+	// Research Centers ---------------------------------------------------------------------------
+	myfile << m_Board.m_Centers.GetSaveOutput();
+	myfile << "\n";
+
 	// Infection Log ------------------------------------------------------------------------------
 	myfile << m_Log->GetSaveOutput();
 	myfile << "\n";
@@ -1752,6 +1756,29 @@ void GameEngine::LoadGame()
 		outbreakmarkerbuilder.ParseOutbreakMarker(marker);
 
 		m_Board.m_OutBreak.InputLoadedGame(outbreakmarkerbuilder.GetPosition());
+	}
+
+	//ResearchCenters -----------------------------------------------------------------------------
+	{
+		buffer = new char[512];
+		load.getline(buffer, 512); // get saved output
+		std::string centers(buffer);
+		delete[] buffer;
+		buffer = nullptr;
+
+		std::vector<ResearchCenter> m_centers;
+		for (uint16_t r = 0; r < 6; r += 1)
+		{
+			size_t slash = centers.find("/");
+			if (slash == std::string::npos) break;
+			std::string city = centers.substr(0, slash);
+			centers = centers.substr(slash + 2);
+			std::stringstream ss(city);
+			uint64_t num = 0;
+			ss >> std::hex >> num;
+			m_centers.emplace_back(m_Board.m_Map.GetCityWithID((CityList::CityID)num));
+		}
+		m_Board.m_Centers.InputLoadedGame(m_centers);
 	}
 
 	// Infection Log ------------------------------------------------------------------------------

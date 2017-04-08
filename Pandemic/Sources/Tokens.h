@@ -86,4 +86,7 @@ public:
 	void AddStation(City* city) { if (validate()) m_Stations.emplace_back(ResearchCenter(city)); }
 	void RemoveStation(const uint16_t& pos) { m_Stations.erase(m_Stations.begin() + pos); }
 	std::vector<ResearchCenter> GetCenters() { return m_Stations; }
+
+	std::string GetSaveOutput();
+	void InputLoadedGame(std::vector<ResearchCenter> stations) { m_Stations = stations; }
 };

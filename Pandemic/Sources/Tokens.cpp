@@ -1,3 +1,4 @@
+#include <sstream>
 #include "Tokens.h"
 
 City::~City()
@@ -49,6 +50,20 @@ std::string City::GetSaveOutput()
 		{
 			result += std::to_string((uint16_t)cube->GetColor()) + " ";
 		}
+	}
+
+	return result;
+}
+
+std::string ResearchStations::GetSaveOutput()
+{
+	std::string result = "";
+
+	for each(ResearchCenter rc in m_Stations)
+	{
+		std::stringstream ss;
+		ss << std::hex << rc.GetCityID();
+		result += ss.str();
 	}
 
 	return result;
