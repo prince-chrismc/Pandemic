@@ -57,4 +57,26 @@ public:
 	bool IsAllCuresDiscovered() { return m_Red.IsCured() && m_Yellow.IsCured() && m_Blue.IsCured() && m_Black.IsCured(); }
 	std::string GetSaveOutput() { return (m_Red.GetState() + m_Blue.GetState() + m_Yellow.GetState() + m_Black.GetState()); } //FilePrint
 	void InputLoadedGame(const uint16_t& red, const uint16_t& blue, const uint16_t& yellow, const uint16_t& black) { m_Red.SetState(red); m_Blue.SetState(blue); m_Yellow.SetState(yellow); m_Black.SetState(black); }
+
+	class Builder
+	{
+	private:
+		uint16_t m_Red;
+		uint16_t m_Yellow;
+		uint16_t m_Blue;
+		uint16_t m_Black;
+
+	public:
+		Builder() : m_Red(0), m_Yellow(0), m_Blue(0), m_Black(0) {}
+
+		Builder& ParseRedCure(std::string loaded);
+		Builder& ParseBlueCure(std::string loaded);
+		Builder& ParseYellowCure(std::string loaded);
+		Builder& ParseBlackCure(std::string loaded);
+
+		const uint16_t& GetRedCure() { return m_Red; }
+		const uint16_t& GetBlueCure() { return m_Blue; }
+		const uint16_t& GetYellowCure() { return m_Yellow; }
+		const uint16_t& GetBlackCure() { return m_Black; }
+	};
 };

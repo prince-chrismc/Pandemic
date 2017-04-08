@@ -1719,21 +1719,10 @@ void GameEngine::LoadGame()
 		delete[] buffer;
 		buffer = nullptr;
 
-		uint16_t red, blue, yellow, black;
-		std::stringstream ss;
-		ss << rate.at(0);
-		ss >> red;
-		ss.clear();
-		ss << rate.at(1);
-		ss >> blue;
-		ss.clear();
-		ss << rate.at(2);
-		ss >> yellow;
-		ss.clear();
-		ss << rate.at(3);
-		ss >> black;
+		CureMakers::Builder curesbuilder;
+		curesbuilder.ParseBlackCure(rate).ParseBlueCure(rate).ParseRedCure(rate).ParseYellowCure(rate);
 
-		m_Board.m_Cures.InputLoadedGame(red, blue, yellow, black);
+		m_Board.m_Cures.InputLoadedGame(curesbuilder.GetRedCure(), curesbuilder.GetBlueCure(), curesbuilder.GetYellowCure(), curesbuilder.GetBlackCure());
 	}
 
 	// Infection Rate -----------------------------------------------------------------------------

@@ -1,3 +1,4 @@
+#include <sstream>
 #include "Cure.h"
 
 void CureMakers::CureDiscover(const Color & color)
@@ -70,4 +71,32 @@ bool CureMakers::IsNotEradicated(const Color & color)
 	default:
 		return false;
 	}
+}
+
+CureMakers::Builder & CureMakers::Builder::ParseRedCure(std::string loaded)
+{
+	std::stringstream ss(loaded.at(0));
+	ss >> m_Red;
+	return *this;
+}
+
+CureMakers::Builder & CureMakers::Builder::ParseBlueCure(std::string loaded)
+{
+	std::stringstream ss(loaded.at(1));
+	ss >> m_Blue;
+	return *this;
+}
+
+CureMakers::Builder & CureMakers::Builder::ParseYellowCure(std::string loaded)
+{
+	std::stringstream ss(loaded.at(2));
+	ss >> m_Yellow;
+	return *this;
+}
+
+CureMakers::Builder & CureMakers::Builder::ParseBlackCure(std::string loaded)
+{
+	std::stringstream ss(loaded.at(3));
+	ss >> m_Black;
+	return *this;
 }
