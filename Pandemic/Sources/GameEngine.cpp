@@ -1475,7 +1475,7 @@ void GameEngine::CheckIfGameOver()
 // CheckIfGameWon ---------------------------------------------------------------------------------
 void GameEngine::CheckIfGameWon()
 {
-	if (m_Board.m_Cures.IsAllCuresDiscovered()) throw GameWonException("all Cures have been discovered!");
+	if (m_Board.m_Cures.IsAllCuresDiscovered()) throw GameWonException("All cures have been discovered!");
 }
 // CheckIfGameWon ---------------------------------------------------------------------------------
 
