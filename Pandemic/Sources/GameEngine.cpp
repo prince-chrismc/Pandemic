@@ -1703,37 +1703,10 @@ void GameEngine::LoadGame()
 			std::string play = players.substr(0, slash);
 			players = players.substr(slash + 2);
 
-			size_t space = play.find(" ");
-			if (space == std::string::npos) break;
-			std::string name = play.substr(0, space); // get players name
-			play = play.substr(space + 1);
+			Player::Builder playerbuilder;
+			playerbuilder.ParsePlayer(play);
 
-			space = play.find(" ");
-			std::string id = play.substr(0, space); // get players role id
-			play = play.substr(space + 1);
-			std::stringstream ss(id);
-			uint64_t roleid;
-			ss >> std::hex >> roleid;
-			Player* joeur = new Player(name, new RoleCard((RoleList::Roles)roleid));
-
-			space = play.find(" ");
-			std::string city = play.substr(0, space); // get players city
-			play = play.substr(space + 1);
-			joeur->ChangeCity(city);
-
-			for (uint16_t s = 0; s < 7; s += 1)
-			{
-				ss = std::stringstream();
-				space = play.find(" ");
-				if (space == std::string::npos) break;
-				ss << play.substr(0, space); // get card id
-				play = play.substr(space + 1);
-				uint64_t cardnum;
-				ss >> std::hex >> cardnum;
-				joeur->AddCard(PlayerCardFactory::MakeCard(cardnum));
-			}
-
-			gamers.emplace_back(joeur);
+			gamers.emplace_back(playerbuilder.GetPlayer());
 		}
 		m_Players = gamers;
 	}

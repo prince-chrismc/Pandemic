@@ -138,3 +138,53 @@ std::string Player::GetSaveOutput()
 
 	return result;
 }
+
+Player::Builder& Player::Builder::ParseHand(std::string loaded)
+{
+	for (uint16_t s = 0; s < 7; s += 1)
+	{
+		size_t space = loaded.find(" ");
+		if (space == std::string::npos) break;
+		std::stringstream ss(loaded.substr(0, space));
+		loaded = loaded.substr(space + 1);
+		uint64_t cardnum;
+		ss >> std::hex >> cardnum;
+		m_Hand.emplace_back(PlayerCardFactory::MakeCard(cardnum));
+	}
+
+	return *this;
+}
+
+Player::Builder& Player::Builder::ParsePlayer(std::string loaded)
+{
+	size_t space = loaded.find(" ");
+	if (space == std::string::npos) return *this;
+	m_Name = loaded.substr(0, space); // get players name
+	loaded = loaded.substr(space + 1);
+
+	space = loaded.find(" ");
+	std::hexadecimal id = loaded.substr(0, space); // get players role id
+	loaded = loaded.substr(space + 1);
+	std::stringstream ss(id);
+	uint64_t roleid;
+	ss >> std::hex >> roleid;
+	m_RoleID = (RoleList::Roles)roleid;
+	
+	space = loaded.find(" ");
+	m_CityID = loaded.substr(0, space); // get players city
+	loaded = loaded.substr(space + 1);
+	
+	return ParseHand(loaded);
+}
+
+Player* Player::Builder::GetPlayer()
+{
+	Player* joeur = new Player(m_Name, new RoleCard(m_RoleID));
+	joeur->ChangeCity(m_CityID);
+	for each(PlayerCard* pc in m_Hand)
+	{
+		joeur->AddCard(pc);
+	}
+
+	return joeur;
+}

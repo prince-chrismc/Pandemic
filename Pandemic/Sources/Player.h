@@ -96,4 +96,22 @@ public:
 	void PrintRefCard();
 
 	std::string GetSaveOutput();  //FilePrint
+
+	class Builder : private PlayerCardFactory
+	{
+	private:
+		std::string m_Name;
+		std::vector<PlayerCard*> m_Hand;
+		RoleList::Roles m_RoleID;
+		std::hexadecimal m_CityID;
+
+		Builder& ParseHand(std::string loaded);
+
+	public:
+		Builder() : m_Name(), m_Hand(), m_RoleID(), m_CityID() {}
+
+		Builder& ParsePlayer(std::string loaded);
+
+		Player* GetPlayer();
+	};
 };
