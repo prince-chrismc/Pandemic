@@ -1733,33 +1733,11 @@ void GameEngine::LoadGame()
 		delete[] buffer;
 		buffer = nullptr;
 
-		switch (rate.at(0))
-		{
-		case '0':
-			m_Board.m_InfectRate.InputLoadedGame(0);
-			break;
-		case '1':
-			m_Board.m_InfectRate.InputLoadedGame(1);
-			break;
-		case '2':
-			m_Board.m_InfectRate.InputLoadedGame(2);
-			break;
-		case '3':
-			m_Board.m_InfectRate.InputLoadedGame(3);
-			break;
-		case '4':
-			m_Board.m_InfectRate.InputLoadedGame(4);
-			break;
-		case '5':
-			m_Board.m_InfectRate.InputLoadedGame(5);
-			break;
-		case '6':
-			m_Board.m_InfectRate.InputLoadedGame(6);
-			break;
-		default:
-			m_Board.m_InfectRate.InputLoadedGame(0);
-			break;
-		}
+		InfectionRate::Builder infecratebuilder;
+		infecratebuilder.ParseInfectionRate(rate);
+
+		m_Board.m_InfectRate.InputLoadedGame(infecratebuilder.GetPosition());
+		
 	}
 
 	// Outbreak Marker ----------------------------------------------------------------------------
@@ -1770,67 +1748,38 @@ void GameEngine::LoadGame()
 		delete[] buffer;
 		buffer = nullptr;
 
-		switch (marker.at(0))
-		{
-		case '0':
-			m_Board.m_OutBreak.InputLoadedGame(0);
-			break;
-		case '1':
-			m_Board.m_OutBreak.InputLoadedGame(1);
-			break;
-		case '2':
-			m_Board.m_OutBreak.InputLoadedGame(2);
-			break;
-		case '3':
-			m_Board.m_OutBreak.InputLoadedGame(3);
-			break;
-		case '4':
-			m_Board.m_OutBreak.InputLoadedGame(4);
-			break;
-		case '5':
-			m_Board.m_OutBreak.InputLoadedGame(5);
-			break;
-		case '6':
-			m_Board.m_OutBreak.InputLoadedGame(6);
-			break;
-		case '7':
-			m_Board.m_OutBreak.InputLoadedGame(7);
-			break;
-		case '8':
-			m_Board.m_OutBreak.InputLoadedGame(8);
-			break;
-		default:
-			m_Board.m_OutBreak.InputLoadedGame(0);
-			break;
-		}
+		OutbreakMarker::Builder outbreakmarkerbuilder;
+		outbreakmarkerbuilder.ParseOutbreakMarker(marker);
 
-		// Infection Log ------------------------------------------------------------------------------
-		{
-			buffer = new char[512];
-			load.getline(buffer, 512); // get saved output
-			std::string log(buffer);
-			delete[] buffer;
-			buffer = nullptr;
-
-			std::vector<std::pair<std::string, uint16_t>> infectlog;
-			for (uint16_t e = 0; e < 99; e += 1)
-			{
-				size_t slash = log.find("/");
-				if (slash == std::string::npos) break;
-				std::string entry(log.substr(0, slash));
-				log = log.substr(slash + 2);
-
-				size_t space = entry.find(" ");
-				std::stringstream ss(entry.substr(space + 1));
-				uint16_t num = 0;
-				ss >> std::hex >> num;
-				infectlog.emplace_back(std::make_pair(entry.substr(0,space), num));
-			}
-
-			m_Log->InputLoadedGame(infectlog);
-		}
-
+		m_Board.m_OutBreak.InputLoadedGame(outbreakmarkerbuilder.GetPosition());
 	}
+
+	// Infection Log ------------------------------------------------------------------------------
+	{
+		buffer = new char[512];
+		load.getline(buffer, 512); // get saved output
+		std::string log(buffer);
+		delete[] buffer;
+		buffer = nullptr;
+
+		std::vector<std::pair<std::string, uint16_t>> infectlog;
+		for (uint16_t e = 0; e < 99; e += 1)
+		{
+			size_t slash = log.find("/");
+			if (slash == std::string::npos) break;
+			std::string entry(log.substr(0, slash));
+			log = log.substr(slash + 2);
+
+			size_t space = entry.find(" ");
+			std::stringstream ss(entry.substr(space + 1));
+			uint16_t num = 0;
+			ss >> std::hex >> num;
+			infectlog.emplace_back(std::make_pair(entry.substr(0,space), num));
+		}
+
+		m_Log->InputLoadedGame(infectlog);
+	}
+
 	m_PreGameComplete = true;
 }
 // LoadGame ---------------------------------------------------------------------------------------

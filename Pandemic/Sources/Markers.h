@@ -25,6 +25,19 @@ public:
 	void IncreaseRate() { m_Position += 1; }
 	std::string GetSaveOutput() { return std::to_string(m_Position); }
 	void InputLoadedGame(const uint16_t& position) { m_Position = position; }
+
+	class Builder
+	{
+	private:
+		uint16_t m_Position;
+
+	public:
+		Builder() : m_Position(0) {}
+
+		Builder& ParseInfectionRate(std::string loaded);
+
+		const uint16_t& GetPosition() { return m_Position; }
+	};
 };
 
 class OutbreakMarker final
@@ -44,4 +57,17 @@ public:
 	void IncreaseRate() { m_Position += 1; }
 	std::string GetSaveOutput() { return std::to_string(m_Position); }
 	void InputLoadedGame(const uint16_t& position) { m_Position = position; }
+
+	class Builder
+	{
+	private:
+		uint16_t m_Position;
+
+	public:
+		Builder() : m_Position(0) {}
+
+		Builder& ParseOutbreakMarker(std::string loaded);
+
+		const uint16_t& GetPosition() { return m_Position; }
+	};
 };
