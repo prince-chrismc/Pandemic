@@ -11,10 +11,15 @@ class WorldMap final //The Connected Cities
 {
 private:
 	std::vector<City*> m_Cities;
+	bool m_costumized;
 
 public:
 	WorldMap();
 	~WorldMap();
+
+	// Garbage code because it ruins the game.. PS untested LOL
+	void UserDriverCostumization();
+	bool Validate();
 
 	//Prevent Copy/Assignment
 	WorldMap(const WorldMap&) = delete;

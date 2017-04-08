@@ -1,8 +1,9 @@
 #include <sstream>
+#include <iostream>
 #include "Cards.h"
 #include "WorldMap.h" 
 
-WorldMap::WorldMap()
+WorldMap::WorldMap() : m_costumized(false)
 {
 	// Create Cities ------------------------------------------------------------------------------
 	City* Algiers = new City(City::ALGIERS, Card::GetCardName(CityCard::ALGIERS));
@@ -378,8 +379,309 @@ std::string WorldMap::GetSaveOutput()
 	return ss.str();
 }
 
+void WorldMap::UserDriverCostumization()
+{
+	std::cout << " WARNING: THIS WILL RESTRICT GAME FUNCTIONALITY " << std::endl << "YES=1 NO=0 --> Do you wish to precced? ";
+
+	uint16_t selection = 0;
+	do
+	{
+		std::cout << "Selcetion: ";
+		std::string input;
+		std::getline(std::cin, input);
+		std::stringstream ss(input);
+		ss >> selection;
+
+		if (selection < 0 || selection > 1)
+			std::cout << "Invalid option. Please Try again..." << std::endl;
+
+	} while (selection < 0 || selection > 1);
+
+	if (selection == 0) return; // hopefully they never pass this....
+
+	m_costumized = true; // prevents map from printing
+
+	std::vector<City*> citiesnotonmap;
+
+	do
+	{
+		selection = 0;
+
+		std::cout << "Input 0 to exit" << std::endl;
+		if (citiesnotonmap.size() < 48)
+			std::cout << "1 - Remove a city" << std::endl;
+		if (citiesnotonmap.size() > 0)
+			std::cout << "2 - Add a city" << std::endl;
+		if(m_Cities.size() > 0)
+			std::cout << "3 - Edit a city's connections" << std::endl;
+
+		do
+		{
+			std::cout << "Selcetion: ";
+			std::string input;
+			std::getline(std::cin, input);
+			std::stringstream ss(input);
+			ss >> selection;
+
+			if (selection < 0 || selection > 3)
+				std::cout << "Invalid option. Please Try again..." << std::endl;
+
+		} while (selection < 0 || selection > 3);
+
+
+		
+		
+		City* city = nullptr;
+		uint16_t counter = 0;
+		bool skip = false;
+		switch (selection)
+		{
+		case 0: break; // player is done editing 
+
+
+		case 1: // Rm -f a city
+			if (citiesnotonmap.size() == 48) // double check incase wrong input
+			{
+				std::cout << "no city to remove" << std::endl;
+				break;
+			}
+
+			counter = 0;
+			for each (City* citya in m_Cities) // let print all the cities
+			{
+				std::cout << counter++ << ": " << citya->GetCityName() << std::endl;
+			}
+
+			std::cout << "Which city from the list above would you like to remove?" << std::endl;
+
+			do // let user pick one
+			{
+				std::cout << "Selcetion: ";
+				std::string input;
+				std::getline(std::cin, input);
+				std::stringstream ss(input);
+				ss >> selection;
+
+				if (selection < 0 || selection > m_Cities.size() - 1)
+					std::cout << "Invalid option. Please Try again..." << std::endl;
+
+			} while (selection < 0 || selection > m_Cities.size() - 1);
+
+			citiesnotonmap.emplace_back(m_Cities.at(selection));
+			m_Cities.erase(m_Cities.begin() + selection); // bang it gone
+
+			selection += 1; // force looping
+			break;
+		case 2: //add a city 
+			if (citiesnotonmap.size() == 0) // double check incase wrong input
+			{
+				std::cout << "no city to add" << std::endl;
+				break;
+			}
+
+			counter = 0;
+			for each (City* cityb in citiesnotonmap) // let print all the cities
+			{
+				std::cout << counter++ << ": " << cityb->GetCityName() << std::endl;
+			}
+
+			std::cout << "Which city from the list above would you like to add?" << std::endl;
+
+			do // let user pick one
+			{
+				std::cout << "Selcetion: ";
+				std::string input;
+				std::getline(std::cin, input);
+				std::stringstream ss(input);
+				ss >> selection;
+
+				if (selection < 0 || selection > citiesnotonmap.size() - 1)
+					std::cout << "Invalid option. Please Try again..." << std::endl;
+
+			} while (selection < 0 || selection > citiesnotonmap.size() - 1);
+
+			m_Cities.emplace_back(citiesnotonmap.at(selection));
+			citiesnotonmap.erase(citiesnotonmap.begin() + selection);
+
+			selection += 1; // force looping
+			break;
+		case 3: //edit a city
+			if (m_Cities.size() == 0) // double check incase wrong input
+			{
+				std::cout << "no city on the map" << std::endl;
+				break;
+			}
+
+			counter = 0;
+			for each (City* cityc in m_Cities) // let print all the cities
+			{
+				std::cout << counter++ << ": " << cityc->GetCityName() << std::endl;
+			}
+
+			std::cout << "Which city from the list above would you like to edit?" << std::endl;
+
+			do // let user pick one
+			{
+				std::cout << "Selcetion: ";
+				std::string input;
+				std::getline(std::cin, input);
+				std::stringstream ss(input);
+				ss >> selection;
+
+				if (selection < 0 || selection > m_Cities.size() - 1)
+					std::cout << "Invalid option. Please Try again..." << std::endl;
+
+			} while (selection < 0 || selection > m_Cities.size() - 1);
+
+
+			city = m_Cities.at(selection);
+
+
+			do
+			{
+				std::cout << "0 - Exit\n1 - Remove\n2 - Add" << std::endl;
+
+				do // let user pick one
+				{
+					std::cout << "Selcetion: ";
+					std::string input;
+					std::getline(std::cin, input);
+					std::stringstream ss(input);
+					ss >> selection;
+
+					if (selection < 0 || selection > 2)
+						std::cout << "Invalid option. Please Try again..." << std::endl;
+
+				} while (selection < 0 || selection > 2);
+
+				switch (selection)
+				{
+				case 0: break;
+
+				case 1: // lets remove
+					if (city->GetNearByCities().size() == 0)
+					{
+						std::cout << "no cities to remove" << std::endl;
+					}
+
+					counter = 0;
+					for each(City* connected in city->GetNearByCities())
+					{
+						std::cout << ++counter << ": " << connected->GetCityName() << std::endl;
+					}
+
+					std::cout << "Which city from the list above would you like to remove?" << std::endl;
+
+					do // let user pick one
+					{
+						std::cout << "Selcetion: ";
+						std::string input;
+						std::getline(std::cin, input);
+						std::stringstream ss(input);
+						ss >> selection;
+
+						if (selection < 1 || selection > counter)
+							std::cout << "Invalid option. Please Try again..." << std::endl;
+
+					} while (selection < 1 || selection > counter);
+
+					city->RemoveNearByCity(selection);
+
+					break;
+
+				case 2: // lets add
+					counter = 0;
+					for each(City* other in m_Cities)
+					{
+						++counter;
+						if (city->GetCityID() == other->GetCityID()) continue;
+						skip = false;
+						for each(City* cityo in city->GetNearByCities())
+						{
+							if (cityo->GetCityID() == other->GetCityID())
+							{
+								skip = true;
+								break;
+							}
+						}
+
+						if (skip) continue;
+						std::cout << counter << ": " << other->GetCityName() << std::endl;
+					}
+
+					std::cout << "Which city from the list above would you like to add?" << std::endl;
+
+					do // let user pick one
+					{
+						std::cout << "Selcetion: ";
+						std::string input;
+						std::getline(std::cin, input);
+						std::stringstream ss(input);
+						ss >> selection;
+
+						if (selection < 1 || selection > counter)
+							std::cout << "Invalid option. Please Try again..." << std::endl;
+
+					} while (selection < 1 || selection > counter);
+
+					if (city->GetCityID() == m_Cities.at(selection - 1)->GetCityID()) skip = false;
+					skip = false;
+					for each(City* cityz in city->GetNearByCities())
+					{
+						if (cityz->GetCityID() == m_Cities.at(selection - 1)->GetCityID())
+						{
+							skip = true;
+							break;
+						}
+					}
+
+					if(!skip)
+						city->AddNearByCity(m_Cities.at(selection - 1));
+
+					break;
+
+				default:
+					break;
+				}
+
+			} while (selection != 0);
+			selection += 1; // force looping
+
+			break;
+		default:
+			break;
+
+		}
+		
+
+		if (!Validate())
+			std::cout << "Invalid map, please fix the errors" << std::endl;
+
+	} while (selection != 0 || !Validate() );
+
+
+
+}
+
+bool WorldMap::Validate()
+{
+	for each(City* city in m_Cities)
+	{
+		if (city->GetNearByCities().size() < 1) return false;
+		if (city->GetNumberOfCubes(Color::RED) > 3) return false;
+		if (city->GetNumberOfCubes(Color::BLUE) > 3) return false;
+		if (city->GetNumberOfCubes(Color::YELLOW) > 3) return false;
+		if (city->GetNumberOfCubes(Color::BLACK) > 3) return false;
+		if (city->GetCityName() == "") return false;
+		if (city->GetCityName() == "Invalid") return false;
+	}
+	return true;
+}
+
 std::string WorldMap::GetMapDiagram()
 {
+	if (m_costumized) return "";
+
 	std::string alg = GetCityWithID(CityList::ALGIERS)->GetMapOutput();
 	std::string Atl = GetCityWithID(CityList::ATLANTA)->GetMapOutput();
 	std::string Bag = GetCityWithID(CityList::BAGHDAD)->GetMapOutput();

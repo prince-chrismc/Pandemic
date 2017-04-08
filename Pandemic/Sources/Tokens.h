@@ -35,6 +35,7 @@ public:
 	void operator=(const City&) = delete;
 
 	void AddNearByCity(City* nearby) { m_NearBy.emplace_back(nearby); } //strictly for world map
+	void RemoveNearByCity(const uint16_t& pos) { m_NearBy.erase(m_NearBy.begin() + pos); } //strictly for world map
 	
 	uint16_t GetNumberOfCubes() { return (uint16_t)m_Cubes.size(); }
 	uint16_t GetNumberOfCubes(const Color& color);
