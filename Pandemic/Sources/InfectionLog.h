@@ -21,4 +21,17 @@ public:
 	void Update(std::string name, uint16_t cubes);
 	std::string GetSaveOutput();
 	void InputLoadedGame(std::vector<std::pair<std::string, uint16_t>> log);
+
+	class Builder
+	{
+	private:
+		std::vector<std::pair<std::string, uint16_t>> m_Log;
+
+	public:
+		Builder() : m_Log() {}
+
+		Builder& ParseLog(std::string loaded);
+
+		std::vector<std::pair<std::string, uint16_t>> GetLog() { return m_Log; }
+	};
 };

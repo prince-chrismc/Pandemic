@@ -1762,22 +1762,8 @@ void GameEngine::LoadGame()
 		delete[] buffer;
 		buffer = nullptr;
 
-		std::vector<std::pair<std::string, uint16_t>> infectlog;
-		for (uint16_t e = 0; e < 99; e += 1)
-		{
-			size_t slash = log.find("/");
-			if (slash == std::string::npos) break;
-			std::string entry(log.substr(0, slash));
-			log = log.substr(slash + 2);
-
-			size_t space = entry.find(" ");
-			std::stringstream ss(entry.substr(space + 1));
-			uint16_t num = 0;
-			ss >> std::hex >> num;
-			infectlog.emplace_back(std::make_pair(entry.substr(0,space), num));
-		}
-
-		m_Log->InputLoadedGame(infectlog);
+		InfectionLog::Builder infectlognuilder;
+		m_Log->InputLoadedGame(infectlognuilder.GetLog());
 	}
 
 	m_PreGameComplete = true;
