@@ -26,10 +26,8 @@ public:
 
 	//Prevent Copy/Assignment
 	InfectionDeck(const InfectionDeck&) = delete;
-	//void operator=(const InfectionDeck&) = delete;
-	void operator=(const InfectionDeck& other) { m_Deck = other.m_Deck; m_Discard = other.m_Discard; }
-
-
+	void operator=(const InfectionDeck&) = delete;
+	
 	std::deque<InfectionCard::CardsList> GetDiscardPile() const { return m_Discard; }
 	InfectionCard* DrawCard();
 	InfectionCard* DrawCardForEpidemic();
