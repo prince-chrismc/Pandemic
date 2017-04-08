@@ -21,16 +21,13 @@ public:
 	void Initialize();
 	void Launch();
 
-	// temp will be moved back after initial testing
-	void SaveGame();
-	void LoadGame();
-
 private:
 	Board m_Board;
 	InfectionLog* m_Log;
 	std::vector<Player*> m_Players;
 	bool m_PreGameComplete;
 	bool m_SkipNextInfectionPhase;
+	std::string m_Filename;
 
 protected:
 	std::string MakeFileName(); // used in save
@@ -41,16 +38,8 @@ protected:
 	void DifficultySetup();
 	void BoardSetup();
 	
-	/*
-		TODO: Improve SameGame
-		- Engine make file name on ctor
-		- auto save every turn
-	*/
-	//void SaveGame();
-	/*
-		TODO: Add load to initialize
-	*/
-	//void LoadGame();
+	void SaveGame();
+	void LoadGame();
 
 	//Subject to the InfectionLog
 	void Notify(std::string name, uint16_t cubes = 1);

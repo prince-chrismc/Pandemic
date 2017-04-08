@@ -8,11 +8,10 @@
 #include "Pandemic.h"
 namespace bfs = boost::filesystem;
 
-GameEngine::GameEngine() : m_Board(), m_Players(), m_PreGameComplete(false), m_SkipNextInfectionPhase(false)
+GameEngine::GameEngine() : m_Board(), m_Players(), m_Log(new InfectionLog()), m_Filename(MakeFileName()), m_PreGameComplete(false), m_SkipNextInfectionPhase(false)
 {
 	std::cout << "\n               -------------- PANDEMIC -------------\nDo you have what it takes to save humanity? As skilled members of a disease - fighting team, you must\nkeep four deadly diseases at bay while discovering their cures.\nYou and your teammates will travel across the globe, treating infections while finding resources for\ncures. You must work together, using your individual strengths, to succeed.The clock is ticking as\noutbreaks and epidemics fuel the spreading plagues.\nCan you find all four cures in time? The fate of humanity is in your hands!\n\n" << std::endl;
 
-	m_Log = new InfectionLog();
 	RegistarObserver(m_Log);
 }
 
@@ -137,7 +136,7 @@ void GameEngine::TurnSequence(const uint16_t & pos)
 	TurnActionsPhase(pos);
 	TurnDrawPhase(pos);
 	TurnInfectPhase();
-	//SaveGame();
+	SaveGame();
 }
 // TurnSequence -----------------------------------------------------------------------------------
 
@@ -1081,9 +1080,9 @@ uint16_t GameEngine::ExecuteQuit(const uint16_t & pos, const CityList::CityID & 
 	cityID; // unused, keept for normalization
 	std::cout << "Are you sure? Yes=1 No=0" << std::endl;
 	uint16_t selection = GetUserInput(0, 1);
-	if (selection == 0)
+	if (selection == 1)
 	{
-		//SaveGame();
+		SaveGame();
 		throw GameQuitException();
 	}
 	return 0;
@@ -1488,13 +1487,9 @@ void GameEngine::SaveGame()
 		return;
 	}
 
-	// Get Timestamp ------------------------------------------------------------------------------
-	std::string filename = MakeFileName();
-
-	// Create File --------------------------------------------------------------------------------
-	std::ofstream myfile;
-	myfile.open(filename);
-	myfile << filename << "\n";
+	// Create/Open File ---------------------------------------------------------------------------
+	std::ofstream myfile(m_Filename,std::ofstream::trunc);
+	myfile << m_Filename << "\n";
 
 	// Infection Cards ----------------------------------------------------------------------------
 	myfile << m_Board.m_InfecDeck.GetSaveOutput();
@@ -1550,7 +1545,7 @@ void GameEngine::LoadGame()
 	if (m_PreGameComplete)
 	{
 		std::cout << "WARNING: Game has already started..." << std::endl;
-		//SaveGame();
+		SaveGame();
 		std::cout << "AutoSave Completed" << std::endl;
 	}
 
@@ -1596,6 +1591,7 @@ void GameEngine::LoadGame()
 
 	char* buffer = new char[512];
 	load.getline(buffer, 512); // to remove title line that is saved
+	m_Filename = std::string(buffer);
 	delete[] buffer;
 	buffer = nullptr;
 
@@ -1811,10 +1807,17 @@ void GameEngine::Notify(std::string name, uint16_t cubes)
 void GameEngine::Initialize()
 {
 	BoardSetup();			 //DO NOT TOUCH ORDER !
-	PlayersSetup();			 //DO NOT TOUCH ORDER !
-	DifficultySetup();		 //DO NOT TOUCH ORDER !
 
-	m_PreGameComplete = true;
+	std::cout << "Would you like to load a game? YES=1 NO=0" << std::endl;
+	uint16_t selection = GetUserInput(0, 1);
+	if (selection == 1)
+		LoadGame();
+	else
+	{
+		PlayersSetup();			 //DO NOT TOUCH ORDER !
+		DifficultySetup();		 //DO NOT TOUCH ORDER !
+		m_PreGameComplete = true;
+	}
 }
 // Initialize -------------------------------------------------------------------------------------
 
