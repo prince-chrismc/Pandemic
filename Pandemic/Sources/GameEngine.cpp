@@ -1392,16 +1392,17 @@ uint16_t GameEngine::ExecuteForecast(const uint16_t & pos, const CityList::CityI
 				break;
 			}
 	}
-	std::cout << "Change forecast..." << std::endl;
+	std::cout << "Changing forecast..." << std::endl;
 	uint16_t selectionA = 0;
 	std::deque<InfectionCard*> forecast = m_Board.m_InfecDeck.GetForecast();
 	do
 	{
 		std::cout << "NOTE: Enter 0 as a selection to quit." << std::endl;
 		std::cout << " - TOP - " << std::endl;
-		for (uint16_t a = 6; a > 0; a -= 1)
+		auto itor = forecast.crbegin(); 
+		for (uint16_t a = (uint16_t)forecast.size(); itor != forecast.crend(); a -= 1, itor++)
 		{
-			std::cout << a << ": " << forecast.at(a - 1)->GetCardInfo() << std::endl;
+			std::cout << a << ": " << (*itor)->GetCardInfo() << std::endl;
 		}
 		std::cout << " - BOTTOM - " << std::endl;
 
