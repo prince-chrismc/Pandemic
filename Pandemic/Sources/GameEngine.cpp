@@ -566,7 +566,8 @@ std::vector<CityList::CityID> GameEngine::CalculateShareKnowlegdeFor(const uint1
 {
 	std::vector<CityList::CityID> result;
 
-	// 1. Player is the researcher
+	// 1. Giving Cards
+	// 1.1 Player is the researcher
 	if (m_Players.at(pos)->GetRoleID() == RoleList::RESEARCHER)
 	{
 		for (size_t index = 0; index < m_Players.size(); index += 1)
@@ -575,13 +576,16 @@ std::vector<CityList::CityID> GameEngine::CalculateShareKnowlegdeFor(const uint1
 
 			if (m_Players.at(pos)->GetCityID() == m_Players.at(index)->GetCityID())
 			{
-				result.emplace_back(m_Players.at(index)->GetCityID());
-				return result;
+				if (m_Players.at(index)->m_Hand.size() < 7)
+				{
+					result.emplace_back(m_Players.at(index)->GetCityID());
+					return result;
+				}
 			}
 		}
 	}
 
-	// 2. has current city's matching city card
+	// 1.2 has current city's matching city card
 	if (m_Players.at(pos)->HasCurrentCityCard())
 	{
 		for (size_t index = 0; index < m_Players.size(); index += 1)
@@ -590,11 +594,53 @@ std::vector<CityList::CityID> GameEngine::CalculateShareKnowlegdeFor(const uint1
 
 			if (m_Players.at(pos)->GetCityID() == m_Players.at(index)->GetCityID())
 			{
-				result.emplace_back(m_Players.at(index)->GetCityID());
-				return result;
+				if (m_Players.at(index)->m_Hand.size() < 7)
+				{
+					result.emplace_back(m_Players.at(index)->GetCityID());
+					return result;
+				}
 			}
 		}
 	}
+
+	// 2. Taking Cards
+	// 2.1 Other Player is the researcher
+	for (size_t index = 0; index < m_Players.size(); index += 1)
+	{
+		if (index == pos) continue;
+
+		if (m_Players.at(pos)->GetCityID() == m_Players.at(index)->GetCityID())
+		{
+			if (m_Players.at(index)->GetRoleID() == RoleList::RESEARCHER)
+			{
+				if (m_Players.at(pos)->m_Hand.size() < 7)
+				{
+					result.emplace_back(m_Players.at(index)->GetCityID());
+					return result;
+				}
+			}
+		}
+	}
+
+	// 2.2 Other Player has current city card
+	for (size_t index = 0; index < m_Players.size(); index += 1)
+	{
+		if (index == pos) continue;
+
+		if (m_Players.at(pos)->GetCityID() == m_Players.at(index)->GetCityID())
+		{
+			if (m_Players.at(index)->GetRoleID() != RoleList::RESEARCHER &&
+				m_Players.at(index)->HasCurrentCityCard())
+			{
+				if (m_Players.at(pos)->m_Hand.size() < 7)
+				{
+					result.emplace_back(m_Players.at(index)->GetCityID());
+					return result;
+				}
+			}
+		}
+	}
+
 	return result;
 }
 // CalculateShareKnowlegdeFor ---------------------------------------------------------------------
@@ -1257,20 +1303,56 @@ void GameEngine::AddResearchCenter(const uint16_t& pos, const CityList::CityID& 
 // ExecuteShareKnowledge --------------------------------------------------------------------------
 uint16_t GameEngine::ExecuteShareKnowledge(const uint16_t & pos, const CityList::CityID & cityID)
 {
-	if (m_Players.at(pos)->GetRoleID() == RoleList::RESEARCHER)
+	for (size_t index = 0; index < m_Players.size(); index += 1)
 	{
-		ExecuteShareKnowledgeAsResearcher(pos);
-	}
-	else
-	{
-		for (size_t index = 0; index < m_Players.size(); index += 1)
-		{
-			if (index == pos) continue;
+		if (index == pos) continue; // skip urself
 
-			if (m_Players.at(pos)->GetCityID() == m_Players.at(index)->GetCityID())
+		if (m_Players.at(pos)->GetCityID() == m_Players.at(index)->GetCityID())
+		{
+			// ultra rare case --------------------------------------------------------------------
+			if (m_Players.at(pos)->GetRoleID() == RoleList::RESEARCHER &&
+				m_Players.at(index)->HasCurrentCityCard())
 			{
-				m_Players.at(index)->AddCard(m_Players.at(pos)->RemoveCard(cityID));
-				return 1;
+				std::cout << "Who would like to share?\n 0:" << m_Players.at(pos)->GetName() << " (Researcher) or...\n1:" <<
+					m_Players.at(index)->GetName() << " (with current city card)" << std::endl;
+				uint16_t selection = GetUserInput(0, 1);
+
+				if (selection == 0)
+					ExecuteShareKnowledgeAsResearcher(pos); // 2.1
+				else
+					m_Players.at(pos)->AddCard(m_Players.at(index)->RemoveCard(cityID)); // 1.2
+
+			}
+			if (m_Players.at(index)->GetRoleID() == RoleList::RESEARCHER &&
+				m_Players.at(pos)->HasCurrentCityCard())
+			{
+				std::cout << "Who would like to share?\n 0:" << m_Players.at(index)->GetName() << " (Researcher) or...\n1:" << 
+					m_Players.at(pos)->GetName() << " (with current city card)" << std::endl;
+				uint16_t selection = GetUserInput(0, 1);
+
+				if(selection == 0)
+					ExecuteShareKnowledgeAsResearcher((uint16_t)index); // 2.1
+				else
+					m_Players.at(index)->AddCard(m_Players.at(pos)->RemoveCard(cityID)); // 1.2
+
+			}
+
+			// basics -----------------------------------------------------------------------------
+			if (m_Players.at(pos)->GetRoleID() == RoleList::RESEARCHER)
+			{
+				ExecuteShareKnowledgeAsResearcher(pos); // 1.1
+			}
+			if (m_Players.at(index)->GetRoleID() == RoleList::RESEARCHER )
+			{
+				ExecuteShareKnowledgeAsResearcher((uint16_t)index); // 2.1
+			}
+			else if (m_Players.at(index)->HasCurrentCityCard()) // 2.2
+			{
+				m_Players.at(index)->AddCard(m_Players.at(pos)->RemoveCard(cityID)); // 1.2
+			}
+			else if (m_Players.at(pos)->HasCurrentCityCard())
+			{
+				m_Players.at(index)->AddCard(m_Players.at(pos)->RemoveCard(cityID)); // 1.2
 			}
 		}
 	}
