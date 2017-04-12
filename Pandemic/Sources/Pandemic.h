@@ -5,6 +5,8 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 #pragma once
+#include <exception>
+#include <string>
 
 enum class Color //Four base colors
 {
@@ -104,4 +106,19 @@ public:
 
 		ROLECARD_MAX = 0x2EFFFFFUL,    //"Invalid"
 	};
+};
+
+class GameException abstract : public std::exception
+{
+private:
+	std::string m_What;
+public:
+	GameException(const std::string& reason) : m_What(reason) {}
+	const char* what() const { const char* what = m_What.c_str(); return what; }
+};
+
+class GameErrorException final : public GameException
+{
+public:
+	GameErrorException(const std::string& reason) : GameException(reason) {}
 };

@@ -21,6 +21,36 @@ uint16_t City::GetNumberOfCubes(const Color & color)
 	return result;
 }
 
+bool City::Validates()
+{
+#ifdef _DEBUG
+	if (m_Cubes.size() > 3)
+	{
+		if (GetNumberOfCubes(Color::RED) > 3)
+		{
+			throw GameErrorException("Red Cubes Exceded Maximum in " + m_Name);
+			return false;
+		}
+		if (GetNumberOfCubes(Color::BLACK) > 3)
+		{
+			throw GameErrorException("Black Cubes Exceded Maximum in " + m_Name);
+			return false;
+		}
+		if (GetNumberOfCubes(Color::YELLOW) > 3)
+		{
+			throw GameErrorException("Yellow Cubes Exceded Maximum in " + m_Name);
+			return false;
+		}
+		if (GetNumberOfCubes(Color::BLUE) > 3)
+		{
+			throw GameErrorException("Blue Cubes Exceded Maximum in " + m_Name);
+			return false;
+		}
+	}
+#endif // _DEBUG
+	return true;	
+}
+
 Color City::GetCityColor()
 {
 	if (IsaRedCity()) return Color::RED;

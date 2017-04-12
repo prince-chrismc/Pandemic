@@ -6,7 +6,6 @@
 
 #pragma once
 #include <map>
-#include <exception>
 #include "Board.h"
 #include "Player.h"
 #include "InfectionLog.h"
@@ -138,16 +137,6 @@ protected:
 
 
 
-};
-
-
-class GameException abstract : public std::exception
-{
-private:
-	std::string m_What;
-public:
-	GameException(const std::string& reason) : m_What(reason) {}
-	const char* what() const { const char* what = m_What.c_str(); return what; }
 };
 
 class GameOverException final : public GameException 
