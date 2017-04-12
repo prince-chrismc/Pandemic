@@ -34,34 +34,34 @@ public:
 	uint16_t CubesLeft() { return m_CubesLeft; }
 	bool IsEmpty() { return (m_CubesLeft == 0); }
 	virtual DiseaseCube* TakeCube() = 0;
-	void PlaceCube(DiseaseCube* dc) { delete dc; m_CubesLeft += 1; }
+	void PlaceCube(DiseaseCube* dc) { delete dc; dc = nullptr;  m_CubesLeft += 1; }
 };
 
 class RedDiseaseCubePile final : public CubePile
 {
 public:
-	RedDiseaseCubePile() {}
+	RedDiseaseCubePile() : CubePile() {}
 	DiseaseCube* TakeCube() { if (m_CubesLeft == 0) { return nullptr; } m_CubesLeft -= 1; return new RedDiseaseCube(); }
 };
 
 class YellowDiseaseCubePile final : public CubePile
 {
 public:
-	YellowDiseaseCubePile() {}
+	YellowDiseaseCubePile() : CubePile() {}
 	DiseaseCube* TakeCube() { if (m_CubesLeft == 0) { return nullptr; } m_CubesLeft -= 1; return new YellowDiseaseCube(); }
 };
 
 class BlueDiseaseCubePile final : public CubePile
 {
 public:
-	BlueDiseaseCubePile() {}
+	BlueDiseaseCubePile() : CubePile() {}
 	DiseaseCube* TakeCube() { if (m_CubesLeft == 0) { return nullptr; } m_CubesLeft -= 1; return new BlueDiseaseCube(); }
 };
 
 class BlackDiseaseCubePile final : public CubePile
 {
 public:
-	BlackDiseaseCubePile() {}
+	BlackDiseaseCubePile() : CubePile() {}
 	DiseaseCube* TakeCube() { if (m_CubesLeft == 0) { return nullptr; } m_CubesLeft -= 1; return new BlackDiseaseCube(); }
 };
 
@@ -74,7 +74,7 @@ private:
 	BlackDiseaseCubePile m_Black;
 
 public:
-	DiseaseCubePile() {}
+	DiseaseCubePile() : m_Red(), m_Yellow(), m_Blue(), m_Black() {}
 
 	//Prevent Copy/Assignment
 	DiseaseCubePile(const DiseaseCubePile&) = delete;
