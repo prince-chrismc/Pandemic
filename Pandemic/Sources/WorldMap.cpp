@@ -741,19 +741,19 @@ std::string WorldMap::GetMapDiagram()
 "  |                   _Montreal--New York__/  "<<Lon<<" "<<Ess<<"  |    /    |                                               |\n" <<
 "  |          Chicago_/"<<Mon<<"  "<<New<<"       |   \\   /    |    |   /    Theran                     Biejing----Seoul      |\n" <<
 "  |          "<<Chi<<"      \\     /    \\         |   Paris--Milan  |  /    "<<Teh<<"                  "<<Bei<<" "<<Seo<<"    |\n" <<
-"  |         /   | | \\      Washington   \\        |   /   |     \\   | /      /   |                          |     /    \\      |\n" <<
+"  |         /   | | \\      Washington   \\        |   /   |     \\   | /      /   |  \\                      |     /    \\      |\n" <<
 "  |-San Fransico| |  \\      "<<Was<<"    \\______Madrid   |    Istanboul    /    |  Dehli------Kolkata     Shanghai----Tokyo--|\n" <<
 "  |/"<<fra<<"   | |   \\    /     |             "<<Mad<<" |    "<<Ist<<"   /     | "<<Del<<"  "<<Kol<<"   "<<Sha<<"  "<<Tok<<"|\n" <<
-"  |        \\    | |    Atlanta   |              /     \\  |   /    |   \\  /      |  /  | \\       |    \\      |    |      |   /|\n" <<
-"  |         \\   | |   "<<Atl<<"  |             /       Algeris    |  Baghdad---Karachi|  \\      |    Hong Kong   |  Okasa  / |\n" <<
-"  |   Los Angeles |          \\   |            /       "<<alg<<"   |"<<Bag<<" "<<Kar<<"|   \\     |    "<<Hon<<"\\  | "<<Osa<<" |\n" <<
-"  |  / "<<Los<<"  |          Miami           /                \\   | /      \\ /     |  |   |     |   /    |  \\  \\ |  /    /   |\n" <<
-"  | /          \\  |        "<<Mia<<"        /                  Cario-----Ryadh    Mumbia  |    Bangkok   |   \\  Tapie   /    |\n" <<
-"  |/          Mexico city_/  /             /                "<<Cai<<" "<<Riy<<" "<<Mum<<" |   "<<Ban<<"  |    \\"<<Tai<<"     |\n" <<
-"  |            "<<Mex<<"\\   /             /                          \\                 \\  |   /   |  \\   |     \\  |   /     /|\n" <<
+"  |        \\    | |    Atlanta   |              /     \\  |   /    |   \\  /      |  /  | \\   /   |    \\      |    |      |   /|\n" <<
+"  |         \\   | |   "<<Atl<<"  |             /       Algeris    |  Baghdad---Karachi|  \\  |   |    Hong Kong   |  Okasa  / |\n" <<
+"  |   Los Angeles |          \\   |            /       "<<alg<<"   |"<<Bag<<" "<<Kar<<"|   \\ |   |    "<<Hon<<"\\  | "<<Osa<<" |\n" <<
+"  |  / "<<Los<<"  |          Miami           /                \\   | /      \\ /     |  |   | |   |   /    |  \\  \\ |  /    /   |\n" <<
+"  | /          \\  |        "<<Mia<<"        /                  Cario-----Ryadh    Mumbia  | |  Bangkok   |   \\  Tapie   /    |\n" <<
+"  |/          Mexico city_/  /             /                "<<Cai<<" "<<Riy<<" "<<Mum<<" | | "<<Ban<<"  |    \\"<<Tai<<"     |\n" <<
+"  |            "<<Mex<<"\\   /             /                          \\                 \\  | | /   |  \\   |     \\  |   /     /|\n" <<
 "  |              \\       \\ /             /                     ___Khartom              Chennia    | HoChiMinh   Manila     / |\n" <<
 "  |               \\     Bogota          /       ______Lagos___/  "<<Kha<<"            "<<Che<<"   | "<<HoC<<"  "<<Man<<"  /  |\n" <<
-"  |                \\   "<<Bog<<"       /       /    "<<Lag<<"     /    |                          |  /          |        /   |\n" <<
+"  |                \\   "<<Bog<<"       /       /    "<<Lag<<"     /    |                       \\  |  /          |        /   |\n" <<
 "  |                 \\ /    |   \\      /       /           \\      /     |                        Jakarta         |       /    |\n" <<
 "  |                Lima    |    Sao Paulo____/            Kinsenea     |                       "<<Jak<<"        |      /     |\n" <<
 "  |             "<<Lim<<"  |    "<<Sao<<"                 "<<Kin<<"    |                               \\        |     /      |\n" <<
