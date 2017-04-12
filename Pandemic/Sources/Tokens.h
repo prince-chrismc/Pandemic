@@ -39,9 +39,10 @@ public:
 	
 	uint16_t GetNumberOfCubes() { return (uint16_t)m_Cubes.size(); }
 	uint16_t GetNumberOfCubes(const Color& color);
-	void AddCube(DiseaseCube* cube) { if (cube == nullptr) { return; } m_Cubes.emplace_back(cube); }
-	void RemoveCube() { m_Cubes.erase(m_Cubes.begin(), m_Cubes.begin() + 1); }
-	void RemoveAllCubes() { m_Cubes.clear(); }
+	void AddCube(DiseaseCube* cube) { if (cube == nullptr) { return; } m_Cubes.emplace_back(cube); Validates(); }
+	bool Validates();
+	DiseaseCube* RemoveCube() { DiseaseCube* dc = m_Cubes.at(0); m_Cubes.erase(m_Cubes.begin(), m_Cubes.begin() + 1); return dc; }
+	std::vector<DiseaseCube*> RemoveAllCubes() { std::vector<DiseaseCube*> cubes = m_Cubes; m_Cubes.clear(); return cubes; }
 
 	Color GetCityColor();
 	CityID GetCityID() { return m_CityID; }

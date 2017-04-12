@@ -220,7 +220,6 @@ void GameEngine::TurnDrawPhase(const uint16_t& pos)
 			m_Players.at(pos)->AddCard(pc); // no matter what draw card
 		}
 	}
-	m_Players.at(pos)->Notify();
 }
 // TurnDrawPhase ----------------------------------------------------------------------------------
 
@@ -1191,16 +1190,15 @@ uint16_t GameEngine::ExecuteShuttleFlight(const uint16_t & pos, const CityList::
 // ExecuteTreateDisease ---------------------------------------------------------------------------
 uint16_t GameEngine::ExecuteTreateDisease(const uint16_t & pos, const CityList::CityID & cityID)
 {
-
 	City* city = m_Board.m_Map.GetCityWithID(cityID);
 	switch (m_Players.at(pos)->GetRoleID())
 	{
 	case RoleList::MEDIC:
-		city->RemoveAllCubes();
+		ExecuteTreateDiseaseAsMedic(city);
 		city->PrintInformation();
 		break;
 	default:
-		city->RemoveCube();
+		m_Board.m_Cubes.PlaceCube(city->RemoveCube());
 		city->PrintInformation();
 		break;
 	}
@@ -1208,6 +1206,17 @@ uint16_t GameEngine::ExecuteTreateDisease(const uint16_t & pos, const CityList::
 	return 1;
 }
 // ExecuteTreateDisease ---------------------------------------------------------------------------
+
+// ExecuteTreateDiseaseAsMedic --------------------------------------------------------------------
+void GameEngine::ExecuteTreateDiseaseAsMedic(City* city)
+{
+	std::vector<DiseaseCube*> cubes = city->RemoveAllCubes();
+	for each(DiseaseCube* dc in cubes)
+	{
+		m_Board.m_Cubes.PlaceCube(dc);
+	}
+}
+// ExecuteTreateDiseaseAsMedic --------------------------------------------------------------------
 
 // ExecuteBuildResearchCenter ---------------------------------------------------------------------
 uint16_t GameEngine::ExecuteBuildResearchCenter(const uint16_t & pos, const CityList::CityID & cityID)
@@ -1825,8 +1834,6 @@ void GameEngine::Notify(std::string name, uint16_t cubes)
 // Initialize -------------------------------------------------------------------------------------
 void GameEngine::Initialize()
 {
-	BoardSetup();			 //DO NOT TOUCH ORDER !
-
 	std::cout << "Would you like to load a game? YES=1 NO=0" << std::endl;
 	uint16_t selection = GetUserInput(0, 1);
 	if (selection == 1)
@@ -1850,6 +1857,7 @@ void GameEngine::Initialize()
 	}
 	else
 	{
+		BoardSetup();			 //DO NOT TOUCH ORDER !
 		PlayersSetup();			 //DO NOT TOUCH ORDER !
 		DifficultySetup();		 //DO NOT TOUCH ORDER !
 		m_PreGameComplete = true;
