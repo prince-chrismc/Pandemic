@@ -81,13 +81,10 @@
     <ClInclude Include="Sources\Markers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Observers.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Subjects.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Sources\InfectionLog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Observers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

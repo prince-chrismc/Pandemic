@@ -8,6 +8,30 @@ Pawn::Pawn(const uint64_t& color) : m_Color((PawnColor)color)
 	m_CityID = ss.str();
 }
 
+std::string Pawn::GetColor()
+{
+	switch (m_Color)
+	{
+	case CYAN:
+		return "Cyan";
+	case 	PINK:
+		return "Pink";
+	case 	ORANGE:
+		return "Orange";
+	case 	YELLOWGREEN:
+		return "Yellow-green";
+	case 	FORESTGREEN:
+		return "Forest Green";
+	case 	BROWN:
+		return "Brown";
+	case 	WHITE:
+		return "White";
+	default:
+		break;
+	}
+	return "Invalid";
+}
+
 Role::Role(const uint64_t & id) : m_Name(Card::GetCardName(id)), m_Pawn(id)
 {
 	std::stringstream ss;
@@ -55,6 +79,7 @@ PlayerCard* Player::RemoveCard(const CityList::CityID& id)
 		{
 			if ((pc->GetNumID() - CityCard::CITYCARD_MIN) == id)
 			{
+				Notify();
 				return RemoveCardAt(counter);
 			}
 		}
@@ -94,30 +119,20 @@ uint16_t Player::GetNumOfCardToDiscoverCure()
 	}
 }
 
-void Player::PrintInfo()
+PlayerSubject::PlayerCharacteristics Player::GetCharacteristics()
 {
 	std::stringstream ss;
 	ss << std::hex << m_Role.m_Pawn.m_CityID;
 	uint64_t num = 0;
 	ss >> std::hex >> num;
 
-	printf("Player %s - %s: is in %s\n", m_Name.c_str(), m_Role.m_Name.c_str(), Card::GetCardName(num + CityCard::CITYCARD_MIN));
-}
-
-void Player::PrintHand()
-{
-	printf("\n");
-	PrintInfo();
-	if (m_Hand.size() == 0)
+	std::vector<std::string> cardnames;
+	for each(PlayerCard* pc in m_Hand)
 	{
-		printf(" Hand is empty\n");
-		return;
+		cardnames.emplace_back(pc->GetCardInfo());
 	}
 
-	for (size_t s = 0; s < m_Hand.size(); s += 1)
-	{
-		printf("Card %d: %s\n", (uint16_t)s, m_Hand.at(s)->GetCardInfo().c_str());
-	}
+	return PlayerSubject::PlayerCharacteristics(m_Name, m_Role.m_Pawn.GetColor(), m_Role.m_Name, std::string(Card::GetCardName(num + CityCard::CITYCARD_MIN)), cardnames);
 }
 
 void Player::PrintRefCard()

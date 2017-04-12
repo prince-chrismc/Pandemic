@@ -5,7 +5,8 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 #pragma once
-#include <vector>
+#include <iostream>
+#include "Observers.h"
 #include "Pandemic.h"
 #include "Cards.h"
 
@@ -33,6 +34,8 @@ public:
 	//Prevent Copy/Assignment
 	Pawn(const Pawn&) = delete;
 	void operator=(const Pawn&) = delete;
+
+	std::string GetColor();
 };
 
 class Role //Defines Role Attributes held by a player
@@ -56,7 +59,7 @@ public:
 	void operator=(const Role&) = delete;
 };
 
-class Player final //The Almighty Player
+class Player final : public PlayerSubject //The Almighty Player
 {
 	friend class GameEngine;
 private:
@@ -78,21 +81,20 @@ public:
 
 	std::string GetName() const { return m_Name; }
 	//Manipulate Hand
-	void AddCard(PlayerCard* card) { m_Hand.emplace_back(card); }
+	void AddCard(PlayerCard* card) { m_Hand.emplace_back(card); Notify(); }
 	PlayerCard* RemoveCard(const CityList::CityID& id);
 	PlayerCard* RemoveCardAt(const uint16_t& pos);
 
 	//Get/Set City
 	CityList::CityID GetCityID();
-	void ChangeCity(const std::hexadecimal& id) { m_Role.m_Pawn.m_CityID = id; }
+	void ChangeCity(const std::hexadecimal& id) { m_Role.m_Pawn.m_CityID = id; Notify(); }
 
 	//utility
 	bool HasCurrentCityCard();
 	RoleList::Roles GetRoleID() { return (RoleList::Roles)m_Role.m_Card->GetNumID(); }
 	uint16_t GetNumOfCardToDiscoverCure();
 
-	void PrintInfo();
-	void PrintHand();
+	PlayerCharacteristics GetCharacteristics();
 	void PrintRefCard();
 
 	std::string GetSaveOutput();  //FilePrint

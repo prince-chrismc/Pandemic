@@ -10,7 +10,6 @@
 #include "Board.h"
 #include "Player.h"
 #include "InfectionLog.h"
-#include "Subjects.h"
 
 class GameEngine final : private ISubject
 {
@@ -25,9 +24,10 @@ private:
 	Board m_Board;
 	InfectionLog* m_Log;
 	std::vector<Player*> m_Players;
+	std::vector<PlayerObserver*> m_PlayersObservers;
+	std::string m_Filename;
 	bool m_PreGameComplete;
 	bool m_SkipNextInfectionPhase;
-	std::string m_Filename;
 
 protected:
 	std::string MakeFileName(); // used in save

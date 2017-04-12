@@ -8,7 +8,7 @@
 #include "Pandemic.h"
 namespace bfs = boost::filesystem;
 
-GameEngine::GameEngine() : m_Board(), m_Players(), m_Log(new InfectionLog()), m_Filename(MakeFileName()), m_PreGameComplete(false), m_SkipNextInfectionPhase(false)
+GameEngine::GameEngine() : m_Board(), m_Players(), m_PlayersObservers(), m_Log(new InfectionLog()), m_Filename(MakeFileName()), m_PreGameComplete(false), m_SkipNextInfectionPhase(false)
 {
 	std::cout << "\n               -------------- PANDEMIC -------------\nDo you have what it takes to save humanity? As skilled members of a disease - fighting team, you must\nkeep four deadly diseases at bay while discovering their cures.\nYou and your teammates will travel across the globe, treating infections while finding resources for\ncures. You must work together, using your individual strengths, to succeed.The clock is ticking as\noutbreaks and epidemics fuel the spreading plagues.\nCan you find all four cures in time? The fate of humanity is in your hands!\n\n" << std::endl;
 
@@ -26,6 +26,16 @@ GameEngine::~GameEngine()
 		}
 	}
 	m_Players.clear();
+
+	for each(PlayerObserver* obv in m_PlayersObservers)
+	{
+		if (obv != nullptr)
+		{
+			delete obv;
+			obv = nullptr;
+		}
+	}
+	m_PlayersObservers.clear();
 
 	delete m_Log; m_Log = nullptr;
 }
@@ -59,6 +69,8 @@ std::string GameEngine::MakeFileName()
 void GameEngine::RegisterPlayer(const std::string & newPlayerName)
 {
 	m_Players.emplace_back(new Player(newPlayerName, m_Board.m_RoleDeck.DrawCard()));
+	m_PlayersObservers.emplace_back(new PlayerObserver(m_Players.back()));
+	m_Players.back()->RegistarObserver(m_PlayersObservers.back());
 }
 // RegisterPlayer ---------------------------------------------------------------------------------
 
@@ -168,7 +180,7 @@ void GameEngine::TurnActionsPhase(const uint16_t & pos)
 	for (size_t i = 0; i < 4; /* no itor, determined by ExecuteMove() */)
 	{
 		std::cout << m_Board.m_Map.GetMapDiagram() << std::endl;
-		m_Players.at(pos)->PrintHand();
+		m_Players.at(pos)->Notify();
 		MovesPerCity options = CalculatePlayerOpt(pos);
 
 		std::cout << "Select your desired move from the list below... (#)" << std::endl;
@@ -189,7 +201,7 @@ void GameEngine::TurnDrawPhase(const uint16_t& pos)
 		CheckIfGameOver();
 		if (m_Players.at(pos)->m_Hand.size() > 6) // if hand is full
 		{
-			m_Players.at(pos)->PrintHand();
+			m_Players.at(pos)->Notify();
 			std::cout << "Which card would you like discard? ";
 			uint16_t selection = GetUserInput(0 , (uint16_t)m_Players.at(pos)->m_Hand.size() - 1);
 
@@ -207,7 +219,7 @@ void GameEngine::TurnDrawPhase(const uint16_t& pos)
 			m_Players.at(pos)->AddCard(pc); // no matter what draw card
 		}
 	}
-	m_Players.at(pos)->PrintHand();
+	m_Players.at(pos)->Notify();
 }
 // TurnDrawPhase ----------------------------------------------------------------------------------
 
@@ -1139,7 +1151,6 @@ uint16_t GameEngine::ExecuteDriveFerry(const uint16_t & pos, const CityList::Cit
 	std::stringstream ss;
 	ss << std::hex << cityID;
 	m_Players.at(pos)->ChangeCity(ss.str());
-	m_Players.at(pos)->PrintInfo();
 	return 1;
 }
 // ExecuteDriveFerry ------------------------------------------------------------------------------
@@ -1151,8 +1162,6 @@ uint16_t GameEngine::ExecuteDirectFlight(const uint16_t & pos, const CityList::C
 	std::stringstream ss;
 	ss << std::hex << cityID;
 	m_Players.at(pos)->ChangeCity(ss.str());
-	m_Players.at(pos)->PrintInfo();
-	m_Players.at(pos)->PrintHand();
 	return 1;
 }
 // ExecuteDirectFlight ----------------------------------------------------------------------------
@@ -1164,8 +1173,6 @@ uint16_t GameEngine::ExecuteCharterFlight(const uint16_t & pos, const CityList::
 	std::stringstream ss;
 	ss << std::hex << cityID;
 	m_Players.at(pos)->ChangeCity(ss.str());
-	m_Players.at(pos)->PrintInfo();
-	m_Players.at(pos)->PrintHand();
 	return 1;
 }
 // ExecuteCharterFlight ---------------------------------------------------------------------------
@@ -1176,7 +1183,6 @@ uint16_t GameEngine::ExecuteShuttleFlight(const uint16_t & pos, const CityList::
 	std::stringstream ss;
 	ss << std::hex << cityID;
 	m_Players.at(pos)->ChangeCity(ss.str());
-	m_Players.at(pos)->PrintInfo();
 	return 1;
 }
 // ExecuteShuttleFlight ---------------------------------------------------------------------------
@@ -1254,8 +1260,6 @@ uint16_t GameEngine::ExecuteShareKnowledge(const uint16_t & pos, const CityList:
 			if (m_Players.at(pos)->GetCityID() == m_Players.at(index)->GetCityID())
 			{
 				m_Players.at(index)->AddCard(m_Players.at(pos)->RemoveCard(cityID));
-				m_Players.at(index)->PrintHand();
-				m_Players.at(pos)->PrintHand();
 				return 1;
 			}
 		}
@@ -1267,7 +1271,7 @@ uint16_t GameEngine::ExecuteShareKnowledge(const uint16_t & pos, const CityList:
 // ExecuteShareKnowledgeAsResearcher --------------------------------------------------------------
 void GameEngine::ExecuteShareKnowledgeAsResearcher(const uint16_t & pos)
 {
-	m_Players.at(pos)->PrintHand();
+	m_Players.at(pos)->Notify();
 	std::cout << "Which card would you like to share..." << std::endl;
 	uint16_t selection = GetUserInput(0 , (uint16_t)m_Players.at(pos)->m_Hand.size()-1);
 
@@ -1278,8 +1282,6 @@ void GameEngine::ExecuteShareKnowledgeAsResearcher(const uint16_t & pos)
 		if (m_Players.at(pos)->GetCityID() == m_Players.at(index)->GetCityID())
 		{
 			m_Players.at(index)->AddCard(m_Players.at(pos)->RemoveCardAt(selection));
-			m_Players.at(index)->PrintHand();
-			m_Players.at(pos)->PrintHand();
 			return;
 		}
 	}
@@ -1333,8 +1335,7 @@ uint16_t GameEngine::ExecuteAirLift(const uint16_t& pos, const CityList::CityID&
 	uint16_t i = 0;
 	for each(Player* joeur in m_Players)
 	{
-		std::cout << i++ << ": ";
-		joeur->PrintInfo();
+		std::cout << i++ << ": " << joeur->GetName() << " in the city " << Card::GetCardName(joeur->GetCityID() + CityCard::CITYCARD_MIN) << std::endl;
 	}
 
 	uint16_t selection = GetUserInput(0,i-1);
@@ -1356,7 +1357,6 @@ uint16_t GameEngine::ExecuteAirLift(const uint16_t& pos, const CityList::CityID&
 	std::stringstream ss;
 	ss << std::hex << secondary.at(pick);
 	m_Players.at(selection)->ChangeCity(ss.str()); // move them to desired city
-	m_Players.at(selection)->PrintInfo();
 
 	return 0;
 }
