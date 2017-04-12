@@ -14,7 +14,7 @@ uint64_t Card::GetNumID()
 
 std::string Card::GetCardInfo()
 {
-	return "ID: " + m_ID + "\tName: " + m_Name + "\t\tDesc: " + m_Description;
+	return "ID: " + m_ID + "\tName: " + m_Name + "\tDesc: " + m_Description;
 }
 
 Card::Card(const uint64_t& id, const char* name, const char* desc) : m_Name(name), m_Description(desc)
@@ -256,7 +256,7 @@ Color CityCard::GetCityColor()
 
 std::string CityCard::GetCardInfo()
 {
-	std::string result = Card::GetCardInfo() + "\t\tColor: ";
+	std::string result = Card::GetCardInfo() + "\tColor: ";
 	switch (GetCityColor())
 	{
 	case Color::RED: result += "RED"; break;
