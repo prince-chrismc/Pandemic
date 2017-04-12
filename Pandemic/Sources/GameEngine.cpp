@@ -8,7 +8,7 @@
 #include "Pandemic.h"
 namespace bfs = boost::filesystem;
 
-GameEngine::GameEngine() : m_Board(), m_Players(), m_PlayersObservers(), m_Log(new InfectionLog()), m_Filename(MakeFileName()), m_PreGameComplete(false), m_SkipNextInfectionPhase(false)
+GameEngine::GameEngine() : m_Board(), m_Players(), m_PlayersObservers(), m_Log(new InfectionLog()), m_Filename(MakeFileName()), m_PreGameComplete(false), m_SkipNextInfectionPhase(false), m_TurnCounter(0)
 {
 	std::cout << "\n               -------------- PANDEMIC -------------\nDo you have what it takes to save humanity? As skilled members of a disease - fighting team, you must\nkeep four deadly diseases at bay while discovering their cures.\nYou and your teammates will travel across the globe, treating infections while finding resources for\ncures. You must work together, using your individual strengths, to succeed.The clock is ticking as\noutbreaks and epidemics fuel the spreading plagues.\nCan you find all four cures in time? The fate of humanity is in your hands!\n\n" << std::endl;
 
@@ -202,6 +202,7 @@ void GameEngine::TurnDrawPhase(const uint16_t& pos)
 		if (m_Players.at(pos)->m_Hand.size() > 6) // if hand is full
 		{
 			m_Players.at(pos)->Notify();
+			//if has an event card, would you like to play it?
 			std::cout << "Which card would you like discard? ";
 			uint16_t selection = GetUserInput(0 , (uint16_t)m_Players.at(pos)->m_Hand.size() - 1);
 
@@ -1537,6 +1538,10 @@ void GameEngine::SaveGame()
 	myfile << m_Log->GetSaveOutput();
 	myfile << "\n";
 
+	// Turn Counter -------------------------------------------------------------------------------
+	myfile << std::to_string(m_TurnCounter);
+	myfile << "\n";
+
 	myfile.close();
 }
 // SaveGame ---------------------------------------------------------------------------------------
@@ -1790,6 +1795,18 @@ void GameEngine::LoadGame()
 		m_Log->InputLoadedGame(infectlognuilder.GetLog());
 	}
 
+	// Turn Counter -------------------------------------------------------------------------------
+	{
+		buffer = new char[512];
+		load.getline(buffer, 512); // get saved output
+		std::string counter(buffer);
+		delete[] buffer;
+		buffer = nullptr;
+
+		std::stringstream ss(counter);
+		ss >> std::hex >> m_TurnCounter;		
+	}
+
 	CheckIfGameOver();
 	m_PreGameComplete = true;
 }
@@ -1850,12 +1867,12 @@ void GameEngine::Launch()
 	}
 
 	try
-	{
-		for (uint16_t i = 0; /* no limit */; i += 1)
+	{       
+		for ( /* no init */; /* no limit */; m_TurnCounter += 1)
 		{
-			std::cout << "\n\nGet ready " << m_Players.at(i % (uint16_t)m_Players.size())->GetName() << " you're up next!\nPress 'enter' to continue...";
+			std::cout << "\n\nGet ready " << m_Players.at(m_TurnCounter % (uint16_t)m_Players.size())->GetName() << " you're up next!\nPress 'enter' to continue...";
 			std::cin.get();
-			TurnSequence(i % (uint16_t)m_Players.size());
+			TurnSequence(m_TurnCounter % (uint16_t)m_Players.size());
 		}
 	}
 	catch (const GameOverException& e)

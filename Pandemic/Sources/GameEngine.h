@@ -28,6 +28,7 @@ private:
 	std::string m_Filename;
 	bool m_PreGameComplete;
 	bool m_SkipNextInfectionPhase;
+	uint16_t m_TurnCounter;
 
 protected:
 	std::string MakeFileName(); // used in save
