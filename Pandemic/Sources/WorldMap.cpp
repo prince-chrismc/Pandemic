@@ -741,7 +741,7 @@ std::string WorldMap::GetMapDiagram()
 "  |                   _Montreal--New York__/  "<<Lon<<" "<<Ess<<"  |    /    |                                               |\n" <<
 "  |          Chicago_/"<<Mon<<"  "<<New<<"       |   \\   /    |    |   /    Theran                     Biejing----Seoul      |\n" <<
 "  |          "<<Chi<<"      \\     /    \\         |   Paris--Milan  |  /    "<<Teh<<"                  "<<Bei<<" "<<Seo<<"    |\n" <<
-"  |         /   | | \\      Washington   \\        |   /   |     \\   | /      /   |  \\                      |     /    \\      |\n" <<
+"  |         /   | | \\      Washington   \\        |   /   |     \\   | /      /   |  \\                       |     /    \\      |\n" <<
 "  |-San Fransico| |  \\      "<<Was<<"    \\______Madrid   |    Istanboul    /    |  Dehli------Kolkata     Shanghai----Tokyo--|\n" <<
 "  |/"<<fra<<"   | |   \\    /     |             "<<Mad<<" |    "<<Ist<<"   /     | "<<Del<<"  "<<Kol<<"   "<<Sha<<"  "<<Tok<<"|\n" <<
 "  |        \\    | |    Atlanta   |              /     \\  |   /    |   \\  /      |  /  | \\   /   |    \\      |    |      |   /|\n" <<
@@ -756,7 +756,7 @@ std::string WorldMap::GetMapDiagram()
 "  |                \\   "<<Bog<<"       /       /    "<<Lag<<"     /    |                       \\  |  /          |        /   |\n" <<
 "  |                 \\ /    |   \\      /       /           \\      /     |                        Jakarta         |       /    |\n" <<
 "  |                Lima    |    Sao Paulo____/            Kinsenea     |                       "<<Jak<<"        |      /     |\n" <<
-"  |             "<<Lim<<"  |    "<<Sao<<"                 "<<Kin<<"    |                               \\        |     /      |\n" <<
+"  |              "<<Lim<<" |    "<<Sao<<"                 "<<Kin<<"    |                               \\        |     /      |\n" <<
 "  |                   |    |     /                              \\      |                                \\       |    /       |\n" <<
 "  |                   |  Beuno Aires                          Johannesburg                               \\      |   /        |\n" <<
 "  |                   |   "<<Bue<<"                            "<<Joh<<"                                  \\     |  /         |\n" <<
