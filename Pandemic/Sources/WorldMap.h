@@ -11,7 +11,7 @@ class WorldMap final //The Connected Cities
 {
 private:
 	std::vector<City*> m_Cities;
-	bool m_costumized;
+	bool m_Costumized;
 
 public:
 	WorldMap();

@@ -3,7 +3,7 @@
 #include "Cards.h"
 #include "WorldMap.h" 
 
-WorldMap::WorldMap() : m_costumized(false)
+WorldMap::WorldMap() : m_Costumized(false)
 {
 	// Create Cities ------------------------------------------------------------------------------
 	City* Algiers = new City(City::ALGIERS, Card::GetCardName(CityCard::ALGIERS));
@@ -399,7 +399,7 @@ void WorldMap::UserDriverCostumization()
 
 	if (selection == 0) return; // hopefully they never pass this....
 
-	m_costumized = true; // prevents map from printing
+	m_Costumized = true; // prevents map from printing
 
 	std::vector<City*> citiesnotonmap;
 
@@ -680,7 +680,7 @@ bool WorldMap::Validate()
 
 std::string WorldMap::GetMapDiagram()
 {
-	if (m_costumized) return "";
+	if (m_Costumized) return "";
 
 	std::string alg = GetCityWithID(CityList::ALGIERS)->GetMapOutput();
 	std::string Atl = GetCityWithID(CityList::ATLANTA)->GetMapOutput();
