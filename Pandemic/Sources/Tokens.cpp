@@ -25,26 +25,22 @@ bool City::Validates()
 {
 #ifdef _DEBUG
 	if (m_Cubes.size() > 3)
-	{
+	{ 
 		if (GetNumberOfCubes(Color::RED) > 3)
 		{
 			throw GameErrorException("Red Cubes Exceded Maximum in " + m_Name);
-			return false;
 		}
 		if (GetNumberOfCubes(Color::BLACK) > 3)
 		{
 			throw GameErrorException("Black Cubes Exceded Maximum in " + m_Name);
-			return false;
 		}
 		if (GetNumberOfCubes(Color::YELLOW) > 3)
 		{
 			throw GameErrorException("Yellow Cubes Exceded Maximum in " + m_Name);
-			return false;
 		}
 		if (GetNumberOfCubes(Color::BLUE) > 3)
 		{
 			throw GameErrorException("Blue Cubes Exceded Maximum in " + m_Name);
-			return false;
 		}
 	}
 #endif // _DEBUG
@@ -80,20 +76,6 @@ std::string City::GetSaveOutput()
 		{
 			result += std::to_string((uint16_t)cube->GetColor()) + " ";
 		}
-	}
-
-	return result;
-}
-
-std::string ResearchStations::GetSaveOutput()
-{
-	std::string result = "";
-
-	for each(ResearchCenter rc in m_Stations)
-	{
-		std::stringstream ss;
-		ss << std::hex << rc.GetCityID();
-		result += ss.str();
 	}
 
 	return result;

@@ -7,7 +7,6 @@
 #pragma once
 #include <string>
 #include <vector>
-#include "Pandemic.h"
 #include "DiseaseCubes.h"
 
 class City final : public CityList
@@ -66,28 +65,4 @@ public:
 
 	City* GetCity() { return m_City; }
 	City::CityID GetCityID() { return m_City->GetCityID(); }
-};
-
-class ResearchStations final
-{
-private:
-	std::vector<ResearchCenter> m_Stations;
-
-protected:
-	bool validate() { return (m_Stations.size() < 7); }
-
-public:
-	ResearchStations() : m_Stations() {};
-
-	//Prevent Copy/Assignment
-	ResearchStations(const ResearchStations&) = delete;
-	void operator=(const ResearchStations&) = delete;
-
-	uint16_t GetNumberOfCenters() { return (uint16_t)m_Stations.size(); }
-	void AddStation(City* city) { if (validate()) m_Stations.emplace_back(ResearchCenter(city)); }
-	void RemoveStation(const uint16_t& pos) { m_Stations.erase(m_Stations.begin() + pos); }
-	std::vector<ResearchCenter> GetCenters() { return m_Stations; }
-
-	std::string GetSaveOutput();
-	void InputLoadedGame(std::vector<ResearchCenter> stations) { m_Stations = stations; }
 };

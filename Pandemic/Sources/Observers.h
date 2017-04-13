@@ -7,7 +7,10 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <iostream>
+#include"Tokens.h"
 
+// Basic Interfaces -------------------------------------------------------------------------------
 class ISubject;
 
 class IObserver
@@ -33,6 +36,7 @@ public:
 	virtual void Notify() { for each(IObserver* obv in m_observers) { if (obv == nullptr) continue; obv->Update(); } }
 };
 
+// Player -----------------------------------------------------------------------------------------
 class PlayerSubject : public ISubject
 {
 public:
@@ -58,7 +62,25 @@ public:
 	void Update() { std::cout << dynamic_cast<PlayerSubject*>(m_Subject)->GetCharacteristics().GetPrintOutput() << std::endl; }
 };
 
-class MapObserver : public IObserver
+// World --------------------------------------------------------------------------------------------
+class MapSubject : public ISubject
 {
+public:
+	virtual City* GetCityWithID(const uint64_t& id) = 0;
+};
 
+class StationsSubject : public ISubject
+{
+public:
+	virtual bool IsaCenterIn(const uint64_t& id) = 0;
+};
+
+class WorldObserver : public IObserver
+{
+private:
+	ISubject* m_MapSub;
+	ISubject* m_StationsSub;
+public:
+	WorldObserver(ISubject* stations, ISubject* map) : IObserver(nullptr), m_StationsSub(stations), m_MapSub(map) {}
+	void Update();
 };

@@ -5,7 +5,6 @@
 #include <ctime> //time
 #include "boost\filesystem.hpp" //dir
 #include "GameEngine.h"
-#include "Pandemic.h"
 namespace bfs = boost::filesystem;
 
 GameEngine::GameEngine() : m_Board(), m_Players(), m_PlayersObservers(), m_Log(new InfectionLog()), m_Filename(MakeFileName()), m_PreGameComplete(false), m_SkipNextInfectionPhase(false), m_TurnCounter(0)
@@ -137,7 +136,7 @@ void GameEngine::BoardSetup()
 	InfectCity();
 	InfectCity();
 
-	m_Board.m_Centers.AddStation(m_Board.m_Map.GetCityWithID(City::ATLANTA)); // add base research center
+	m_Board.m_Centers->AddStation(m_Board.m_Map->GetCityWithID(City::ATLANTA)); // add base research center
 }
 // DifficultySetup --------------------------------------------------------------------------------
 
@@ -179,7 +178,7 @@ void GameEngine::TurnActionsPhase(const uint16_t & pos)
 	std::cout << std::endl;
 	for (size_t i = 0; i < 4; /* no itor, determined by ExecuteMove() */)
 	{
-		std::cout << m_Board.m_Map.GetMapDiagram() << std::endl;
+		m_Board.m_Map->Notify();
 		m_Players.at(pos)->Notify();
 		MovesPerCity options = CalculatePlayerOpt(pos);
 
@@ -248,7 +247,7 @@ void GameEngine::InfectCity(const uint16_t& cubesToAdd)
 	delete ic;
 	ic = nullptr;
 
-	City* city = m_Board.m_Map.GetCityWithID(cid); // get city
+	City* city = m_Board.m_Map->GetCityWithID(cid); // get city
 	Color c = city->GetCityColor();
 	if (m_Board.m_Cures.IsEradicated(c)) // if eradicated do add cubes
 		return;
@@ -373,7 +372,7 @@ void GameEngine::Epidemic()
 		City::CityID cid = (City::CityID)(ic->GetNumID() - InfectionCard::INFECTIONCARD_MIN);
 		delete ic; ic = nullptr;
 
-		City* city = m_Board.m_Map.GetCityWithID(cid);
+		City* city = m_Board.m_Map->GetCityWithID(cid);
 		std::cout << "Occurring in: " << city->GetCityName() << std::endl;
 		bool nooutbreak = true;
 		for (uint16_t i = 0; i < 3; i += 1)
@@ -440,7 +439,7 @@ GameEngine::MovesPerCity GameEngine::CalculatePlayerOpt(const uint16_t & pos)
 	}
 
 	// Treat Diesease -----------------------------------------------------------------------------
-	if (m_Board.m_Map.GetCityWithID(m_Players.at(pos)->GetCityID())->GetNumberOfCubes() > 0)
+	if (m_Board.m_Map->GetCityWithID(m_Players.at(pos)->GetCityID())->GetNumberOfCubes() > 0)
 	{
 		options.insert(std::make_pair(GameEngine::TREATDISEASE, m_Players.at(pos)->GetCityID()));
 	}
@@ -501,7 +500,7 @@ GameEngine::MovesPerCity GameEngine::CalculatePlayerOpt(const uint16_t & pos)
 std::vector<CityList::CityID> GameEngine::CalculateDriveCitiesFor(const uint16_t& pos)
 {
 	std::vector<CityList::CityID> result;
-	for each(City* city in m_Board.m_Map.GetCitiesConnectedTo(m_Players.at(pos)->GetCityID()))
+	for each(City* city in m_Board.m_Map->GetCitiesConnectedTo(m_Players.at(pos)->GetCityID()))
 	{
 		result.emplace_back(city->GetCityID());
 	}
@@ -530,7 +529,7 @@ std::vector<CityList::CityID> GameEngine::CalculateCharterFlightsFor(const uint1
 	std::vector<CityList::CityID> result;
 	if (m_Players.at(pos)->HasCurrentCityCard())
 	{
-		for each (City* city in m_Board.m_Map.GetAllCities())
+		for each (City* city in m_Board.m_Map->GetAllCities())
 		{
 			if (city->GetCityID() == m_Players.at(pos)->GetCityID())
 				continue;
@@ -548,7 +547,7 @@ std::vector<CityList::CityID> GameEngine::CalculateShuttleFlightsFor(const uint1
 	bool IsInACityWithAResearchCEnter = false;
 	std::vector<CityList::CityID> flights;
 	CityList::CityID cid = m_Players.at(pos)->GetCityID();
-	for each(ResearchCenter rc in m_Board.m_Centers.GetCenters())
+	for each(ResearchCenter rc in m_Board.m_Centers->GetAllCenters())
 	{
 		if (rc.GetCityID() == cid)
 		{
@@ -657,7 +656,7 @@ std::vector<CityList::CityID> GameEngine::CalculateShareKnowlegdeFor(const uint1
 std::vector<CityList::CityID> GameEngine::CalculateDiscoverCureFor(const uint16_t& pos)
 {
 	std::vector<CityList::CityID> result;
-	for each(ResearchCenter rc in m_Board.m_Centers.GetCenters())
+	for each(ResearchCenter rc in m_Board.m_Centers->GetAllCenters())
 	{
 		if (rc.GetCityID() == m_Players.at(pos)->GetCityID())
 		{
@@ -780,11 +779,11 @@ std::vector<CityList::CityID> GameEngine::CalculateGovernmentGrantFor(const uint
 		{
 			if (pc->GetNumID() == EventCard::GOVTGRANT)
 			{
-				for each(City* city in m_Board.m_Map.GetAllCities())
+				for each(City* city in m_Board.m_Map->GetAllCities())
 				{
 					CityList::CityID cid = city->GetCityID();
 					result.emplace_back(cid);
-					for each(ResearchCenter rc in m_Board.m_Centers.GetCenters())
+					for each(ResearchCenter rc in m_Board.m_Centers->GetAllCenters())
 					{
 						if (rc.GetCityID() == cid)
 						{
@@ -907,7 +906,7 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 		for (auto it = low; it != high; it++)
 		{
 			moves.insert(std::make_pair(++i, *it));
-			City* city = m_Board.m_Map.GetCityWithID(it->second);
+			City* city = m_Board.m_Map->GetCityWithID(it->second);
 			std::cout << "  " << i << " - To " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
 		}
 	}
@@ -922,7 +921,7 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 		for (auto it = low; it != high; it++)
 		{
 			moves.insert(std::make_pair(++i, *it));
-			City* city = m_Board.m_Map.GetCityWithID(it->second);
+			City* city = m_Board.m_Map->GetCityWithID(it->second);
 			std::cout << "  " << i << " - To " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
 		}
 	}
@@ -937,7 +936,7 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 		for (auto it = low; it != high; it++)
 		{
 			moves.insert(std::make_pair(++i, *it));
-			City* city = m_Board.m_Map.GetCityWithID(it->second);
+			City* city = m_Board.m_Map->GetCityWithID(it->second);
 			std::cout << "  " << i << " - From " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
 		}
 	}
@@ -952,7 +951,7 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 		for (auto it = low; it != high; it++)
 		{
 			moves.insert(std::make_pair(++i, *it));
-			City* city = m_Board.m_Map.GetCityWithID(it->second);
+			City* city = m_Board.m_Map->GetCityWithID(it->second);
 			std::cout << "  " << i << " - To " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
 		}
 	}
@@ -967,7 +966,7 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 		for (auto it = low; it != high; it++)
 		{
 			moves.insert(std::make_pair(++i, *it));
-			City* city = m_Board.m_Map.GetCityWithID(it->second);
+			City* city = m_Board.m_Map->GetCityWithID(it->second);
 			std::cout << "  " << i << " - In " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
 		}
 	}
@@ -982,7 +981,7 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 		for (auto it = low; it != high; it++)
 		{
 			moves.insert(std::make_pair(++i, *it));
-			City* city = m_Board.m_Map.GetCityWithID(it->second);
+			City* city = m_Board.m_Map->GetCityWithID(it->second);
 			std::cout << "  " << i << " - In " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
 		}
 	}
@@ -996,7 +995,7 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 		for (auto it = low; it != high; it++)
 		{
 			moves.insert(std::make_pair(++i, *it));
-			City* city = m_Board.m_Map.GetCityWithID(it->second);
+			City* city = m_Board.m_Map->GetCityWithID(it->second);
 			std::cout << "  " << i << " - In " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
 		}
 	}
@@ -1010,7 +1009,7 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 		for (auto it = low; it != high; it++)
 		{
 			moves.insert(std::make_pair(++i, *it));
-			City* city = m_Board.m_Map.GetCityWithID(it->second);
+			City* city = m_Board.m_Map->GetCityWithID(it->second);
 			std::cout << "  " << i << " - To " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
 		}
 	}
@@ -1026,7 +1025,7 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 		for (auto it = low; it != high; it++)
 		{
 			moves.insert(std::make_pair(++i, *it));
-			City* city = m_Board.m_Map.GetCityWithID(it->second);
+			City* city = m_Board.m_Map->GetCityWithID(it->second);
 			std::cout << "  " << i << " - From " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
 		}
 	}
@@ -1041,7 +1040,7 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 		for (auto it = low; it != high; it++)
 		{
 			moves.insert(std::make_pair(++i, *it));
-			City* city = m_Board.m_Map.GetCityWithID(it->second);
+			City* city = m_Board.m_Map->GetCityWithID(it->second);
 			std::cout << "  " << i << " - To " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
 		}
 	}
@@ -1056,7 +1055,7 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 		for (auto it = low; it != high; it++)
 		{
 			moves.insert(std::make_pair(++i, *it));
-			City* city = m_Board.m_Map.GetCityWithID(it->second);
+			City* city = m_Board.m_Map->GetCityWithID(it->second);
 			std::cout << "  " << i << " - From " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
 		}
 	}
@@ -1071,7 +1070,7 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 		for (auto it = low; it != high; it++)
 		{
 			moves.insert(std::make_pair(++i, *it));
-			City* city = m_Board.m_Map.GetCityWithID(it->second);
+			City* city = m_Board.m_Map->GetCityWithID(it->second);
 			std::cout << "  " << i << " - From " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
 		}
 	}
@@ -1086,7 +1085,7 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 		for (auto it = low; it != high; it++)
 		{
 			moves.insert(std::make_pair(++i, *it));
-			City* city = m_Board.m_Map.GetCityWithID(it->second);
+			City* city = m_Board.m_Map->GetCityWithID(it->second);
 			std::cout << "  " << i << " - To " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
 		}
 	}
@@ -1244,7 +1243,7 @@ uint16_t GameEngine::ExecuteShuttleFlight(const uint16_t & pos, const CityList::
 // ExecuteTreateDisease ---------------------------------------------------------------------------
 uint16_t GameEngine::ExecuteTreateDisease(const uint16_t & pos, const CityList::CityID & cityID)
 {
-	City* city = m_Board.m_Map.GetCityWithID(cityID);
+	City* city = m_Board.m_Map->GetCityWithID(cityID);
 	switch (m_Players.at(pos)->GetRoleID())
 	{
 	case RoleList::MEDIC:
@@ -1285,25 +1284,25 @@ uint16_t GameEngine::ExecuteBuildResearchCenter(const uint16_t & pos, const City
 void GameEngine::AddResearchCenter(const uint16_t& pos, const CityList::CityID& cityID)
 {
 	pos; // unused but kept for formality
-	if (m_Board.m_Centers.GetCenters().size() < 7)
+	if (m_Board.m_Centers->GetAllCenters().size() < 7)
 	{
-		m_Board.m_Centers.AddStation(m_Board.m_Map.GetCityWithID(cityID));
-		std::cout << "New Research Center in: " << m_Board.m_Map.GetCityWithID(cityID)->GetCityName() << std::endl;
+		m_Board.m_Centers->AddStation(m_Board.m_Map->GetCityWithID(cityID));
+		std::cout << "New Research Center in: " << m_Board.m_Map->GetCityWithID(cityID)->GetCityName() << std::endl;
 	}
 	else
 	{
 		std::cout << "Remove Existing Center..." << std::endl;
 		uint16_t j = 0;
-		for each(ResearchCenter rc in m_Board.m_Centers.GetCenters())
+		for each(ResearchCenter rc in m_Board.m_Centers->GetAllCenters())
 		{
 			std::cout << j++ << ": ";
 			rc.GetCity()->PrintInformation();
 		}
 		uint16_t selection = GetUserInput(0, j - 1);
 
-		m_Board.m_Centers.RemoveStation(selection);
-		m_Board.m_Centers.AddStation(m_Board.m_Map.GetCityWithID(cityID));
-		std::cout << "New Research Center in: " << m_Board.m_Map.GetCityWithID(cityID)->GetCityName() << std::endl;
+		m_Board.m_Centers->RemoveStation(selection);
+		m_Board.m_Centers->AddStation(m_Board.m_Map->GetCityWithID(cityID));
+		std::cout << "New Research Center in: " << m_Board.m_Map->GetCityWithID(cityID)->GetCityName() << std::endl;
 	}
 }
 // AddResearchCenter ------------------------------------------------------------------------------
@@ -1442,7 +1441,7 @@ uint16_t GameEngine::ExecuteAirLift(const uint16_t& pos, const CityList::CityID&
 
 	uint16_t j = 0;
 	std::cout << "Which city would you like to move " << m_Players.at(selection)->m_Name << " to..." << std::endl;
-	for each(City* ville in m_Board.m_Map.GetAllCities())
+	for each(City* ville in m_Board.m_Map->GetAllCities())
 	{
 		if (ville->GetCityID() == m_Players.at(selection)->GetCityID())
 			continue;
@@ -1606,7 +1605,7 @@ void GameEngine::SaveGame()
 	myfile << "\n";
 
 	// Cities -------------------------------------------------------------------------------------
-	myfile << m_Board.m_Map.GetSaveOutput();
+	myfile << m_Board.m_Map->GetSaveOutput();
 	myfile << "\n";
 
 	// Players ------------------------------------------------------------------------------------
@@ -1630,7 +1629,7 @@ void GameEngine::SaveGame()
 	myfile << "\n";
 
 	// Research Centers ---------------------------------------------------------------------------
-	myfile << m_Board.m_Centers.GetSaveOutput();
+	myfile << m_Board.m_Centers->GetSaveOutput();
 	myfile << "\n";
 
 	// Infection Log ------------------------------------------------------------------------------
@@ -1754,7 +1753,7 @@ void GameEngine::LoadGame()
 		delete[] buffer;
 		buffer = nullptr;
 
-		for each(City* city in m_Board.m_Map.GetAllCities())
+		for each(City* city in m_Board.m_Map->GetAllCities())
 		{
 			size_t sep = cities.find("/");
 			if (sep == 0)
@@ -1865,9 +1864,9 @@ void GameEngine::LoadGame()
 			std::stringstream ss(city);
 			uint64_t num = 0;
 			ss >> std::hex >> num;
-			m_centers.emplace_back(m_Board.m_Map.GetCityWithID((CityList::CityID)num));
+			m_centers.emplace_back(m_Board.m_Map->GetCityWithID((CityList::CityID)num));
 		}
-		m_Board.m_Centers.InputLoadedGame(m_centers);
+		m_Board.m_Centers->InputLoadedGame(m_centers);
 	}
 
 	// Infection Log ------------------------------------------------------------------------------
@@ -1964,7 +1963,7 @@ void GameEngine::Launch()
 	catch (const GameOverException& e)
 	{
 		std::cout << "\n\n ---- GAME OVER! ----\n  You lost due to: " << e.what() << std::endl;
-		std::cout << m_Board.m_Map.GetMapDiagram() << std::endl;
+		m_Board.m_Map->Notify();
 		bfs::path remove(m_Filename);
 		if (bfs::exists(remove))
 			if (bfs::is_regular_file(remove))
