@@ -321,7 +321,7 @@ bool GameEngine::IsQuarentineSpecialistNearBy(City * city)
 // IsQuarentineSpecialistNearBy -------------------------------------------------------------------
 
 // Outbreak ---------------------------------------------------------------------------------------
-void GameEngine::Outbreak(City* city, City* skip)
+void GameEngine::Outbreak(City* city, std::vector<City*> skip)
 {
 	if (IsQuarentineSpecialistNearBy(city))
 		return;
@@ -333,13 +333,18 @@ void GameEngine::Outbreak(City* city, City* skip)
 
 	for each(City* connected in city->GetNearByCities())
 	{
-		if(skip != nullptr)
-			if (connected->GetCityID() == skip->GetCityID())
-				continue;
+		bool alreadyhit = false;
+		if (skip.size() > 0)
+			for each(City* skipped in skip)
+				if (connected->GetCityID() == skipped->GetCityID())
+					alreadyhit = true;
+
+		if(alreadyhit) continue;
 
 		if (connected->GetNumberOfCubes(city->GetCityColor()) == 3)
 		{
-			Outbreak(connected, city);
+			skip.emplace_back(city);
+			Outbreak(connected, skip);
 		}
 		else
 		{
