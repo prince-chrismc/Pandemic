@@ -66,13 +66,20 @@ public:
 		uint16_t m_Blue;
 		uint16_t m_Black;
 
-	public:
-		Builder() : m_Red(0), m_Yellow(0), m_Blue(0), m_Black(0) {}
-
 		Builder& ParseRedCure(std::string loaded);
 		Builder& ParseBlueCure(std::string loaded);
 		Builder& ParseYellowCure(std::string loaded);
 		Builder& ParseBlackCure(std::string loaded);
+
+		Builder() : m_Red(0), m_Yellow(0), m_Blue(0), m_Black(0) {}
+	public:
+		static Builder& GetInstance() { static Builder builder; return builder; }
+
+		//Prevent Copy/Assignment
+		Builder(const Builder&) = delete;
+		void operator=(const Builder&) = delete;
+
+		Builder& ParseCures(std::string loaded) { return GetInstance().ParseRedCure(loaded).ParseBlueCure(loaded).ParseYellowCure(loaded).ParseBlackCure(loaded); }
 
 		const uint16_t& GetRedCure() { return m_Red; }
 		const uint16_t& GetBlueCure() { return m_Blue; }

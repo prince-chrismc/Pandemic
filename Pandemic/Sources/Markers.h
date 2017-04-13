@@ -31,11 +31,15 @@ public:
 	private:
 		uint16_t m_Position;
 
-	public:
 		Builder() : m_Position(0) {}
 
-		Builder& ParseInfectionRate(std::string loaded);
+	public:
+		//Prevent Copy/Assignment
+		Builder(const Builder&) = delete;
+		void operator=(const Builder&) = delete;
 
+		static Builder& GetInstance() { static Builder builder; return builder; }
+		Builder& ParseInfectionRate(std::string loaded);
 		const uint16_t& GetPosition() { return m_Position; }
 	};
 };
@@ -63,11 +67,15 @@ public:
 	private:
 		uint16_t m_Position;
 
-	public:
 		Builder() : m_Position(0) {}
 
-		Builder& ParseOutbreakMarker(std::string loaded);
+	public:
+		//Prevent Copy/Assignment
+		Builder(const Builder&) = delete;
+		void operator=(const Builder&) = delete;
 
+		static Builder& GetInstance() { static Builder builder; return builder; }
+		Builder& ParseOutbreakMarker(std::string loaded);
 		const uint16_t& GetPosition() { return m_Position; }
 	};
 };

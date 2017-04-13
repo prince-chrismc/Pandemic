@@ -26,11 +26,15 @@ public:
 	private:
 		std::vector<std::pair<std::string, uint16_t>> m_Log;
 
-	public:
 		Builder() : m_Log() {}
 
-		Builder& ParseLog(std::string loaded);
+	public:
+		//Prevent Copy/Assignment
+		Builder(const Builder&) = delete;
+		void operator=(const Builder&) = delete;
 
+		static Builder& GetInstance() { static Builder builder; return builder; }
+		Builder& ParseLog(std::string loaded);
 		std::vector<std::pair<std::string, uint16_t>> GetLog() { return m_Log; }
 	};
 };

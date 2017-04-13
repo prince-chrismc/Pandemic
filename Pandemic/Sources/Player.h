@@ -112,8 +112,11 @@ public:
 	public:
 		Builder() : m_Name(), m_Hand(), m_RoleID(), m_CityID() {}
 
-		Builder& ParsePlayer(std::string loaded);
+		//Prevent Copy/Assignment
+		Builder(const Builder&) = delete;
+		void operator=(const Builder&) = delete;
 
+		Builder& ParsePlayer(std::string loaded);
 		Player* GetPlayer();
 	};
 };

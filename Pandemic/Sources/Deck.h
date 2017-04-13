@@ -44,12 +44,16 @@ public:
 		std::deque<InfectionCard::CardsList> m_Deck;
 		std::deque<InfectionCard::CardsList> m_Discard;
 
-	public:
-		Builder() : m_Deck(), m_Discard() {}
-
 		void AddToDeck(InfectionCard::CardsList cardId) { m_Deck.emplace_back(cardId); }
 		void AddToDiscard(InfectionCard::CardsList cardId) { m_Discard.emplace_back(cardId); }
 
+	public:
+		Builder() : m_Deck(), m_Discard() {}
+
+		//Prevent Copy/Assignment
+		Builder(const Builder&) = delete;
+		void operator=(const Builder&) = delete;
+		
 		Builder& ParseDeck(std::string loaded);
 		Builder& ParseDiscard(std::string loaded);
 
@@ -94,11 +98,15 @@ public:
 		std::deque<PlayerCard::CardsList> m_Deck;
 		std::deque<PlayerCard::CardsList> m_Discard;
 
+		void AddToDeck(PlayerCard::CardsList cardId) { m_Deck.emplace_back(cardId); }
+		void AddToDiscard(PlayerCard::CardsList cardId) { m_Discard.emplace_back(cardId); }
+
 	public:
 		Builder() : m_Deck(), m_Discard() {}
 
-		void AddToDeck(PlayerCard::CardsList cardId) { m_Deck.emplace_back(cardId); }
-		void AddToDiscard(PlayerCard::CardsList cardId) { m_Discard.emplace_back(cardId); }
+		//Prevent Copy/Assignment
+		Builder(const Builder&) = delete;
+		void operator=(const Builder&) = delete;
 
 		Builder& ParseDeck(std::string loaded);
 		Builder& ParseDiscard(std::string loaded);
@@ -129,13 +137,16 @@ public:
 	private:
 		std::deque<RoleCard::Roles> m_Deck;
 
-	public:
 		Builder() : m_Deck() {}
-
 		void AddToDeck(RoleCard::Roles cardId) { m_Deck.emplace_back(cardId); }
 
-		Builder& ParseDeck(std::string loaded);
+	public:
+		//Prevent Copy/Assignment
+		Builder(const Builder&) = delete;
+		void operator=(const Builder&) = delete;
 
+		static Builder& GetInstance() { static Builder builder; return builder; }
+		Builder& ParseDeck(std::string loaded);
 		std::deque<RoleCard::Roles> GetDeck() { return m_Deck; }
 	};
 };

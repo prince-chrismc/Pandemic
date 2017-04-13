@@ -1743,8 +1743,7 @@ void GameEngine::LoadGame()
 		delete[] buffer;
 		buffer = nullptr;
 
-		RoleDeck::Builder roledeckbuilder;
-		m_Board.m_RoleDeck.InputLoadedGame(roledeckbuilder.ParseDeck(role).GetDeck());
+		m_Board.m_RoleDeck.InputLoadedGame(RoleDeck::Builder::GetInstance().ParseDeck(role).GetDeck());
 	}
 
 	// Cities -------------------------------------------------------------------------------------
@@ -1822,9 +1821,7 @@ void GameEngine::LoadGame()
 		delete[] buffer;
 		buffer = nullptr;
 
-		CureMakers::Builder curesbuilder;
-		curesbuilder.ParseRedCure(rate).ParseBlueCure(rate).ParseYellowCure(rate).ParseBlackCure(rate);
-		m_Board.m_Cures.InputLoadedGame(curesbuilder.GetRedCure(), curesbuilder.GetBlueCure(), curesbuilder.GetYellowCure(), curesbuilder.GetBlackCure());
+		m_Board.m_Cures.InputLoadedGame(CureMakers::Builder::GetInstance().ParseCures(rate).GetRedCure(), CureMakers::Builder::GetInstance().GetBlueCure(), CureMakers::Builder::GetInstance().GetYellowCure(), CureMakers::Builder::GetInstance().GetBlackCure());
 	}
 
 	// Infection Rate -----------------------------------------------------------------------------
@@ -1835,8 +1832,7 @@ void GameEngine::LoadGame()
 		delete[] buffer;
 		buffer = nullptr;
 
-		InfectionRate::Builder infecratebuilder;
-		m_Board.m_InfectRate.InputLoadedGame(infecratebuilder.ParseInfectionRate(rate).GetPosition());
+		m_Board.m_InfectRate.InputLoadedGame(InfectionRate::Builder::GetInstance().ParseInfectionRate(rate).GetPosition());
 		
 	}
 
@@ -1848,8 +1844,7 @@ void GameEngine::LoadGame()
 		delete[] buffer;
 		buffer = nullptr;
 
-		OutbreakMarker::Builder outbreakmarkerbuilder;
-		m_Board.m_OutBreak.InputLoadedGame(outbreakmarkerbuilder.ParseOutbreakMarker(marker).GetPosition());
+		m_Board.m_OutBreak.InputLoadedGame(OutbreakMarker::Builder::GetInstance().ParseOutbreakMarker(marker).GetPosition());
 	}
 
 	//ResearchCenters -----------------------------------------------------------------------------
@@ -1883,8 +1878,7 @@ void GameEngine::LoadGame()
 		delete[] buffer;
 		buffer = nullptr;
 
-		InfectionLog::Builder infectlognuilder;
-		m_Log->InputLoadedGame(infectlognuilder.ParseLog(log).GetLog());
+		m_Log->InputLoadedGame(InfectionLog::Builder::GetInstance().ParseLog(log).GetLog());
 	}
 
 	// Turn Counter -------------------------------------------------------------------------------
