@@ -5,7 +5,6 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 #pragma once
-#include <cstdint>
 #include "Pandemic.h"
 
 class DiseaseCube abstract
@@ -76,7 +75,7 @@ private:
 public:
 	DiseaseCubePile() : m_Red(), m_Yellow(), m_Blue(), m_Black() {}
 
-	//Prevent Copy/Assignment
+	///Prevent Copy/Assignment
 	DiseaseCubePile(const DiseaseCubePile&) = delete;
 	void operator=(const DiseaseCubePile&) = delete;
 

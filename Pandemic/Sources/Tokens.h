@@ -29,12 +29,12 @@ public:
 	City(const CityID& id, const char* name) : m_CityID(id), m_Color(GetCityColor()), m_Name(name), m_NearBy(), m_Cubes() {}
 	~City();
 
-	//Prevent Copy/Assignment
+	///Prevent Copy/Assignment
 	City(const City&) = delete;
 	void operator=(const City&) = delete;
 
-	void AddNearByCity(City* nearby) { m_NearBy.emplace_back(nearby); } //strictly for world map
-	void RemoveNearByCity(const uint16_t& pos) { m_NearBy.erase(m_NearBy.begin() + pos); } //strictly for world map
+	void AddNearByCity(City* nearby) { m_NearBy.emplace_back(nearby); } ///strictly for world map
+	void RemoveNearByCity(const uint16_t& pos) { m_NearBy.erase(m_NearBy.begin() + pos); } ///strictly for world map
 	
 	uint16_t GetNumberOfCubes() { return (uint16_t)m_Cubes.size(); }
 	uint16_t GetNumberOfCubes(const Color& color);

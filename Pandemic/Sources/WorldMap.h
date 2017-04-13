@@ -22,7 +22,7 @@ public:
 	void UserDriverCostumization();
 	bool Validate();
 
-	//Prevent Copy/Assignment
+	///Prevent Copy/Assignment
 	WorldMap(const WorldMap&) = delete;
 	void operator=(const WorldMap&) = delete;
 	
@@ -45,7 +45,7 @@ protected:
 public:
 	ResearchStations() : m_Stations() {};
 
-	//Prevent Copy/Assignment
+	///Prevent Copy/Assignment
 	ResearchStations(const ResearchStations&) = delete;
 	void operator=(const ResearchStations&) = delete;
 

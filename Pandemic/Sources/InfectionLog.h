@@ -29,7 +29,7 @@ public:
 		Builder() : m_Log() {}
 
 	public:
-		//Prevent Copy/Assignment
+		///Prevent Copy/Assignment
 		Builder(const Builder&) = delete;
 		void operator=(const Builder&) = delete;
 

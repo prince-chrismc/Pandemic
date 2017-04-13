@@ -29,7 +29,7 @@ public:
 	Board() : m_Map(new WorldMap()), m_InfectRate(), m_OutBreak(), m_Cubes(), m_InfecDeck(), m_PlayerDeck(), m_RoleDeck(), m_Cures(), m_Centers(new ResearchStations()), m_Observer(new WorldObserver(m_Centers, m_Map)) { m_Map->RegistarObserver(m_Observer); m_Centers->RegistarObserver(m_Observer); }
 	~Board() {}
 
-	//Prevent Copy/Assignment
+	///Prevent Copy/Assignment
 	Board(const Board&) = delete;
 	void operator=(const Board&) = delete;
 };

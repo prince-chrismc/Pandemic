@@ -31,7 +31,7 @@ private:
 public:
 	Pawn(const uint64_t& color);
 
-	//Prevent Copy/Assignment
+	///Prevent Copy/Assignment
 	Pawn(const Pawn&) = delete;
 	void operator=(const Pawn&) = delete;
 
@@ -54,7 +54,7 @@ public:
 	Role(RoleCard* card);
 	~Role();
 
-	//Prevent Copy/Assignment
+	///Prevent Copy/Assignment
 	Role(const Role&) = delete;
 	void operator=(const Role&) = delete;
 };
@@ -75,21 +75,21 @@ public:
 	Player(const std::string& name, RoleCard* card) : m_Name(name), m_Role(card), m_RefCard() {}
 	~Player();
 
-	//Prevent Copy/Assignment
+	///Prevent Copy/Assignment
 	Player(const Player&) = delete;
 	void operator=(const Player&) = delete;
 
 	std::string GetName() const { return m_Name; }
-	//Manipulate Hand
+	/// Manipulate Hand
 	void AddCard(PlayerCard* card) { m_Hand.emplace_back(card); Notify(); }
 	PlayerCard* RemoveCard(const CityList::CityID& id);
 	PlayerCard* RemoveCardAt(const uint16_t& pos);
 
-	//Get/Set City
+	/// Get/Set City
 	CityList::CityID GetCityID();
 	void ChangeCity(const std::hexadecimal& id) { m_Role.m_Pawn.m_CityID = id; Notify(); }
 
-	//utility
+	///utility
 	bool HasCurrentCityCard();
 	RoleList::Roles GetRoleID() { return (RoleList::Roles)m_Role.m_Card->GetNumID(); }
 	uint16_t GetNumOfCardToDiscoverCure();
@@ -112,7 +112,7 @@ public:
 	public:
 		Builder() : m_Name(), m_Hand(), m_RoleID(), m_CityID() {}
 
-		//Prevent Copy/Assignment
+		///Prevent Copy/Assignment
 		Builder(const Builder&) = delete;
 		void operator=(const Builder&) = delete;
 

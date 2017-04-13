@@ -19,7 +19,7 @@ public:
 	void Initialize();
 	void Launch();
 
-	//Prevent Copy/Assignment
+	///Prevent Copy/Assignment
 	GameEngine(const GameEngine&) = delete;
 	void operator=(const GameEngine&) = delete;
 
@@ -34,9 +34,9 @@ private:
 	uint16_t m_TurnCounter;
 
 protected:
-	std::string MakeFileName(); // used in save
+	std::string MakeFileName(); 
 
-	// game initialization
+	/// game initialization
 	void RegisterPlayer(const std::string& newPlayerName);
 	void PlayersSetup();
 	void DifficultySetup();
@@ -45,13 +45,13 @@ protected:
 	void SaveGame();
 	void LoadGame();
 
-	//Subject to the InfectionLog
+	/// Subject to the InfectionLog
 	void Notify(std::string name, uint16_t cubes = 1);
 
 	// game play ----------------------------------------------------------------------------------
 	enum MoveOptions
 	{
-		// game actions
+		/// game actions
 		INVALID = 0x000UL,
 		DRIVE_FERRY = 0x001UL,
 		FLIGHT = 0x002UL,
@@ -62,14 +62,14 @@ protected:
 		SHARECARD = 0x007UL,
 		CUREDISEASE = 0x008UL,
 
-		// Event cards
+		/// Event cards
 		RESILLIENT = 0x200UL,
 		AIRLIFT = 0x201UL,
 		FORECAST = 0x202UL,
 		QUIETNIGHT = 0x203UL,
 		GOVTGRANT = 0x204UL,
 
-		// basics
+		/// basics
 		QUIT = 0x0F0UL,
 		REFCARD = 0x0A0UL,
 		PEAK_PLAYER_DISCARD,
@@ -108,7 +108,6 @@ protected:
 				std::vector<CityList::CityID> CalculateQuietNightFor(const uint16_t& pos);
 				std::vector<CityList::CityID> CalculateGovernmentGrantFor(const uint16_t& pos);
 			PlayerMoves DeterminePlayerMoves(const MovesPerCity& options);
-				//std::string MoveOpToString(const MoveOptions & opt);
 			uint16_t ExecuteMove(const uint16_t& pos, const MoveOptions& opt, const CityList::CityID& cityID);
 				uint16_t ExecuteQuit(const uint16_t& pos, const CityList::CityID& cityID);
 				uint16_t ExecuteViewRefCard(const uint16_t& pos, const CityList::CityID& cityID);
@@ -139,9 +138,6 @@ protected:
 			void Outbreak(City* city, std::vector<City*> skip = std::vector<City*>());
 			void Epidemic();
 	// Game Play Functions ------------------------------------------------------------------------
-
-
-
 };
 
 class GameOverException final : public GameException 

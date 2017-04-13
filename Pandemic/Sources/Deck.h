@@ -15,7 +15,7 @@ protected:
 	Deck(const uint16_t& size) : m_Size(size) {}
 };
 
-class InfectionDeck : public Deck //InfectionCard Factory
+class InfectionDeck : public Deck //InfectionCard Pool/Factory
 {
 private:
 	std::deque<InfectionCard::CardsList> m_Deck;
@@ -24,7 +24,7 @@ private:
 public:
 	InfectionDeck();
 
-	//Prevent Copy/Assignment
+	///Prevent Copy/Assignment
 	InfectionDeck(const InfectionDeck&) = delete;
 	void operator=(const InfectionDeck&) = delete;
 	
@@ -50,7 +50,7 @@ public:
 	public:
 		Builder() : m_Deck(), m_Discard() {}
 
-		//Prevent Copy/Assignment
+		///Prevent Copy/Assignment
 		Builder(const Builder&) = delete;
 		void operator=(const Builder&) = delete;
 		
@@ -62,7 +62,7 @@ public:
 	};
 };
 
-class PlayerDeck final : public Deck, private PlayerCardFactory //PlayerCards Factory
+class PlayerDeck final : public Deck, private PlayerCardFactory //PlayerCards Pool/Abstract Factory
 {
 private:
 	enum class Difficulty
@@ -80,7 +80,7 @@ private:
 public:
 	PlayerDeck();
 
-	//Prevent Copy/Assignment
+	///Prevent Copy/Assignment
 	PlayerDeck(const PlayerDeck&) = delete;
 	void operator=(const PlayerDeck&) = delete;
 
@@ -104,7 +104,7 @@ public:
 	public:
 		Builder() : m_Deck(), m_Discard() {}
 
-		//Prevent Copy/Assignment
+		///Prevent Copy/Assignment
 		Builder(const Builder&) = delete;
 		void operator=(const Builder&) = delete;
 
@@ -116,7 +116,7 @@ public:
 	};
 };
 
-class RoleDeck final : public Deck //RoleCard Factory
+class RoleDeck final : public Deck //RoleCard Pool/Factory
 {
 private:
 	std::deque<RoleCard::Roles> m_Deck;
@@ -124,7 +124,7 @@ private:
 public:
 	RoleDeck();
 
-	//Prevent Copy/Assignment
+	///Prevent Copy/Assignment
 	RoleDeck(const RoleDeck&) = delete;
 	void operator=(const RoleDeck&) = delete;
 
@@ -141,7 +141,7 @@ public:
 		void AddToDeck(RoleCard::Roles cardId) { m_Deck.emplace_back(cardId); }
 
 	public:
-		//Prevent Copy/Assignment
+		///Prevent Copy/Assignment
 		Builder(const Builder&) = delete;
 		void operator=(const Builder&) = delete;
 

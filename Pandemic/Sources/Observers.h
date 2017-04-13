@@ -21,6 +21,10 @@ protected:
 public:
 	IObserver(ISubject* sub) : m_Subject(sub) {}
 
+	///Prevent Copy/Assignment
+	IObserver(const IObserver&) = delete;
+	void operator=(const IObserver&) = delete;
+
 	virtual void Update() = 0;
 };
 
@@ -32,6 +36,10 @@ protected:
 public:
 	ISubject() : m_observers() {}
 
+	///Prevent Copy/Assignment
+	ISubject(const ISubject&) = delete;
+	void operator=(const ISubject&) = delete;
+
 	void RegistarObserver(IObserver* obv) { m_observers.emplace_back(obv); }
 	virtual void Notify() { for each(IObserver* obv in m_observers) { if (obv == nullptr) continue; obv->Update(); } }
 };
@@ -40,6 +48,11 @@ public:
 class PlayerSubject : public ISubject
 {
 public:
+	PlayerSubject() : ISubject() {}
+	///Prevent Copy/Assignment
+	PlayerSubject(const PlayerSubject&) = delete;
+	void operator=(const PlayerSubject&) = delete;
+
 	struct PlayerCharacteristics
 	{
 		std::string m_Name;
@@ -59,6 +72,11 @@ class PlayerObserver : public IObserver
 {
 public:
 	PlayerObserver(ISubject* sub) : IObserver(sub) {}
+
+	///Prevent Copy/Assignment
+	PlayerObserver(const PlayerObserver&) = delete;
+	void operator=(const PlayerObserver&) = delete;
+
 	void Update() { std::cout << dynamic_cast<PlayerSubject*>(m_Subject)->GetCharacteristics().GetPrintOutput() << std::endl; }
 };
 
@@ -66,12 +84,22 @@ public:
 class MapSubject : public ISubject
 {
 public:
+	MapSubject() : ISubject() {}
+	///Prevent Copy/Assignment
+	MapSubject(const MapSubject&) = delete;
+	void operator=(const MapSubject&) = delete;
+
 	virtual City* GetCityWithID(const uint64_t& id) = 0;
 };
 
 class StationsSubject : public ISubject
 {
 public:
+	StationsSubject() : ISubject() {}
+	///Prevent Copy/Assignment
+	StationsSubject(const StationsSubject&) = delete;
+	void operator=(const StationsSubject&) = delete;
+
 	virtual bool IsaCenterIn(const uint64_t& id) = 0;
 };
 
@@ -82,5 +110,10 @@ private:
 	ISubject* m_StationsSub;
 public:
 	WorldObserver(ISubject* stations, ISubject* map) : IObserver(nullptr), m_StationsSub(stations), m_MapSub(map) {}
+
+	///Prevent Copy/Assignment
+	WorldObserver(const WorldObserver&) = delete;
+	void operator=(const WorldObserver&) = delete;
+
 	void Update();
 };

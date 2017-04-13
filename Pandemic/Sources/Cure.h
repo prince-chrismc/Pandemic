@@ -19,7 +19,7 @@ private:
 public:
 	Cure(const Color& color) : m_Color(color), m_State(UNDISCOVERED) {}
 
-	// Mutator/Accessor
+	/// Mutator/Accessor
 	std::string GetState() { return std::to_string(m_State); }
 	void SetState(const uint16_t& state) { m_State = (State)state; }
 
@@ -45,7 +45,7 @@ private:
 public:
 	CureMakers() : m_Red(), m_Yellow(), m_Blue(), m_Black() {}
 
-	//Prevent Copy/Assignment
+	///Prevent Copy/Assignment
 	CureMakers(const CureMakers&) = delete;
 	void operator=(const CureMakers&) = delete;
 
@@ -75,7 +75,7 @@ public:
 	public:
 		static Builder& GetInstance() { static Builder builder; return builder; }
 
-		//Prevent Copy/Assignment
+		///Prevent Copy/Assignment
 		Builder(const Builder&) = delete;
 		void operator=(const Builder&) = delete;
 

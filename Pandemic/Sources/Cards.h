@@ -21,7 +21,7 @@ protected:
 	Card(const uint64_t& id, const char* name, const char* desc);
 
 public:
-	//EXAMPLE = 0x0A89CFCUL
+	///EXAMPLE = 0x0A89CFCUL
 	enum CardsList	//Important definition to define ranges for types and the IDs themselves
 	{
 		CARD_INVALID = 0x0000000UL, //Invalid
@@ -40,11 +40,11 @@ protected:
 	PlayerCard(const uint64_t& id, const char* name, const char* desc) : Card(id, name, desc) {}
 
 public:
-	//EXAMPLE = 0x0A89CFCUL
+	///EXAMPLE = 0x0A89CFCUL
 	enum CardsList
 	{
-		PLAYERCARD_MIN = 0x2000000UL, //"Invalid"
-		PLAYERCARD_MAX = 0x2FFFFFFUL, //"Invalid"
+		PLAYERCARD_MIN = 0x2000000UL, //Invalid
+		PLAYERCARD_MAX = 0x2FFFFFFUL, //Invalid
 	};
 	virtual std::string GetCardInfo() = 0;
 };
@@ -73,73 +73,71 @@ private:
 	static const char* GetCardDesc(const uint64_t& id);
 
 public:
-	//Prevent Copy/Assignment
+	///Prevent Copy/Assignment
 	CityCard(const CityCard&) = delete;
 	void operator=(const CityCard&) = delete;
 
-	//EXAMPLE = 0x0A89CFCUL
+	///EXAMPLE = 0x0A89CFCUL
 	enum CardsList
 	{
-		CITYCARD_MIN = 0x2400000UL,   //"Invalid"
-
-		ALGIERS = CityList::ALGIERS + CITYCARD_MIN,
-		ATLANTA = CityList::ATLANTA + CITYCARD_MIN,
-		BAGHDAD = CityList::BAGHDAD + CITYCARD_MIN,
-		BANGKOK = CityList::BANGKOK + CITYCARD_MIN,
-		BEIJING = CityList::BEIJING + CITYCARD_MIN,
-		BOGOTA = CityList::BOGOTA + CITYCARD_MIN,
-		BUENOSAIRES = CityList::BUENOSAIRES + CITYCARD_MIN,
-		CAIRO = CityList::CAIRO + CITYCARD_MIN,
-		CHENNAI = CityList::CHENNAI + CITYCARD_MIN,
-		CHICAGO = CityList::CHICAGO + CITYCARD_MIN,
-		DELHI = CityList::DELHI + CITYCARD_MIN,
-		ESSEN = CityList::ESSEN + CITYCARD_MIN,
-		HOCHIMINH = CityList::HOCHIMINH + CITYCARD_MIN,
-		HONGKONG = CityList::HONGKONG + CITYCARD_MIN,
-		ISTANBUL = CityList::ISTANBUL + CITYCARD_MIN,
-		JAKARTA = CityList::JAKARTA + CITYCARD_MIN,
-		JOHANNESBURG = CityList::JOHANNESBURG + CITYCARD_MIN,
-		KARACHI = CityList::KARACHI + CITYCARD_MIN,
-		KHARTOUM = CityList::KHARTOUM + CITYCARD_MIN,
-		KINSHASA = CityList::KINSHASA + CITYCARD_MIN,
-		KOLKATA = CityList::KOLKATA + CITYCARD_MIN,
-		LAGOS = CityList::LAGOS + CITYCARD_MIN,
-		LIMA = CityList::LIMA + CITYCARD_MIN,
-		LONDON = CityList::LONDON + CITYCARD_MIN,
-		LOSANGELES = CityList::LOSANGELES + CITYCARD_MIN,
-		MADRID = CityList::MADRID + CITYCARD_MIN,
-		MANILA = CityList::MANILA + CITYCARD_MIN,
-		MEXICO = CityList::MEXICO + CITYCARD_MIN,
-		MIAMI = CityList::MIAMI + CITYCARD_MIN,
-		MILAN = CityList::MILAN + CITYCARD_MIN,
-		MONTREAL = CityList::MONTREAL + CITYCARD_MIN,
-		MOSCOW = CityList::MOSCOW + CITYCARD_MIN,
-		MUMBAI = CityList::MUMBAI + CITYCARD_MIN,
-		NEWYORK = CityList::NEWYORK + CITYCARD_MIN,
-		OSAKA = CityList::OSAKA + CITYCARD_MIN,
-		PARIS = CityList::PARIS + CITYCARD_MIN,
-		RIYADH = CityList::RIYADH + CITYCARD_MIN,
-		SANFRAN = CityList::SANFRAN + CITYCARD_MIN,
-		SANTIAGO = CityList::SANTIAGO + CITYCARD_MIN,
-		SAOPAULO = CityList::SAOPAULO + CITYCARD_MIN,
-		SEOUL = CityList::SEOUL + CITYCARD_MIN,
-		SHANGHAI = CityList::SHANGHAI + CITYCARD_MIN,
-		STPETER = CityList::STPETER + CITYCARD_MIN,
-		SYDNEY = CityList::SYDNEY + CITYCARD_MIN,
-		TAIPEI = CityList::TAIPEI + CITYCARD_MIN,
-		TEHRAN = CityList::TEHRAN + CITYCARD_MIN,
-		TOKYO = CityList::TOKYO + CITYCARD_MIN,
-		WASHINGTON = CityList::WASHINGTON + CITYCARD_MIN,
-		RED_MIN = CityList::RED_MIN + CITYCARD_MIN,
-		RED_MAX = CityList::RED_MAX + CITYCARD_MIN,
-		BLACK_MIN = CityList::BLACK_MIN + CITYCARD_MIN,
-		BLACK_MAX = CityList::BLACK_MAX + CITYCARD_MIN,
-		BLUE_MIN = CityList::BLUE_MIN + CITYCARD_MIN,
-		BLUE_MAX = CityList::BLUE_MAX + CITYCARD_MIN,
-		YELLOW_MIN = CityList::YELLOW_MIN + CITYCARD_MIN,
-		YELLOW_MAX = CityList::YELLOW_MAX + CITYCARD_MIN,
-
-		CITYCARD_MAX = 0x24FFFFFUL,   //"Invalid"
+		CITYCARD_MIN = 0x2400000UL,   //Invalid
+		ALGIERS = CityList::ALGIERS + CITYCARD_MIN,  //Algiers
+		ATLANTA = CityList::ATLANTA + CITYCARD_MIN,  //Atlanta
+		BAGHDAD = CityList::BAGHDAD + CITYCARD_MIN,  //Baghdad
+		BANGKOK = CityList::BANGKOK + CITYCARD_MIN,  //Bangkok
+		BEIJING = CityList::BEIJING + CITYCARD_MIN,  //Beijing
+		BOGOTA = CityList::BOGOTA + CITYCARD_MIN,  //Bogota
+		BUENOSAIRES = CityList::BUENOSAIRES + CITYCARD_MIN,  //Buenos Aires
+		CAIRO = CityList::CAIRO + CITYCARD_MIN,  //Cairo
+		CHENNAI = CityList::CHENNAI + CITYCARD_MIN,  //Chennai
+		CHICAGO = CityList::CHICAGO + CITYCARD_MIN,  //Chicago
+		DELHI = CityList::DELHI + CITYCARD_MIN,  //Delhi
+		ESSEN = CityList::ESSEN + CITYCARD_MIN,  //Essen
+		HOCHIMINH = CityList::HOCHIMINH + CITYCARD_MIN,  //Ho Chi Minh City
+		HONGKONG = CityList::HONGKONG + CITYCARD_MIN,  //Hong Kong
+		ISTANBUL = CityList::ISTANBUL + CITYCARD_MIN,  //Istanbul
+		JAKARTA = CityList::JAKARTA + CITYCARD_MIN,  //Jakarta
+		JOHANNESBURG = CityList::JOHANNESBURG + CITYCARD_MIN,  //Johannesburg
+		KARACHI = CityList::KARACHI + CITYCARD_MIN,  //Karachi
+		KHARTOUM = CityList::KHARTOUM + CITYCARD_MIN,  //Khartoum
+		KINSHASA = CityList::KINSHASA + CITYCARD_MIN,  //Kinshasa
+		KOLKATA = CityList::KOLKATA + CITYCARD_MIN,  //Kolkata
+		LAGOS = CityList::LAGOS + CITYCARD_MIN,  //Lagos
+		LIMA = CityList::LIMA + CITYCARD_MIN,  //Lima
+		LONDON = CityList::LONDON + CITYCARD_MIN,  //London
+		LOSANGELES = CityList::LOSANGELES + CITYCARD_MIN,  //Los Angeles
+		MADRID = CityList::MADRID + CITYCARD_MIN,  //Madrid
+		MANILA = CityList::MANILA + CITYCARD_MIN,  //Manila
+		MEXICO = CityList::MEXICO + CITYCARD_MIN,  //Mexico City
+		MIAMI = CityList::MIAMI + CITYCARD_MIN,  //Miami
+		MILAN = CityList::MILAN + CITYCARD_MIN,  //Milan
+		MONTREAL = CityList::MONTREAL + CITYCARD_MIN,  //Montreal
+		MOSCOW = CityList::MOSCOW + CITYCARD_MIN,  //Moscow
+		MUMBAI = CityList::MUMBAI + CITYCARD_MIN,  //Mumbai
+		NEWYORK = CityList::NEWYORK + CITYCARD_MIN,  //NewYork
+		OSAKA = CityList::OSAKA + CITYCARD_MIN,  //Osaka
+		PARIS = CityList::PARIS + CITYCARD_MIN,  //Paris
+		RIYADH = CityList::RIYADH + CITYCARD_MIN,  //Riyadh
+		SANFRAN = CityList::SANFRAN + CITYCARD_MIN,  //San Francisco
+		SANTIAGO = CityList::SANTIAGO + CITYCARD_MIN,  //Santiago
+		SAOPAULO = CityList::SAOPAULO + CITYCARD_MIN,  //Sao Paulo
+		SEOUL = CityList::SEOUL + CITYCARD_MIN,  //Seoul
+		SHANGHAI = CityList::SHANGHAI + CITYCARD_MIN,  //Shanghai
+		STPETER = CityList::STPETER + CITYCARD_MIN,  //StPetersburg
+		SYDNEY = CityList::SYDNEY + CITYCARD_MIN,  //Sydney
+		TAIPEI = CityList::TAIPEI + CITYCARD_MIN,  //Taipei
+		TEHRAN = CityList::TEHRAN + CITYCARD_MIN,  //Tehran
+		TOKYO = CityList::TOKYO + CITYCARD_MIN,  //Tokyo
+		WASHINGTON = CityList::WASHINGTON + CITYCARD_MIN,  //Washington
+		RED_MIN = CityList::RED_MIN + CITYCARD_MIN,  //Invalid
+		RED_MAX = CityList::RED_MAX + CITYCARD_MIN,  //Invalid
+		BLACK_MIN = CityList::BLACK_MIN + CITYCARD_MIN,  //Invalid
+		BLACK_MAX = CityList::BLACK_MAX + CITYCARD_MIN,  //Invalid
+		BLUE_MIN = CityList::BLUE_MIN + CITYCARD_MIN,  //Invalid
+		BLUE_MAX = CityList::BLUE_MAX + CITYCARD_MIN,  //Invalid
+		YELLOW_MIN = CityList::YELLOW_MIN + CITYCARD_MIN,  //Invalid
+		YELLOW_MAX = CityList::YELLOW_MAX + CITYCARD_MIN,  //Invalid
+		CITYCARD_MAX = 0x24FFFFFUL,   //Invalid
 	};
 
 	CityCard(const CardsList& id) : PlayerCard(id, GetCardName(id), GetCardDesc(id)) {}
@@ -156,14 +154,14 @@ private:
 	static const char* GetCardDesc(const uint64_t& id);
 
 public:
-	//Prevent Copy/Assignment
+	///Prevent Copy/Assignment
 	EventCard(const EventCard&) = delete;
 	void operator=(const EventCard&) = delete;
 
-	//EXAMPLE = 0x0A89CFCUL
+	///EXAMPLE = 0x0A89CFCUL
 	enum CardsList
 	{
-		EVENTCARD_MIN = 0x2800000UL,  //"Invalid"
+		EVENTCARD_MIN = 0x2800000UL,  //Invalid
 
 		RESILLIENT = 0x2800123UL,
 		AIRLIFT = 0x2800246UL,
@@ -171,7 +169,7 @@ public:
 		QUIETNIGHT = 0x280048C,
 		GOVTGRANT = 0x28006AF,
 
-		EVENTCARD_MAX = 0x28FFFFFUL,  //"Invalid"
+		EVENTCARD_MAX = 0x28FFFFFUL,  //Invalid
 	};
 
 	EventCard(const CardsList& id) : PlayerCard(id, GetCardName(id), GetCardDesc(id)) {}
@@ -186,21 +184,21 @@ private:
 	static const char* GetCardDesc(const uint64_t& id);
 
 public:
-	//Prevent Copy/Assignment
+	///Prevent Copy/Assignment
 	EpidemicCard(const EpidemicCard&) = delete;
 	void operator=(const EpidemicCard&) = delete;
 
-	//EXAMPLE = 0x0A89CFCUL
+	///EXAMPLE = 0x0A89CFCUL
 	enum CardsList
 	{
-		EPIDEMICCARD_MIN = 0x2B00000UL,  //"Invalid"
-		EPIDEMICCARDONE = 0x2B00333UL,
-		EPIDEMICCARDTWO = 0x2B00888UL,
-		EPIDEMICCARDTHREE = 0x2B00AAAUL,
-		EPIDEMICCARDFOUR = 0x2B00CCCUL,
-		EPIDEMICCARDFIVE = 0x2B00DDDUL,
-		EPIDEMICCARDSIX = 0x2B00EEEUL,
-		EPIDEMICCARD_MAX = 0x2BFFFFFUL,  //"Invalid"
+		EPIDEMICCARD_MIN = 0x2B00000UL,  //Invalid
+		EPIDEMICCARDONE = 0x2B00333UL,	 //Epidemic Card
+		EPIDEMICCARDTWO = 0x2B00888UL,	 //Epidemic Card
+		EPIDEMICCARDTHREE = 0x2B00AAAUL, //Epidemic Card
+		EPIDEMICCARDFOUR = 0x2B00CCCUL,	 //Epidemic Card
+		EPIDEMICCARDFIVE = 0x2B00DDDUL,	 //Epidemic Card
+		EPIDEMICCARDSIX = 0x2B00EEEUL,	 //Epidemic Card
+		EPIDEMICCARD_MAX = 0x2BFFFFFUL,  //Invalid
 	};
 
 	EpidemicCard(const CardsList& id) : PlayerCard(id, GetCardName(id), GetCardDesc(id)) {}
@@ -215,7 +213,7 @@ private:
 	static const char* GetCardDesc(const uint64_t& id);
 
 public:
-	//Prevent Copy/Assignment
+	///Prevent Copy/Assignment
 	RoleCard(const RoleCard&) = delete;
 	void operator=(const RoleCard&) = delete;
 
@@ -229,16 +227,16 @@ private:
 	static const char* GetCardDesc();
 
 public:
-	//Prevent Copy/Assignment
+	///Prevent Copy/Assignment
 	ReferenceCard(const ReferenceCard&) = delete;
 	void operator=(const ReferenceCard&) = delete;
 
-	//EXAMPLE = 0x0A89CFCUL
+	///EXAMPLE = 0x0A89CFCUL
 	enum CardsList
 	{
-		REFERENCECARD_MIN = 0xA000000UL, //"Invalid"
-		REFERENCECARD = 0xAABCDEFUL,
-		REFERENCECARD_MAX = 0xAFFFFFFUL, //"Invalid"
+		REFERENCECARD_MIN = 0xA000000UL, //Invalid
+		REFERENCECARD = 0xAABCDEFUL,	 //Reference Card
+		REFERENCECARD_MAX = 0xAFFFFFFUL, //Invalid
 	};
 
 	ReferenceCard() : Card(REFERENCECARD, "Reference Card", GetCardDesc()) {}
@@ -258,71 +256,71 @@ private:
 	static bool IsaBlackCity(const uint64_t& id) { return (id > BLACK_MIN) && (id < BLACK_MAX); }
 
 public:
-	//Prevent Copy/Assignment
+	///Prevent Copy/Assignment
 	InfectionCard(const InfectionCard&) = delete;
 	void operator=(const InfectionCard&) = delete;
 
-	//EXAMPLE = 0x0A89CFCUL
+	///EXAMPLE = 0x0A89CFCUL
 	enum CardsList
 	{
-		INFECTIONCARD_MIN = 0xC000000UL, //"Invalid"
-		ALGIERS = CityList::ALGIERS + INFECTIONCARD_MIN,
-		ATLANTA = CityList::ATLANTA + INFECTIONCARD_MIN,
-		BAGHDAD = CityList::BAGHDAD + INFECTIONCARD_MIN,
-		BANGKOK = CityList::BANGKOK + INFECTIONCARD_MIN,
-		BEIJING = CityList::BEIJING + INFECTIONCARD_MIN,
-		BOGOTA = CityList::BOGOTA + INFECTIONCARD_MIN,
-		BUENOSAIRES = CityList::BUENOSAIRES + INFECTIONCARD_MIN,
-		CAIRO = CityList::CAIRO + INFECTIONCARD_MIN,
-		CHENNAI = CityList::CHENNAI + INFECTIONCARD_MIN,
-		CHICAGO = CityList::CHICAGO + INFECTIONCARD_MIN,
-		DELHI = CityList::DELHI + INFECTIONCARD_MIN,
-		ESSEN = CityList::ESSEN + INFECTIONCARD_MIN,
-		HOCHIMINH = CityList::HOCHIMINH + INFECTIONCARD_MIN,
-		HONGKONG = CityList::HONGKONG + INFECTIONCARD_MIN,
-		ISTANBUL = CityList::ISTANBUL + INFECTIONCARD_MIN,
-		JAKARTA = CityList::JAKARTA + INFECTIONCARD_MIN,
-		JOHANNESBURG = CityList::JOHANNESBURG + INFECTIONCARD_MIN,
-		KARACHI = CityList::KARACHI + INFECTIONCARD_MIN,
-		KHARTOUM = CityList::KHARTOUM + INFECTIONCARD_MIN,
-		KINSHASA = CityList::KINSHASA + INFECTIONCARD_MIN,
-		KOLKATA = CityList::KOLKATA + INFECTIONCARD_MIN,
-		LAGOS = CityList::LAGOS + INFECTIONCARD_MIN,
-		LIMA = CityList::LIMA + INFECTIONCARD_MIN,
-		LONDON = CityList::LONDON + INFECTIONCARD_MIN,
-		LOSANGELES = CityList::LOSANGELES + INFECTIONCARD_MIN,
-		MADRID = CityList::MADRID + INFECTIONCARD_MIN,
-		MANILA = CityList::MANILA + INFECTIONCARD_MIN,
-		MEXICO = CityList::MEXICO + INFECTIONCARD_MIN,
-		MIAMI = CityList::MIAMI + INFECTIONCARD_MIN,
-		MILAN = CityList::MILAN + INFECTIONCARD_MIN,
-		MONTREAL = CityList::MONTREAL + INFECTIONCARD_MIN,
-		MOSCOW = CityList::MOSCOW + INFECTIONCARD_MIN,
-		MUMBAI = CityList::MUMBAI + INFECTIONCARD_MIN,
-		NEWYORK = CityList::NEWYORK + INFECTIONCARD_MIN,
-		OSAKA = CityList::OSAKA + INFECTIONCARD_MIN,
-		PARIS = CityList::PARIS + INFECTIONCARD_MIN,
-		RIYADH = CityList::RIYADH + INFECTIONCARD_MIN,
-		SANFRAN = CityList::SANFRAN + INFECTIONCARD_MIN,
-		SANTIAGO = CityList::SANTIAGO + INFECTIONCARD_MIN,
-		SAOPAULO = CityList::SAOPAULO + INFECTIONCARD_MIN,
-		SEOUL = CityList::SEOUL + INFECTIONCARD_MIN,
-		SHANGHAI = CityList::SHANGHAI + INFECTIONCARD_MIN,
-		STPETER = CityList::STPETER + INFECTIONCARD_MIN,
-		SYDNEY = CityList::SYDNEY + INFECTIONCARD_MIN,
-		TAIPEI = CityList::TAIPEI + INFECTIONCARD_MIN,
-		TEHRAN = CityList::TEHRAN + INFECTIONCARD_MIN,
-		TOKYO = CityList::TOKYO + INFECTIONCARD_MIN,
-		WASHINGTON = CityList::WASHINGTON + INFECTIONCARD_MIN,
-		RED_MIN = CityList::RED_MIN + INFECTIONCARD_MIN,
-		RED_MAX = CityList::RED_MAX + INFECTIONCARD_MIN,
-		BLACK_MIN = CityList::BLACK_MIN + INFECTIONCARD_MIN,
-		BLACK_MAX = CityList::BLACK_MAX + INFECTIONCARD_MIN,
-		BLUE_MIN = CityList::BLUE_MIN + INFECTIONCARD_MIN,
-		BLUE_MAX = CityList::BLUE_MAX + INFECTIONCARD_MIN,
-		YELLOW_MIN = CityList::YELLOW_MIN + INFECTIONCARD_MIN,
-		YELLOW_MAX = CityList::YELLOW_MAX + INFECTIONCARD_MIN,
-		INFECTIONCARD_MAX = 0xCFFFFFFUL, //"Invalid"
+		INFECTIONCARD_MIN = 0xC000000UL, //Invalid
+		ALGIERS = CityList::ALGIERS + INFECTIONCARD_MIN,  //Algiers
+		ATLANTA = CityList::ATLANTA + INFECTIONCARD_MIN,  //Atlanta
+		BAGHDAD = CityList::BAGHDAD + INFECTIONCARD_MIN,  //Baghdad
+		BANGKOK = CityList::BANGKOK + INFECTIONCARD_MIN,  //Bangkok
+		BEIJING = CityList::BEIJING + INFECTIONCARD_MIN,  //Beijing
+		BOGOTA = CityList::BOGOTA + INFECTIONCARD_MIN,  //Bogota
+		BUENOSAIRES = CityList::BUENOSAIRES + INFECTIONCARD_MIN,  //Buenos Aires
+		CAIRO = CityList::CAIRO + INFECTIONCARD_MIN,  //Cairo
+		CHENNAI = CityList::CHENNAI + INFECTIONCARD_MIN,  //Chennai
+		CHICAGO = CityList::CHICAGO + INFECTIONCARD_MIN,  //Chicago
+		DELHI = CityList::DELHI + INFECTIONCARD_MIN,  //Delhi
+		ESSEN = CityList::ESSEN + INFECTIONCARD_MIN,  //Essen
+		HOCHIMINH = CityList::HOCHIMINH + INFECTIONCARD_MIN,  //Ho Chi Minh City
+		HONGKONG = CityList::HONGKONG + INFECTIONCARD_MIN,  //Hong Kong
+		ISTANBUL = CityList::ISTANBUL + INFECTIONCARD_MIN,  //Istanbul
+		JAKARTA = CityList::JAKARTA + INFECTIONCARD_MIN,  //Jakarta
+		JOHANNESBURG = CityList::JOHANNESBURG + INFECTIONCARD_MIN,  //Johannesburg
+		KARACHI = CityList::KARACHI + INFECTIONCARD_MIN,  //Karachi
+		KHARTOUM = CityList::KHARTOUM + INFECTIONCARD_MIN,  //Khartoum
+		KINSHASA = CityList::KINSHASA + INFECTIONCARD_MIN,  //Kinshasa
+		KOLKATA = CityList::KOLKATA + INFECTIONCARD_MIN,  //Kolkata
+		LAGOS = CityList::LAGOS + INFECTIONCARD_MIN,  //Lagos
+		LIMA = CityList::LIMA + INFECTIONCARD_MIN,  //Lima
+		LONDON = CityList::LONDON + INFECTIONCARD_MIN,  //London
+		LOSANGELES = CityList::LOSANGELES + INFECTIONCARD_MIN,  //Los Angeles
+		MADRID = CityList::MADRID + INFECTIONCARD_MIN,  //Madrid
+		MANILA = CityList::MANILA + INFECTIONCARD_MIN,  //Manila
+		MEXICO = CityList::MEXICO + INFECTIONCARD_MIN,  //Mexico City
+		MIAMI = CityList::MIAMI + INFECTIONCARD_MIN,  //Miami
+		MILAN = CityList::MILAN + INFECTIONCARD_MIN,  //Milan
+		MONTREAL = CityList::MONTREAL + INFECTIONCARD_MIN,  //Montreal
+		MOSCOW = CityList::MOSCOW + INFECTIONCARD_MIN,  //Moscow
+		MUMBAI = CityList::MUMBAI + INFECTIONCARD_MIN,  //Mumbai
+		NEWYORK = CityList::NEWYORK + INFECTIONCARD_MIN,  //NewYork
+		OSAKA = CityList::OSAKA + INFECTIONCARD_MIN,  //Osaka
+		PARIS = CityList::PARIS + INFECTIONCARD_MIN,  //Paris
+		RIYADH = CityList::RIYADH + INFECTIONCARD_MIN,  //Riyadh
+		SANFRAN = CityList::SANFRAN + INFECTIONCARD_MIN,  //San Francisco
+		SANTIAGO = CityList::SANTIAGO + INFECTIONCARD_MIN,  //Santiago
+		SAOPAULO = CityList::SAOPAULO + INFECTIONCARD_MIN,  //Sao Paulo
+		SEOUL = CityList::SEOUL + INFECTIONCARD_MIN,  //Seoul
+		SHANGHAI = CityList::SHANGHAI + INFECTIONCARD_MIN,  //Shanghai
+		STPETER = CityList::STPETER + INFECTIONCARD_MIN,  //StPetersburg
+		SYDNEY = CityList::SYDNEY + INFECTIONCARD_MIN,  //Sydney
+		TAIPEI = CityList::TAIPEI + INFECTIONCARD_MIN,  //Taipei
+		TEHRAN = CityList::TEHRAN + INFECTIONCARD_MIN,  //Tehran
+		TOKYO = CityList::TOKYO + INFECTIONCARD_MIN,  //Tokyo
+		WASHINGTON = CityList::WASHINGTON + INFECTIONCARD_MIN,  //Washington
+		RED_MIN = CityList::RED_MIN + INFECTIONCARD_MIN,  //Invalid
+		RED_MAX = CityList::RED_MAX + INFECTIONCARD_MIN,  //Invalid
+		BLACK_MIN = CityList::BLACK_MIN + INFECTIONCARD_MIN,  //Invalid
+		BLACK_MAX = CityList::BLACK_MAX + INFECTIONCARD_MIN,  //Invalid
+		BLUE_MIN = CityList::BLUE_MIN + INFECTIONCARD_MIN,  //Invalid
+		BLUE_MAX = CityList::BLUE_MAX + INFECTIONCARD_MIN,  //Invalid
+		YELLOW_MIN = CityList::YELLOW_MIN + INFECTIONCARD_MIN,  //Invalid
+		YELLOW_MAX = CityList::YELLOW_MAX + INFECTIONCARD_MIN,  //Invalid
+		INFECTIONCARD_MAX = 0xCFFFFFFUL, //Invalid
 	};
 
 	InfectionCard(const CardsList& id) : Card(id, GetCardName(id), GetCardDesc(id)), m_Color(GetCityColor()), m_CityID((CityID)(id - INFECTIONCARD_MIN)) {}

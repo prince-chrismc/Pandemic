@@ -17,7 +17,7 @@ private:
 public:
 	InfectionRate() : m_Position(0) {}
 
-	//Prevent Copy/Assignment
+	///Prevent Copy/Assignment
 	InfectionRate(const InfectionRate&) = delete;
 	void operator=(const InfectionRate&) = delete;
 
@@ -34,7 +34,7 @@ public:
 		Builder() : m_Position(0) {}
 
 	public:
-		//Prevent Copy/Assignment
+		///Prevent Copy/Assignment
 		Builder(const Builder&) = delete;
 		void operator=(const Builder&) = delete;
 
@@ -53,7 +53,7 @@ private:
 public:
 	OutbreakMarker() : m_Position(0) {}
 
-	//Prevent Copy/Assignment
+	///Prevent Copy/Assignment
 	OutbreakMarker(const OutbreakMarker&) = delete;
 	void operator=(const OutbreakMarker&) = delete;
 
@@ -70,7 +70,7 @@ public:
 		Builder() : m_Position(0) {}
 
 	public:
-		//Prevent Copy/Assignment
+		///Prevent Copy/Assignment
 		Builder(const Builder&) = delete;
 		void operator=(const Builder&) = delete;
 
