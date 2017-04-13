@@ -10,7 +10,7 @@
 #include "Deck.h"
 #include "Cure.h"
 
-class Board // Container Class
+class Board final // Container Class
 {
 	friend class GameEngine;
 private:
@@ -29,5 +29,9 @@ protected:
 public:
 	Board() : m_Map(), m_InfectRate(), m_OutBreak(), m_Cubes(), m_InfecDeck(), m_PlayerDeck(), m_RoleDeck(), m_Cures(), m_Centers() {}
 	~Board() {}
+
+	//Prevent Copy/Assignment
+	Board(const Board&) = delete;
+	void operator=(const Board&) = delete;
 };
 
