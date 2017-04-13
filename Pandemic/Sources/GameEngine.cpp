@@ -353,6 +353,7 @@ void GameEngine::Outbreak(City* city, std::vector<City*> skip)
 		}
 	CheckIfGameOver();
 	}
+	skip.clear();
 }
 // Outbreak ---------------------------------------------------------------------------------------
 
@@ -374,12 +375,14 @@ void GameEngine::Epidemic()
 
 		City* city = m_Board.m_Map.GetCityWithID(cid);
 		std::cout << "Occurring in: " << city->GetCityName() << std::endl;
-		uint16_t i = 0;
-		for (; i < 3; i += 1)
+		bool nooutbreak = true;
+		for (uint16_t i = 0; i < 3; i += 1)
 		{
 			// 2.1. Otbreaks if Need be
 			if (city->GetNumberOfCubes(citycolor) == 3)
 			{
+				nooutbreak = false;
+				Notify(city->GetCityName(), i);
 				Outbreak(city);
 				break;
 			}
@@ -387,7 +390,7 @@ void GameEngine::Epidemic()
 			city->AddCube(m_Board.m_Cubes.TakeCube(citycolor));
 			CheckIfGameOver();
 		}
-		Notify(city->GetCityName(), i);
+		if(nooutbreak) Notify(city->GetCityName(), 3);
 
 		// 3. Intensify reshuffle infect discard and add on top of deck
 		m_Board.m_InfecDeck.Intensify();
@@ -1712,7 +1715,6 @@ void GameEngine::LoadGame()
 
 		InfectionDeck::Builder infecdeckbuilder;
 		infecdeckbuilder.ParseDeck(infecdeck).ParseDiscard(infecdiscard);
-
 		m_Board.m_InfecDeck.InputLoadedGame(infecdeckbuilder.GetDeck(), infecdeckbuilder.GetDiscard());
 	}
 
@@ -1730,7 +1732,6 @@ void GameEngine::LoadGame()
 
 		PlayerDeck::Builder playerdeckbuilder;
 		playerdeckbuilder.ParseDeck(playdeck).ParseDiscard(playdiscard);
-
 		m_Board.m_PlayerDeck.InputLoadedGame(playerdeckbuilder.GetDeck(), playerdeckbuilder.GetDiscard());
 	}
 
@@ -1743,9 +1744,7 @@ void GameEngine::LoadGame()
 		buffer = nullptr;
 
 		RoleDeck::Builder roledeckbuilder;
-		roledeckbuilder.ParseDeck(role);
-
-		m_Board.m_RoleDeck.InputLoadedGame(roledeckbuilder.GetDeck());
+		m_Board.m_RoleDeck.InputLoadedGame(roledeckbuilder.ParseDeck(role).GetDeck());
 	}
 
 	// Cities -------------------------------------------------------------------------------------
@@ -1806,9 +1805,11 @@ void GameEngine::LoadGame()
 			players = players.substr(slash + 2);
 
 			Player::Builder playerbuilder;
-			playerbuilder.ParsePlayer(play);
+			gamers.emplace_back(playerbuilder.ParsePlayer(play).GetPlayer());
+			
+			m_PlayersObservers.emplace_back(new PlayerObserver(gamers.back()));
+			gamers.back()->RegistarObserver(m_PlayersObservers.back());
 
-			gamers.emplace_back(playerbuilder.GetPlayer());
 		}
 		m_Players = gamers;
 	}
@@ -1822,8 +1823,7 @@ void GameEngine::LoadGame()
 		buffer = nullptr;
 
 		CureMakers::Builder curesbuilder;
-		curesbuilder.ParseBlackCure(rate).ParseBlueCure(rate).ParseRedCure(rate).ParseYellowCure(rate);
-
+		curesbuilder.ParseRedCure(rate).ParseBlueCure(rate).ParseYellowCure(rate).ParseBlackCure(rate);
 		m_Board.m_Cures.InputLoadedGame(curesbuilder.GetRedCure(), curesbuilder.GetBlueCure(), curesbuilder.GetYellowCure(), curesbuilder.GetBlackCure());
 	}
 
@@ -1836,9 +1836,7 @@ void GameEngine::LoadGame()
 		buffer = nullptr;
 
 		InfectionRate::Builder infecratebuilder;
-		infecratebuilder.ParseInfectionRate(rate);
-
-		m_Board.m_InfectRate.InputLoadedGame(infecratebuilder.GetPosition());
+		m_Board.m_InfectRate.InputLoadedGame(infecratebuilder.ParseInfectionRate(rate).GetPosition());
 		
 	}
 
@@ -1851,9 +1849,7 @@ void GameEngine::LoadGame()
 		buffer = nullptr;
 
 		OutbreakMarker::Builder outbreakmarkerbuilder;
-		outbreakmarkerbuilder.ParseOutbreakMarker(marker);
-
-		m_Board.m_OutBreak.InputLoadedGame(outbreakmarkerbuilder.GetPosition());
+		m_Board.m_OutBreak.InputLoadedGame(outbreakmarkerbuilder.ParseOutbreakMarker(marker).GetPosition());
 	}
 
 	//ResearchCenters -----------------------------------------------------------------------------
@@ -1888,7 +1884,7 @@ void GameEngine::LoadGame()
 		buffer = nullptr;
 
 		InfectionLog::Builder infectlognuilder;
-		m_Log->InputLoadedGame(infectlognuilder.GetLog());
+		m_Log->InputLoadedGame(infectlognuilder.ParseLog(log).GetLog());
 	}
 
 	// Turn Counter -------------------------------------------------------------------------------
@@ -1908,7 +1904,7 @@ void GameEngine::LoadGame()
 }
 // LoadGame ---------------------------------------------------------------------------------------
 
-
+// Notify -----------------------------------------------------------------------------------------
 void GameEngine::Notify(std::string name, uint16_t cubes)
 {
 	for each(InfectionLog* obv in m_observers)
@@ -1917,6 +1913,7 @@ void GameEngine::Notify(std::string name, uint16_t cubes)
 		obv->Update(name, cubes);
 	}
 }
+// Notify -----------------------------------------------------------------------------------------
 
 // Initialize -------------------------------------------------------------------------------------
 void GameEngine::Initialize()
@@ -1973,6 +1970,7 @@ void GameEngine::Launch()
 	catch (const GameOverException& e)
 	{
 		std::cout << "\n\n ---- GAME OVER! ----\n  You lost due to: " << e.what() << std::endl;
+		std::cout << m_Board.m_Map.GetMapDiagram() << std::endl;
 		bfs::path remove(m_Filename);
 		if (bfs::exists(remove))
 			if (bfs::is_regular_file(remove))
