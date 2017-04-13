@@ -19,6 +19,10 @@ public:
 	void Initialize();
 	void Launch();
 
+	//Prevent Copy/Assignment
+	GameEngine(const GameEngine&) = delete;
+	void operator=(const GameEngine&) = delete;
+
 private:
 	Board m_Board;
 	InfectionLog* m_Log;
