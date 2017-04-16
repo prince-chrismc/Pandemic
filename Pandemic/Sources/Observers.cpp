@@ -140,3 +140,8 @@ void WorldObserver::Update()
 		"  * = Research Center\t\t[ red, blue, yellow, black ]\n" << "  Paris  - " << Par << "\tMilan   - " << Mil << "\n";
 	std::cout << ss.str();
 }
+
+void CureObserver::Update()
+{
+	std::cout << "Red Cure: " << std::string(dynamic_cast<CureSubject*>(m_Subject)->IsCured(Color::RED) ? "Cured" : "" + dynamic_cast<CureSubject*>(m_Subject)->IsEradicated(Color::RED) ? "Eradicated" : "") << std::endl <<  "Blue Cure: " << std::string(dynamic_cast<CureSubject*>(m_Subject)->IsCured(Color::BLUE) ? "Cured" : "" + dynamic_cast<CureSubject*>(m_Subject)->IsEradicated(Color::BLUE) ? "Eradicated" : "") << std::endl << "Yellow Cure: " << std::string(dynamic_cast<CureSubject*>(m_Subject)->IsCured(Color::YELLOW) ? "Cured" : "" + dynamic_cast<CureSubject*>(m_Subject)->IsEradicated(Color::YELLOW) ? "Eradicated" : "") << std::endl << "Black Cure: " << std::string(dynamic_cast<CureSubject*>(m_Subject)->IsCured(Color::BLACK) ? "Cured" : "" + dynamic_cast<CureSubject*>(m_Subject)->IsEradicated(Color::BLACK) ? "Eradicated" : "") << std::endl;
+}

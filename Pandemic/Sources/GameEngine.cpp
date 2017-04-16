@@ -249,7 +249,7 @@ void GameEngine::InfectCity(const uint16_t& cubesToAdd)
 
 	City* city = m_Board.m_Map->GetCityWithID(cid); // get city
 	Color c = city->GetCityColor();
-	if (m_Board.m_Cures.IsEradicated(c)) // if eradicated do add cubes
+	if (m_Board.m_Cures->IsEradicated(c)) // if eradicated do add cubes
 		return;
 
 	std::vector<RoleList::Roles> rolesincity; // lets figure out whos in the city
@@ -269,7 +269,7 @@ void GameEngine::InfectCity(const uint16_t& cubesToAdd)
 		case RoleList::QUARANTINE:
 			return;
 		case RoleList::MEDIC:
-			if (m_Board.m_Cures.IsCured(c))
+			if (m_Board.m_Cures->IsCured(c))
 				return;
 		default:
 			break;
@@ -367,7 +367,7 @@ void GameEngine::Epidemic()
 	// 2. Infect Last Card of InfectionDeck with at most 3 Cubes
 	InfectionCard* ic = m_Board.m_InfecDeck.DrawCardForEpidemic();
 	Color citycolor = ic->GetCityColor();
-	if (m_Board.m_Cures.IsNotEradicated(citycolor))
+	if (m_Board.m_Cures->IsNotEradicated(citycolor))
 	{
 		City::CityID cid = (City::CityID)(ic->GetNumID() - InfectionCard::INFECTIONCARD_MIN);
 		delete ic; ic = nullptr;
@@ -1248,13 +1248,15 @@ uint16_t GameEngine::ExecuteTreateDisease(const uint16_t & pos, const CityList::
 	{
 	case RoleList::MEDIC:
 		ExecuteTreateDiseaseAsMedic(city);
-		city->PrintInformation();
 		break;
 	default:
 		m_Board.m_Cubes.PlaceCube(city->RemoveCube());
-		city->PrintInformation();
 		break;
 	}
+	city->PrintInformation();
+
+
+
 	CheckIfGameOver();
 	return 1;
 }
@@ -1395,17 +1397,20 @@ uint16_t GameEngine::ExecuteCureDisease(const uint16_t & pos, const CityList::Ci
 	Color cc = DetermineCureColor(pos);
 	if (cc != Color::INVALID)
 	{
-		m_Board.m_Cures.CureDiscover(cc);
-		for (size_t k = 0; k < m_Players.at(pos)->m_Hand.size(); k += 1)
+		m_Board.m_Cures->CureDiscover(cc);
+		size_t k = 0;
+		for ( /* no init */; k < m_Players.at(pos)->m_Hand.size() && k < 5; k += 1)
 		{
 			if (PlayerCardFactory::IsaCityCard(m_Players.at(pos)->m_Hand.at(k)->GetNumID()))
 				if (static_cast<CityCard*>(m_Players.at(pos)->m_Hand.at(k))->GetCityColor() == cc)
 					m_Board.m_PlayerDeck.DiscardCard(m_Players.at(pos)->RemoveCardAt((uint16_t)k));
-			/*
-				TODO: this should be counted... its possible to delete extra cards...
-				- deletion should be choosen by player...
-			*/
 		}
+
+#if _DEBUG
+		if (k != 4)
+			throw GameErrorException("Did not delete correct number of cards!");
+#endif // _DEBUG
+
 	}
 	CheckIfGameWon();
 
@@ -1540,6 +1545,7 @@ uint16_t GameEngine::ExecuteQuietNight(const uint16_t & pos, const CityList::Cit
 			}
 	}
 
+	std::cout << "\n  Next Infection Phase Will Be Skiped\n";
 	m_SkipNextInfectionPhase = true;
 
 	return 0;
@@ -1575,7 +1581,7 @@ void GameEngine::CheckIfGameOver()
 // CheckIfGameWon ---------------------------------------------------------------------------------
 void GameEngine::CheckIfGameWon()
 {
-	if (m_Board.m_Cures.IsAllCuresDiscovered()) throw GameWonException("all cures have been discovered!");
+	if (m_Board.m_Cures->IsAllCuresDiscovered()) throw GameWonException("all cures have been discovered!");
 }
 // CheckIfGameWon ---------------------------------------------------------------------------------
 
@@ -1617,7 +1623,7 @@ void GameEngine::SaveGame()
 	myfile << "\n";
 
 	// Cures --------------------------------------------------------------------------------------
-	myfile << m_Board.m_Cures.GetSaveOutput();
+	myfile << m_Board.m_Cures->GetSaveOutput();
 	myfile << "\n";
 
 	// Infection Rate -----------------------------------------------------------------------------
@@ -1820,7 +1826,7 @@ void GameEngine::LoadGame()
 		delete[] buffer;
 		buffer = nullptr;
 
-		m_Board.m_Cures.InputLoadedGame(CureMakers::Builder::GetInstance().ParseCures(rate).GetRedCure(), CureMakers::Builder::GetInstance().GetBlueCure(), CureMakers::Builder::GetInstance().GetYellowCure(), CureMakers::Builder::GetInstance().GetBlackCure());
+		m_Board.m_Cures->InputLoadedGame(CureMakers::Builder::GetInstance().ParseCures(rate).GetRedCure(), CureMakers::Builder::GetInstance().GetBlueCure(), CureMakers::Builder::GetInstance().GetYellowCure(), CureMakers::Builder::GetInstance().GetBlackCure());
 	}
 
 	// Infection Rate -----------------------------------------------------------------------------
