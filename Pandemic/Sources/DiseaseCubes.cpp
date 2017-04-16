@@ -1,5 +1,20 @@
 #include "DiseaseCubes.h"
 
+bool DiseaseCubePile::IsFull(const Color & color)
+{
+	switch (color)
+	{
+	case Color::RED:
+		return m_Red.CubesLeft() == 24;
+	case Color::YELLOW:
+		return m_Yellow.CubesLeft() == 24;
+	case Color::BLUE:
+		return m_Blue.CubesLeft() == 24;
+	case Color::BLACK:
+		return m_Black.CubesLeft() == 24;
+	}
+}
+
 DiseaseCube* DiseaseCubePile::TakeCube(const Color& color)
 {
 	DiseaseCube* dc = nullptr;
@@ -21,8 +36,9 @@ DiseaseCube* DiseaseCubePile::TakeCube(const Color& color)
 	return dc;
 }
 
-void DiseaseCubePile::PlaceCube(DiseaseCube* dc)
+const Color& DiseaseCubePile::PlaceCube(DiseaseCube* dc)
 {
+	Color result = dc->GetColor();
 	switch (dc->GetColor())
 	{
 	case Color::RED:
@@ -38,4 +54,5 @@ void DiseaseCubePile::PlaceCube(DiseaseCube* dc)
 		m_Black.PlaceCube(dc);
 		break;
 	}
+	return result;
 }
