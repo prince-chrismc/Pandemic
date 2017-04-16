@@ -12,12 +12,12 @@ class InfectionLog final : public IObserver
 private:
 	std::vector<std::pair<std::string, uint16_t>> m_Log;
 
-	void Update();
+	void Update(); // custom because a member of a class can not have a pointer to the object it is within
 
 public:
 	InfectionLog() : IObserver(nullptr), m_Log() {}
 
-	void Update(std::string name, uint16_t cubes);
+	void Update(std::string name, uint16_t cubes); // custom because a member of a class can not have a pointer to the object it is within
 	std::string GetSaveOutput();
 	void InputLoadedGame(std::vector<std::pair<std::string, uint16_t>> log);
 
