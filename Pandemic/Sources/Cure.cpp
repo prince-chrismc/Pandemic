@@ -75,6 +75,23 @@ bool CureMakers::IsNotEradicated(const Color & color)
 	}
 }
 
+bool CureMakers::IsEradicated(const Color & color)
+{
+	switch (color)
+	{
+	case Color::RED:
+		return m_Red.IsEradicated();
+	case Color::YELLOW:
+		return m_Yellow.IsEradicated();
+	case Color::BLUE:
+		return m_Blue.IsEradicated();
+	case Color::BLACK:
+		return m_Black.IsEradicated();
+	default:
+		return false;
+	}
+}
+
 CureMakers::Builder & CureMakers::Builder::ParseRedCure(std::string loaded)
 {
 	std::stringstream ss(loaded.at(0));

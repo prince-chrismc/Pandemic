@@ -18,14 +18,18 @@ private:
 public:
 	Cure(const Color& color) : m_Color(color), m_State(UNDISCOVERED) {}
 
-	/// Mutator/Accessor
+	/// file i/o
 	std::string GetState() { return std::to_string(m_State); }
 	void SetState(const uint16_t& state) { m_State = (State)state; }
 
+	/// change state
 	void CureDiscover() { m_State = KNOWN; }
 	void EradicateDisease() { m_State = ERADICATED; }
-	bool IsCured() { return (m_State == KNOWN); }
+
+	///checks
+	bool IsCured() { return (m_State == KNOWN) || (m_State == ERADICATED); }
 	bool IsNotEradicated() { return (m_State != ERADICATED); }
+	bool IsEradicated() { return (m_State == ERADICATED); }
 };
 
 class RedCure final : public Cure { public: RedCure() : Cure(Color::RED) {} };
@@ -52,7 +56,7 @@ public:
 	void EradicateDisease(const Color& color);
 	bool IsCured(const Color& color);
 	bool IsNotEradicated(const Color& color);
-	bool IsEradicated(const Color& color) { return !IsNotEradicated(color); }
+	bool IsEradicated(const Color& color);
 	bool IsAllCuresDiscovered() { return m_Red.IsCured() && m_Yellow.IsCured() && m_Blue.IsCured() && m_Black.IsCured(); }
 	std::string GetSaveOutput() { return (m_Red.GetState() + m_Blue.GetState() + m_Yellow.GetState() + m_Black.GetState()); } //FilePrint
 	void InputLoadedGame(const uint16_t& red, const uint16_t& blue, const uint16_t& yellow, const uint16_t& black) { m_Red.SetState(red); m_Blue.SetState(blue); m_Yellow.SetState(yellow); m_Black.SetState(black); }
