@@ -1254,18 +1254,25 @@ uint16_t GameEngine::ExecuteShuttleFlight(const uint16_t & pos, const CityList::
 uint16_t GameEngine::ExecuteTreateDisease(const uint16_t & pos, const CityList::CityID & cityID)
 {
 	City* city = m_Board.m_Map->GetCityWithID(cityID);
+	Color removed;
 	switch (m_Players.at(pos)->GetRoleID())
 	{
 	case RoleList::MEDIC:
-		ExecuteTreateDiseaseAsMedic(city);
+		removed = ExecuteTreateDiseaseAsMedic(city);
 		break;
 	default:
-		m_Board.m_Cubes.PlaceCube(city->RemoveCube());
+		removed = m_Board.m_Cubes.PlaceCube(city->RemoveCube());
 		break;
 	}
 	city->PrintInformation();
 
-
+	if (m_Board.m_Cures->IsCured(removed))
+	{
+		if (m_Board.m_Cubes.IsFull(removed))
+		{
+			m_Board.m_Cures->EradicateDisease(removed);
+		}
+	}
 
 	CheckIfGameOver();
 	return 1;
@@ -1273,13 +1280,15 @@ uint16_t GameEngine::ExecuteTreateDisease(const uint16_t & pos, const CityList::
 // ExecuteTreateDisease ---------------------------------------------------------------------------
 
 // ExecuteTreateDiseaseAsMedic --------------------------------------------------------------------
-void GameEngine::ExecuteTreateDiseaseAsMedic(City* city)
+const Color& GameEngine::ExecuteTreateDiseaseAsMedic(City* city)
 {
 	std::vector<DiseaseCube*> cubes = city->RemoveCubeAsMedic();
+	Color result = cubes.at(0)->GetColor();
 	for each(DiseaseCube* dc in cubes)
 	{
 		m_Board.m_Cubes.PlaceCube(dc);
 	}
+	return result;
 }
 // ExecuteTreateDiseaseAsMedic --------------------------------------------------------------------
 
