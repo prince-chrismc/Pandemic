@@ -9,14 +9,15 @@ namespace bfs = boost::filesystem;
 
 GameEngine::GameEngine() : m_Board(), m_Players(), m_PlayersObservers(), m_Log(new InfectionLog()), m_Filename(MakeFileName()), m_PreGameComplete(false), m_SkipNextInfectionPhase(false), m_TurnCounter(0)
 {
+	// print basic game opening message
 	std::cout << "\n               -------------- PANDEMIC -------------\nDo you have what it takes to save humanity? As skilled members of a disease - fighting team, you must\nkeep four deadly diseases at bay while discovering their cures.\nYou and your teammates will travel across the globe, treating infections while finding resources for\ncures. You must work together, using your individual strengths, to succeed.The clock is ticking as\noutbreaks and epidemics fuel the spreading plagues.\nCan you find all four cures in time? The fate of humanity is in your hands!\n\n" << std::endl;
 
-	RegistarObserver(m_Log);
+	RegistarObserver(m_Log); // to notify on infections
 }
 
 GameEngine::~GameEngine()
 {
-	for (size_t pos = 0; pos < m_Players.size(); pos += 1)
+	for (size_t pos = 0; pos < m_Players.size(); pos += 1) // delete players
 	{
 		if (m_Players.at(pos) != nullptr)
 		{
@@ -26,7 +27,7 @@ GameEngine::~GameEngine()
 	}
 	m_Players.clear();
 
-	for each(PlayerObserver* obv in m_PlayersObservers)
+	for each(PlayerObserver* obv in m_PlayersObservers) // delete players observers
 	{
 		if (obv != nullptr)
 		{
@@ -43,8 +44,9 @@ GameEngine::~GameEngine()
 std::string GameEngine::MakeFileName()
 {
 	time_t t = time(0);
-	struct tm* now = localtime(&t);
+	struct tm* now = localtime(&t); // get local time
 
+	// build file path + name with padding
 	std::string filename = "bin/Pandemic-";
 	filename += std::to_string(now->tm_year + 1900);
 	if (now->tm_mon + 1 < 10) filename += "0";
@@ -67,16 +69,17 @@ std::string GameEngine::MakeFileName()
 // RegisterPlayer ---------------------------------------------------------------------------------
 void GameEngine::RegisterPlayer(const std::string & newPlayerName)
 {
+	// with name complete the details 
 	m_Players.emplace_back(new Player(newPlayerName, m_Board.m_RoleDeck.DrawCard()));
-	m_PlayersObservers.emplace_back(new PlayerObserver(m_Players.back()));
-	m_Players.back()->RegistarObserver(m_PlayersObservers.back());
+	m_PlayersObservers.emplace_back(new PlayerObserver(m_Players.back())); // make new player observer with the last player added
+	m_Players.back()->RegistarObserver(m_PlayersObservers.back()); // give latest player his observer's pointer
 }
 // RegisterPlayer ---------------------------------------------------------------------------------
 
 // PlayerSetup ------------------------------------------------------------------------------------
 void GameEngine::PlayersSetup()
 {
-	std::cout << "How many players will there be?" << std::endl;
+	std::cout << "How many players will there be?" << std::endl; //players
 	uint16_t num = GetUserInput(2, 4);
 
 	for (uint16_t i = 0; i < num; i += 1)
@@ -93,7 +96,7 @@ void GameEngine::PlayersSetup()
 	//random shuffle =)
 	std::random_device rd;
 	std::mt19937 g(rd());
-	std::shuffle(m_Players.begin(), m_Players.end(), g);
+	std::shuffle(m_Players.begin(), m_Players.end(), g); // shuffle players for fun
 
 	for each(Player* joeur in m_Players) // draw # of cards based on number of players
 	{
@@ -116,10 +119,10 @@ void GameEngine::PlayersSetup()
 // DifficultySetup --------------------------------------------------------------------------------
 void GameEngine::DifficultySetup()
 {
-	std::cout << "1. Introductory 2. Standard 3. Heroic\nChoose your difficulty... ";
+	std::cout << "Choose your difficulty...\n 1. Introductory 2. Standard 3. Heroic\n"; // relates to number of epidemic cards
 	uint16_t dif = GetUserInput(1, 3);
 
-	m_Board.m_PlayerDeck.IncreaseDifficulty(dif);
+	m_Board.m_PlayerDeck.IncreaseDifficulty(dif); // add epidemics
 }
 // DifficultySetup --------------------------------------------------------------------------------
 
@@ -147,13 +150,15 @@ void GameEngine::TurnSequence(const uint16_t & pos)
 	TurnActionsPhase(pos);
 	TurnDrawPhase(pos);
 	TurnInfectPhase();
-	SaveGame();
+	SaveGame(); // auto save
 }
 // TurnSequence -----------------------------------------------------------------------------------
 
 // GetUserInput -----------------------------------------------------------------------------------
 const uint16_t GameEngine::GetUserInput(const uint16_t & lower, const uint16_t & upper)
 {
+	// this is a gneral utility function to get a valid input between two values (inclusively)
+	// adding this removed aprox. 200 lines of code lol
 	uint16_t selection = 0;
 	do
 	{
@@ -178,15 +183,16 @@ void GameEngine::TurnActionsPhase(const uint16_t & pos)
 	std::cout << std::endl;
 	for (size_t i = 0; i < 4; /* no itor, determined by ExecuteMove() */)
 	{
-		m_Board.m_Map->Notify();
-		m_Players.at(pos)->Notify();
-		MovesPerCity options = CalculatePlayerOpt(pos);
+		m_Board.m_Map->Notify(); // force map print
+		m_Players.at(pos)->Notify(); //force play details print
 
+		// check what player can do from list of all possible game moves
+		MovesPerCity options = CalculatePlayerOpt(pos);
 		std::cout << "Select your desired move from the list below... (#)" << std::endl;
 		PlayerMoves moves = DeterminePlayerMoves(options);
-		
 		uint16_t selection = GetUserInput(1, (uint16_t)moves.size());
 
+		// execute thier selection
 		i += ExecuteMove(pos, moves.at(selection).first, moves.at(selection).second);		
 	}
 }
@@ -231,10 +237,10 @@ void GameEngine::TurnInfectPhase()
 		return;
 	}
 
-	for (size_t i = 0; i < m_Board.m_InfectRate.GetRate(); i++)
+	for (size_t i = 0; i < m_Board.m_InfectRate.GetRate(); i++) // based on infection rate
 	{
-		InfectCity();
-		CheckIfGameOver();
+		InfectCity(); // do the obvious
+		CheckIfGameOver(); // check if game over .... these functions have good names xD
 	}
 }
 // TurnInfectPhase --------------------------------------------------------------------------------
@@ -249,7 +255,8 @@ void GameEngine::InfectCity(const uint16_t& cubesToAdd)
 
 	City* city = m_Board.m_Map->GetCityWithID(cid); // get city
 	Color c = city->GetCityColor();
-	if (m_Board.m_Cures->IsEradicated(c)) // if eradicated do add cubes
+
+	if (m_Board.m_Cures->IsEradicated(c)) // if eradicated do NOT add cubes
 		return;
 
 	std::vector<RoleList::Roles> rolesincity; // lets figure out whos in the city
@@ -266,10 +273,10 @@ void GameEngine::InfectCity(const uint16_t& cubesToAdd)
 	{
 		switch (roleid)
 		{
-		case RoleList::QUARANTINE:
+		case RoleList::QUARANTINE: // dont add cubes
 			return;
 		case RoleList::MEDIC:
-			if (m_Board.m_Cures->IsCured(c))
+			if (m_Board.m_Cures->IsCured(c)) // dont add cubes iff cured
 				return;
 		default:
 			break;
@@ -277,37 +284,38 @@ void GameEngine::InfectCity(const uint16_t& cubesToAdd)
 	}
 
 	uint16_t cubesActuallyAdded = 0;
-	for (size_t i = 0; i < cubesToAdd; i++)
+	for (size_t i = 0; i < cubesToAdd; i++) // add as many cubes as need
 	{
-		if (city->GetNumberOfCubes(city->GetCityColor()) == 3)
+		if (city->GetNumberOfCubes(city->GetCityColor()) == 3) // if city has 3
 		{
 			if(cubesActuallyAdded > 0) 
-				Notify(city->GetCityName(), cubesActuallyAdded);
+				Notify(city->GetCityName(), cubesActuallyAdded); // if cubes were added notify infect log
 
-			Outbreak(city);
+			Outbreak(city); // outbreak occures!!!
 			return;
 		}
 		else
 		{
-			city->AddCube(m_Board.m_Cubes.TakeCube(city->GetCityColor()));
+			city->AddCube(m_Board.m_Cubes.TakeCube(city->GetCityColor())); // lets add a cube!
 			cubesActuallyAdded += 1;
 		}
 		CheckIfGameOver();
 	}
 
-	Notify(city->GetCityName(), cubesActuallyAdded);
+	Notify(city->GetCityName(), cubesActuallyAdded); // record in log
 }
 // InfectCity -------------------------------------------------------------------------------------
 
 // IsQuarentineSpecialistNearBy -------------------------------------------------------------------
 bool GameEngine::IsQuarentineSpecialistNearBy(City * city)
 {
+	//utility fuction 
 	for each(Player* joeur in m_Players)
 	{
-		if (joeur->GetRoleID() == RoleList::QUARANTINE)
+		if (joeur->GetRoleID() == RoleList::QUARANTINE) // if any player is quarantine spec
 		{
 			CityList::CityID cid = joeur->GetCityID();
-			for each(City* ville in city->GetNearByCities())
+			for each(City* ville in city->GetNearByCities()) // look if they are in any near by ones
 			{
 				if (ville->GetCityID() == cid)
 					return true;
@@ -322,6 +330,7 @@ bool GameEngine::IsQuarentineSpecialistNearBy(City * city)
 // Outbreak ---------------------------------------------------------------------------------------
 void GameEngine::Outbreak(City* city, std::vector<City*> skip)
 {
+	// pre conditions
 	if (IsQuarentineSpecialistNearBy(city)) // make sure quarantine specialist isnt nearby
 		return;
 
@@ -335,6 +344,7 @@ void GameEngine::Outbreak(City* city, std::vector<City*> skip)
 		}
 	}		
 
+	// main scenario
 	std::cout << "  --- OUTBREAK " << std::string((skip.size() > 0) ? "CONTINUED " : "") << "--- " << city->GetCityName() << " --- " << std::endl;
 	m_Board.m_OutBreak.IncreaseRate();
 	std::cout << "Outbreak Marker: " << m_Board.m_OutBreak.GetMarker() << std::endl;
@@ -342,23 +352,24 @@ void GameEngine::Outbreak(City* city, std::vector<City*> skip)
 
 	for each(City* connected in city->GetNearByCities())
 	{
-		bool alreadyhit = false;
-		if (skip.size() > 0)
+		bool alreadyhit = false; // lets check if the connected city has already been hit in the chain
+		if (skip.size() > 0) // chainning is happening
 			for each(City* skipped in skip)
-				if (connected->GetCityID() == skipped->GetCityID())
+				if (connected->GetCityID() == skipped->GetCityID()) // compare current connected with alreay hit cities
 					alreadyhit = true;
 
-		if(alreadyhit) continue;
+		if(alreadyhit) continue; // if indeed a chainned city let skip it 
 
-		if (connected->GetNumberOfCubes(city->GetCityColor()) == 3)
+		if (connected->GetNumberOfCubes(city->GetCityColor()) == 3) 
 		{
-			skip.emplace_back(city);
-			Outbreak(connected, skip);
+			// chain of outbreaks!
+			skip.emplace_back(connected); // mark as to be skipped 
+			Outbreak(connected, skip); 
 		}
 		else
 		{
-			connected->AddCube(m_Board.m_Cubes.TakeCube(city->GetCityColor()));
-			Notify(connected->GetCityName());
+			connected->AddCube(m_Board.m_Cubes.TakeCube(city->GetCityColor())); // let's add a cube baby
+			Notify(connected->GetCityName()); // record in log
 		}
 	CheckIfGameOver();
 	}
@@ -377,33 +388,34 @@ void GameEngine::Epidemic()
 	// 2. Infect Last Card of InfectionDeck with at most 3 Cubes
 	InfectionCard* ic = m_Board.m_InfecDeck.DrawCardForEpidemic();
 	Color citycolor = ic->GetCityColor();
-	if (m_Board.m_Cures->IsNotEradicated(citycolor))
-	{
-		City::CityID cid = (City::CityID)(ic->GetNumID() - InfectionCard::INFECTIONCARD_MIN);
-		delete ic; ic = nullptr;
+	City::CityID cid = (City::CityID)(ic->GetNumID() - InfectionCard::INFECTIONCARD_MIN);
+	City* city = m_Board.m_Map->GetCityWithID(cid);
 
-		City* city = m_Board.m_Map->GetCityWithID(cid);
+	if (m_Board.m_Cures->IsNotEradicated(citycolor) && !IsQuarentineSpecialistNearBy(city))
+	{
 		std::cout << "Occurring in: " << city->GetCityName() << std::endl;
 		bool nooutbreak = true;
 		for (uint16_t i = 0; i < 3; i += 1)
 		{
 			// 2.1. Otbreaks if Need be
-			if (city->GetNumberOfCubes(citycolor) == 3)
+			if (city->GetNumberOfCubes(citycolor) == 3) // let have ab outbreak!
 			{
 				nooutbreak = false;
-				Notify(city->GetCityName(), i);
+				Notify(city->GetCityName(), i); // record in log
 				Outbreak(city);
 				break;
 			}
 
-			city->AddCube(m_Board.m_Cubes.TakeCube(citycolor));
+			city->AddCube(m_Board.m_Cubes.TakeCube(citycolor)); // add a cube
 			CheckIfGameOver();
 		}
-		if(nooutbreak) Notify(city->GetCityName(), 3);
+		if(nooutbreak) Notify(city->GetCityName(), 3); // if no outbreak occured update log
 
-		// 3. Intensify reshuffle infect discard and add on top of deck
-		m_Board.m_InfecDeck.Intensify();
 	}
+	delete ic; ic = nullptr;
+
+	// 3. Intensify reshuffle infect discard and add on top of deck
+	m_Board.m_InfecDeck.Intensify();
 }
 // Epidemic ---------------------------------------------------------------------------------------
 
@@ -502,6 +514,38 @@ GameEngine::MovesPerCity GameEngine::CalculatePlayerOpt(const uint16_t & pos)
 		options.insert(std::make_pair(GameEngine::GOVTGRANT, id));
 	}
 
+	// Contingency Planer -------------------------------------------------------------------------
+	/*
+	if(m_Players.at(pos)->GetRolID() == RoleList::CONTI..)
+	{
+	options.insert(std::make_pair(GameEngine::CONTIN, m_Players.at(pos)->GetCityID()))
+	}
+	*/
+
+	// Operations Expert --------------------------------------------------------------------------
+	/*
+	if(m_Players.at(pos)->GetRolID() == RoleList::OP && !IsRCin(m_Players.at(pos)->GetCityID()))
+		options.insert(std::make_pair(GameEngine::CONTIN, m_Players.at(pos)->GetCityID()))
+
+	foreach(CityList::CityID id in CalculateOperationsExpertRCtoanycity(pos)
+	{
+	options.insert(std::make_pair(GameEngine::OE TO ANY CITY, m_Players.at(pos)->GetCityID()))
+	}
+	*/
+
+	// Dispatcher ---------------------------------------------------------------------------------
+	/*
+	foreach(CityList::CityID id in CalculateDispatcherMovePAwntoPAwn(pos)
+	{
+	options.insert(std::make_pair(GameEngine::dispatchpawn topawn, id))
+	}
+
+	foreach(CityList::CityID id in CalculateDispatcherMoveAsOwn(pos)
+	{
+	options.insert(std::make_pair(GameEngine::dispatchmoveasown, id))
+	}
+	*/
+
 	return options;
 }
 // CalculatePlayerOpt -----------------------------------------------------------------------------
@@ -512,7 +556,7 @@ std::vector<CityList::CityID> GameEngine::CalculateDriveCitiesFor(const uint16_t
 	std::vector<CityList::CityID> result;
 	for each(City* city in m_Board.m_Map->GetCitiesConnectedTo(m_Players.at(pos)->GetCityID()))
 	{
-		result.emplace_back(city->GetCityID());
+		result.emplace_back(city->GetCityID()); // add all connected cities
 	}
 	return result;
 }
@@ -526,7 +570,7 @@ std::vector<CityList::CityID> GameEngine::CalculateFlightCitiesFor(const uint16_
 	{
 		if (PlayerCardFactory::IsaCityCard(pc->GetNumID()))
 		{
-			result.emplace_back((CityList::CityID)(pc->GetNumID() - CityCard::CITYCARD_MIN));
+			result.emplace_back((CityList::CityID)(pc->GetNumID() - CityCard::CITYCARD_MIN)); // to all citycards in players hand
 		}
 	}
 	return result;
@@ -541,10 +585,10 @@ std::vector<CityList::CityID> GameEngine::CalculateCharterFlightsFor(const uint1
 	{
 		for each (City* city in m_Board.m_Map->GetAllCities())
 		{
-			if (city->GetCityID() == m_Players.at(pos)->GetCityID())
+			if (city->GetCityID() == m_Players.at(pos)->GetCityID()) //skip current city
 				continue;
 
-			result.emplace_back(city->GetCityID());
+			result.emplace_back(city->GetCityID()); // to every other city
 		}
 	}
 	return result;
@@ -556,13 +600,13 @@ std::vector<CityList::CityID> GameEngine::CalculateShuttleFlightsFor(const uint1
 {
 	bool IsInACityWithAResearchCEnter = false;
 	std::vector<CityList::CityID> flights;
-	CityList::CityID cid = m_Players.at(pos)->GetCityID();
-	for each(ResearchCenter rc in m_Board.m_Centers->GetAllCenters())
+	CityList::CityID cid = m_Players.at(pos)->GetCityID(); // get players city
+	for each(ResearchCenter rc in m_Board.m_Centers->GetAllCenters()) // scan all RCs
 	{
-		if (rc.GetCityID() == cid)
+		if (rc.GetCityID() == cid) // if player is in a city with a RC
 		{
 			IsInACityWithAResearchCEnter = true;
-			continue;
+			continue; //skip
 		}
 		else
 		{
@@ -570,9 +614,9 @@ std::vector<CityList::CityID> GameEngine::CalculateShuttleFlightsFor(const uint1
 		}
 	}
 
-	if (!IsInACityWithAResearchCEnter)
+	if (!IsInACityWithAResearchCEnter) // if player is not in a city with a RC
 	{
-		flights.clear();
+		flights.clear(); // return nothing
 	}
 	return flights;
 }
@@ -589,11 +633,11 @@ std::vector<CityList::CityID> GameEngine::CalculateShareKnowlegdeFor(const uint1
 	{
 		for (size_t index = 0; index < m_Players.size(); index += 1)
 		{
-			if (index == pos) continue;
+			if (index == pos) continue; // skip same player
 
-			if (m_Players.at(pos)->GetCityID() == m_Players.at(index)->GetCityID())
+			if (m_Players.at(pos)->GetCityID() == m_Players.at(index)->GetCityID()) // two players in the same city
 			{
-				if (m_Players.at(index)->m_Hand.size() < 7)
+				if (m_Players.at(index)->m_Hand.size() < 7) // other guys hand is not full
 				{
 					result.emplace_back(m_Players.at(index)->GetCityID());
 					return result;
@@ -607,11 +651,11 @@ std::vector<CityList::CityID> GameEngine::CalculateShareKnowlegdeFor(const uint1
 	{
 		for (size_t index = 0; index < m_Players.size(); index += 1)
 		{
-			if (index == pos) continue;
+			if (index == pos) continue; // skip same player
 
-			if (m_Players.at(pos)->GetCityID() == m_Players.at(index)->GetCityID())
+			if (m_Players.at(pos)->GetCityID() == m_Players.at(index)->GetCityID()) // two players in the same city
 			{
-				if (m_Players.at(index)->m_Hand.size() < 7)
+				if (m_Players.at(index)->m_Hand.size() < 7) // other guys hand is not full
 				{
 					result.emplace_back(m_Players.at(index)->GetCityID());
 					return result;
@@ -624,13 +668,13 @@ std::vector<CityList::CityID> GameEngine::CalculateShareKnowlegdeFor(const uint1
 	// 2.1 Other Player is the researcher
 	for (size_t index = 0; index < m_Players.size(); index += 1)
 	{
-		if (index == pos) continue;
+		if (index == pos) continue; // skip same
 
-		if (m_Players.at(pos)->GetCityID() == m_Players.at(index)->GetCityID())
+		if (m_Players.at(pos)->GetCityID() == m_Players.at(index)->GetCityID())  // two players in the same city
 		{
 			if (m_Players.at(index)->GetRoleID() == RoleList::RESEARCHER)
 			{
-				if (m_Players.at(pos)->m_Hand.size() < 7)
+				if (m_Players.at(pos)->m_Hand.size() < 7) // your hand isnt full
 				{
 					result.emplace_back(m_Players.at(index)->GetCityID());
 					return result;
@@ -642,14 +686,14 @@ std::vector<CityList::CityID> GameEngine::CalculateShareKnowlegdeFor(const uint1
 	// 2.2 Other Player has current city card
 	for (size_t index = 0; index < m_Players.size(); index += 1)
 	{
-		if (index == pos) continue;
+		if (index == pos) continue; // skip same player
 
-		if (m_Players.at(pos)->GetCityID() == m_Players.at(index)->GetCityID())
+		if (m_Players.at(pos)->GetCityID() == m_Players.at(index)->GetCityID()) // two players in the same city
 		{
-			if (m_Players.at(index)->GetRoleID() != RoleList::RESEARCHER &&
+			if (m_Players.at(index)->GetRoleID() != RoleList::RESEARCHER && // other guy isnt Research but has card (prevents double loggging of option)
 				m_Players.at(index)->HasCurrentCityCard())
 			{
-				if (m_Players.at(pos)->m_Hand.size() < 7)
+				if (m_Players.at(pos)->m_Hand.size() < 7)  // your hand isnt full
 				{
 					result.emplace_back(m_Players.at(index)->GetCityID());
 					return result;
@@ -673,6 +717,10 @@ std::vector<CityList::CityID> GameEngine::CalculateDiscoverCureFor(const uint16_
 			uint16_t NumOfCardsNeeded = m_Players.at(pos)->GetNumOfCardToDiscoverCure();
 			if (m_Players.at(pos)->m_Hand.size() >= NumOfCardsNeeded)
 			{
+				/*
+					TODO: this can be improved
+				*/
+
 				switch (DetermineCureColor(pos))
 				{
 				case Color::RED:
