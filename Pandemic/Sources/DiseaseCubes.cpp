@@ -13,6 +13,7 @@ bool DiseaseCubePile::IsFull(const Color & color)
 	case Color::BLACK:
 		return m_Black.CubesLeft() == 24;
 	}
+	return false;
 }
 
 DiseaseCube* DiseaseCubePile::TakeCube(const Color& color)
@@ -36,9 +37,9 @@ DiseaseCube* DiseaseCubePile::TakeCube(const Color& color)
 	return dc;
 }
 
-const Color& DiseaseCubePile::PlaceCube(DiseaseCube* dc)
+const Color DiseaseCubePile::PlaceCube(DiseaseCube* dc)
 {
-	Color result = dc->GetColor();
+	const Color result = dc->GetColor();
 	switch (dc->GetColor())
 	{
 	case Color::RED:

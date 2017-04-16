@@ -59,7 +59,7 @@ std::vector<DiseaseCube*> City::RemoveCubeAsMedic()
 	uint16_t blue = GetNumberOfCubes(Color::BLUE);
 
 	//determing highest
-	Color tbrm;
+	Color tbrm = Color::INVALID;
 	if (red >= black && red >= yellow && red >= blue) // red is biggest?
 	{
 		tbrm = Color::RED;
@@ -89,6 +89,28 @@ std::vector<DiseaseCube*> City::RemoveCubeAsMedic()
 		{
 			m_Cubes.emplace_back(*itor);
 			cubes.erase(itor);
+		}
+	}
+
+	return cubes;
+}
+
+std::vector<DiseaseCube*> City::RemoveCubeAsMedic(const Color& color)
+{
+	std::vector<DiseaseCube*> cubes; // will be all the cubes of the corresponding color
+
+	for (auto itor = cubes.begin(); itor != cubes.end(); /* no incr */)
+	{
+		if ((*itor)->GetColor() == color)
+		{
+			cubes.emplace_back(*itor);
+			m_Cubes.erase(itor);
+		}
+		else
+		{
+			itor++; // if its not the color to be deleted do nothing
+			continue;
+			
 		}
 	}
 

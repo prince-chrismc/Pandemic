@@ -54,10 +54,13 @@ public:
 
 	void CureDiscover(const Color& color);
 	void EradicateDisease(const Color& color);
+
 	bool IsCured(const Color& color);
 	bool IsNotEradicated(const Color& color);
 	bool IsEradicated(const Color& color);
 	bool IsAllCuresDiscovered() { return m_Red.IsCured() && m_Yellow.IsCured() && m_Blue.IsCured() && m_Black.IsCured(); }
+	bool IsAnyCured() { return m_Red.IsCured() || m_Yellow.IsCured() || m_Blue.IsCured() || m_Black.IsCured(); }
+
 	std::string GetSaveOutput() { return (m_Red.GetState() + m_Blue.GetState() + m_Yellow.GetState() + m_Black.GetState()); } //FilePrint
 	void InputLoadedGame(const uint16_t& red, const uint16_t& blue, const uint16_t& yellow, const uint16_t& black) { m_Red.SetState(red); m_Blue.SetState(blue); m_Yellow.SetState(yellow); m_Black.SetState(black); }
 

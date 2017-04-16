@@ -114,11 +114,12 @@ protected:
 				uint16_t ExecutePeakInfectionDiscard(const uint16_t& pos, const CityList::CityID& cityID);
 				uint16_t ExecutePeakPlayerDiscard(const uint16_t& pos, const CityList::CityID& cityID);
 				uint16_t ExecuteDriveFerry(const uint16_t& pos, const CityList::CityID& cityID);
+					void ExecuteMedicEnteredCity(const CityList::CityID& cityID);
 				uint16_t ExecuteDirectFlight(const uint16_t& pos, const CityList::CityID& cityID);
 				uint16_t ExecuteCharterFlight(const uint16_t& pos, const CityList::CityID& cityID);
 				uint16_t ExecuteShuttleFlight(const uint16_t& pos, const CityList::CityID& cityID);
 				uint16_t ExecuteTreateDisease(const uint16_t& pos, const CityList::CityID& cityID);
-					const Color& ExecuteTreateDiseaseAsMedic(City* city);
+					const Color ExecuteTreateDiseaseAsMedic(City* city);
 				uint16_t ExecuteBuildResearchCenter(const uint16_t& pos, const CityList::CityID& cityID);
 					void AddResearchCenter(const uint16_t& pos, const CityList::CityID& cityID);
 				uint16_t ExecuteShareKnowledge(const uint16_t& pos, const CityList::CityID& cityID);

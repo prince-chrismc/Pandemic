@@ -1214,9 +1214,30 @@ uint16_t GameEngine::ExecuteDriveFerry(const uint16_t & pos, const CityList::Cit
 	std::stringstream ss;
 	ss << std::hex << cityID;
 	m_Players.at(pos)->ChangeCity(ss.str());
+
+	if (m_Players.at(pos)->GetRoleID() == RoleList::MEDIC)
+		if (m_Board.m_Cures->IsAnyCured())
+			ExecuteMedicEnteredCity(cityID);
+
 	return 1;
 }
 // ExecuteDriveFerry ------------------------------------------------------------------------------
+
+// ExecuteMedicEnteredCity ------------------------------------------------------------------------
+void GameEngine::ExecuteMedicEnteredCity(const CityList::CityID & cityID)
+{
+	City* city = m_Board.m_Map->GetCityWithID(cityID);
+	if (m_Board.m_Cures->IsCured(Color::RED))
+		city->RemoveCubeAsMedic(Color::RED);
+	if (m_Board.m_Cures->IsCured(Color::BLACK))
+		city->RemoveCubeAsMedic(Color::BLACK);
+	if (m_Board.m_Cures->IsCured(Color::YELLOW))
+		city->RemoveCubeAsMedic(Color::YELLOW);
+	if (m_Board.m_Cures->IsCured(Color::BLUE))
+		city->RemoveCubeAsMedic(Color::BLUE);
+
+}
+// ExecuteMedicEnteredCity ------------------------------------------------------------------------
 
 // ExecuteDirectFlight ----------------------------------------------------------------------------
 uint16_t GameEngine::ExecuteDirectFlight(const uint16_t & pos, const CityList::CityID & cityID)
@@ -1225,6 +1246,11 @@ uint16_t GameEngine::ExecuteDirectFlight(const uint16_t & pos, const CityList::C
 	std::stringstream ss;
 	ss << std::hex << cityID;
 	m_Players.at(pos)->ChangeCity(ss.str());
+
+	if (m_Players.at(pos)->GetRoleID() == RoleList::MEDIC)
+		if (m_Board.m_Cures->IsAnyCured())
+			ExecuteMedicEnteredCity(cityID);
+
 	return 1;
 }
 // ExecuteDirectFlight ----------------------------------------------------------------------------
@@ -1236,6 +1262,11 @@ uint16_t GameEngine::ExecuteCharterFlight(const uint16_t & pos, const CityList::
 	std::stringstream ss;
 	ss << std::hex << cityID;
 	m_Players.at(pos)->ChangeCity(ss.str());
+
+	if (m_Players.at(pos)->GetRoleID() == RoleList::MEDIC)
+		if (m_Board.m_Cures->IsAnyCured())
+			ExecuteMedicEnteredCity(cityID);
+
 	return 1;
 }
 // ExecuteCharterFlight ---------------------------------------------------------------------------
@@ -1246,6 +1277,11 @@ uint16_t GameEngine::ExecuteShuttleFlight(const uint16_t & pos, const CityList::
 	std::stringstream ss;
 	ss << std::hex << cityID;
 	m_Players.at(pos)->ChangeCity(ss.str());
+
+	if (m_Players.at(pos)->GetRoleID() == RoleList::MEDIC)
+		if (m_Board.m_Cures->IsAnyCured())
+			ExecuteMedicEnteredCity(cityID);
+
 	return 1;
 }
 // ExecuteShuttleFlight ---------------------------------------------------------------------------
@@ -1280,10 +1316,10 @@ uint16_t GameEngine::ExecuteTreateDisease(const uint16_t & pos, const CityList::
 // ExecuteTreateDisease ---------------------------------------------------------------------------
 
 // ExecuteTreateDiseaseAsMedic --------------------------------------------------------------------
-const Color& GameEngine::ExecuteTreateDiseaseAsMedic(City* city)
+const Color GameEngine::ExecuteTreateDiseaseAsMedic(City* city)
 {
 	std::vector<DiseaseCube*> cubes = city->RemoveCubeAsMedic();
-	Color result = cubes.at(0)->GetColor();
+	const Color result = cubes.at(0)->GetColor();
 	for each(DiseaseCube* dc in cubes)
 	{
 		m_Board.m_Cubes.PlaceCube(dc);
@@ -1480,6 +1516,10 @@ uint16_t GameEngine::ExecuteAirLift(const uint16_t& pos, const CityList::CityID&
 	std::stringstream ss;
 	ss << std::hex << secondary.at(pick);
 	m_Players.at(selection)->ChangeCity(ss.str()); // move them to desired city
+
+	if (m_Players.at(selection)->GetRoleID() == RoleList::MEDIC)
+		if (m_Board.m_Cures->IsAnyCured())
+			ExecuteMedicEnteredCity(cityID);
 
 	return 0;
 }

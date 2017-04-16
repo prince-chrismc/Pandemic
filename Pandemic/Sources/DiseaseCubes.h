@@ -82,5 +82,5 @@ public:
 	bool IsAnyEmpty() { return m_Red.IsEmpty() || m_Yellow.IsEmpty() || m_Blue.IsEmpty() || m_Black.IsEmpty(); }
 	bool IsFull(const Color& color);
 	DiseaseCube* TakeCube(const Color& color);
-	const Color& PlaceCube(DiseaseCube* dc);
+	const Color PlaceCube(DiseaseCube* dc);
 };
