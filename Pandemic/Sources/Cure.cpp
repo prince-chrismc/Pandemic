@@ -18,6 +18,7 @@ void CureMakers::CureDiscover(const Color & color)
 		m_Black.CureDiscover();
 		break;
 	}
+	Notify();
 }
 
 void CureMakers::EradicateDisease(const Color& color)
@@ -37,6 +38,7 @@ void CureMakers::EradicateDisease(const Color& color)
 		m_Black.EradicateDisease();
 		break;
 	}
+	Notify();
 }
 
 bool CureMakers::IsCured(const Color& color)

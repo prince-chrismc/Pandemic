@@ -117,3 +117,28 @@ public:
 
 	void Update();
 };
+
+// Cure -------------------------------------------------------------------------------------------
+class CureSubject : public ISubject
+{
+public:
+	CureSubject() : ISubject() {}
+	///Prevent Copy/Assignment
+	CureSubject(const CureSubject&) = delete;
+	void operator=(const CureSubject&) = delete;
+
+	virtual bool IsCured(const Color& color) = 0;
+	virtual bool IsEradicated(const Color& color) = 0;
+};
+
+class CureObserver : public IObserver
+{
+public:
+	CureObserver(ISubject* sub) : IObserver(sub) {}
+
+	///Prevent Copy/Assignment
+	CureObserver(const CureObserver&) = delete;
+	void operator=(const CureObserver&) = delete;
+
+	void Update();
+};

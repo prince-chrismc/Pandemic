@@ -5,8 +5,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 #pragma once
-#include <string>
-#include "Pandemic.h"
+#include "Observers.h"
 
 class Cure abstract
 {
@@ -34,7 +33,7 @@ class YellowCure final : public Cure { public: YellowCure() : Cure(Color::YELLOW
 class BlueCure final : public Cure { public: BlueCure() : Cure(Color::BLUE) {} };
 class BlackCure final : public Cure { public: BlackCure() : Cure(Color::BLACK) {} };
 
-class CureMakers final
+class CureMakers final : public CureSubject
 {
 private:
 	RedCure m_Red;
