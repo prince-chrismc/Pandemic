@@ -50,8 +50,8 @@ public:
 	void operator=(const ResearchStations&) = delete;
 
 	uint16_t GetNumberOfCenters() { return (uint16_t)m_Stations.size(); }
-	void AddStation(City* city) { if (validate()) m_Stations.emplace_back(ResearchCenter(city)); }
-	void RemoveStation(const uint16_t& pos) { m_Stations.erase(m_Stations.begin() + pos); }
+	void AddStation(City* city) { if (validate()) { m_Stations.emplace_back(ResearchCenter(city)); Notify(); } }
+	void RemoveStation(const uint16_t& pos) { m_Stations.erase(m_Stations.begin() + pos); Notify(); }
 	bool IsaCenterIn(const uint64_t& id);
 	std::vector<ResearchCenter> GetAllCenters() { return m_Stations; }
 
