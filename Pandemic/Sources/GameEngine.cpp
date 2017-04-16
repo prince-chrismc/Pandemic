@@ -322,10 +322,20 @@ bool GameEngine::IsQuarentineSpecialistNearBy(City * city)
 // Outbreak ---------------------------------------------------------------------------------------
 void GameEngine::Outbreak(City* city, std::vector<City*> skip)
 {
-	if (IsQuarentineSpecialistNearBy(city))
+	if (IsQuarentineSpecialistNearBy(city)) // make sure quarantine specialist isnt nearby
 		return;
 
-	std::cout << " --- OUTBREAK --- " << city->GetCityName() << std::endl;
+	if (m_Board.m_Cures->IsCured(city->GetCityColor())) //worth checking for medic?
+	{
+		for each(Player* joeur in m_Players) // lets figure out the the medic is in the city
+		{
+			if (joeur->GetCityID() == city->GetCityID())
+				if (joeur->GetRoleID() == RoleList::MEDIC)
+					return;
+		}
+	}		
+
+	std::cout << "  --- OUTBREAK " << std::string((skip.size() > 0) ? "CONTINUED " : "") << "--- " << city->GetCityName() << " --- " << std::endl;
 	m_Board.m_OutBreak.IncreaseRate();
 	std::cout << "Outbreak Marker: " << m_Board.m_OutBreak.GetMarker() << std::endl;
 	CheckIfGameOver();
