@@ -710,31 +710,11 @@ std::vector<CityList::CityID> GameEngine::CalculateShareKnowlegdeFor(const uint1
 std::vector<CityList::CityID> GameEngine::CalculateDiscoverCureFor(const uint16_t& pos)
 {
 	std::vector<CityList::CityID> result;
-	for each(ResearchCenter rc in m_Board.m_Centers->GetAllCenters())
-	{
-		if (rc.GetCityID() == m_Players.at(pos)->GetCityID())
-		{
-			uint16_t NumOfCardsNeeded = m_Players.at(pos)->GetNumOfCardToDiscoverCure();
-			if (m_Players.at(pos)->m_Hand.size() >= NumOfCardsNeeded)
-			{
-				/*
-					TODO: this can be improved
-				*/
 
-				switch (DetermineCureColor(pos))
-				{
-				case Color::RED:
-				case Color::BLUE:
-				case Color::YELLOW:
-				case Color::BLACK:
-					result.emplace_back(rc.GetCityID());
-				default:
-					break;
-				}
-				break;
-			}
-		}
-	}
+	if(DetermineCureColor(pos) != Color::INVALID) // the player can cure a disease
+		if (m_Board.m_Centers->IsaCenterIn(m_Players.at(pos)->GetCityID())) // if his city has a RC
+			result.emplace_back(m_Players.at(pos)->GetCityID());
+
 	return result;
 }
 // CalculateDiscoverCureFor -----------------------------------------------------------------------
@@ -869,7 +849,7 @@ Color GameEngine::DetermineCureColor(const uint16_t& pos)
 		{
 			if (PlayerCardFactory::IsaCityCard(pc->GetNumID()))
 			{
-				switch (static_cast<CityCard*>(pc)->GetCityColor())
+				switch (dynamic_cast<CityCard*>(pc)->GetCityColor())
 				{
 				case Color::RED: red++; break;
 				case Color::BLUE: blue++; break;
