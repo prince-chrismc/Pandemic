@@ -120,6 +120,7 @@ protected:
 				uint16_t ExecuteShuttleFlight(const uint16_t& pos, const CityList::CityID& cityID);
 				uint16_t ExecuteTreateDisease(const uint16_t& pos, const CityList::CityID& cityID);
 					const Color ExecuteTreateDiseaseAsMedic(City* city);
+					const Color ExecuteTreateDiseaseForCured(City* city, const Color& color);
 				uint16_t ExecuteBuildResearchCenter(const uint16_t& pos, const CityList::CityID& cityID);
 					void AddResearchCenter(const uint16_t& pos, const CityList::CityID& cityID);
 				uint16_t ExecuteShareKnowledge(const uint16_t& pos, const CityList::CityID& cityID);

@@ -1405,6 +1405,10 @@ uint16_t GameEngine::ExecuteTreateDisease(const uint16_t & pos, const CityList::
 		break;
 	default:
 		removed = m_Board.m_Cubes.PlaceCube(city->RemoveCube()); // remove the oldest cube in the city
+
+		if (m_Board.m_Cures->IsCured(removed))
+			removed = ExecuteTreateDiseaseForCured(city, removed);
+		else
 		break;
 	}
 	city->PrintInformation(); // show new info
@@ -1430,6 +1434,19 @@ const Color GameEngine::ExecuteTreateDiseaseAsMedic(City* city)
 	return result;
 }
 // ExecuteTreateDiseaseAsMedic --------------------------------------------------------------------
+
+// ExecuteTreateDiseaseForCured -------------------------------------------------------------------
+const Color GameEngine::ExecuteTreateDiseaseForCured(City* city, const Color& color)
+{
+	std::vector<DiseaseCube*> cubes = city->RemoveCubeForCured(color); // rm all cubes of that color
+	const Color removed = cubes.at(0)->GetColor(); // get the color 
+	for each(DiseaseCube* dc in cubes)
+	{
+		m_Board.m_Cubes.PlaceCube(dc); // return to pile each cube
+	}
+	return color;
+}
+// ExecuteTreateDiseaseForCured -------------------------------------------------------------------
 
 // ExecuteBuildResearchCenter ---------------------------------------------------------------------
 uint16_t GameEngine::ExecuteBuildResearchCenter(const uint16_t & pos, const CityList::CityID & cityID)

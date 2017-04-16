@@ -41,6 +41,7 @@ public:
 	void AddCube(DiseaseCube* cube) { if (cube == nullptr) { return; } m_Cubes.emplace_back(cube); Validates(); }
 	bool Validates();
 	DiseaseCube* RemoveCube() { DiseaseCube* dc = m_Cubes.at(0); m_Cubes.erase(m_Cubes.begin(), m_Cubes.begin() + 1); return dc; }
+	std::vector<DiseaseCube*> RemoveCubeForCured(const Color& color) { return RemoveCubeAsMedic(color); }
 	std::vector<DiseaseCube*> RemoveCubeAsMedic();
 	std::vector<DiseaseCube*> RemoveCubeAsMedic(const Color& color);
 
