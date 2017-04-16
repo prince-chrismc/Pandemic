@@ -47,6 +47,54 @@ bool City::Validates()
 	return true;	
 }
 
+std::vector<DiseaseCube*> City::RemoveCubeAsMedic()
+{
+	std::vector<DiseaseCube*> cubes = m_Cubes; // get all cubes
+	m_Cubes.clear(); //empty to refill laterz
+
+	//count colors
+	uint16_t red = GetNumberOfCubes(Color::RED);
+	uint16_t black = GetNumberOfCubes(Color::BLACK);
+	uint16_t yellow = GetNumberOfCubes(Color::YELLOW);
+	uint16_t blue = GetNumberOfCubes(Color::BLUE);
+
+	//determing highest
+	Color tbrm;
+	if (red >= black && red >= yellow && red >= blue) // red is biggest?
+	{
+		tbrm = Color::RED;
+	}
+	else if (black >= red && black >= yellow && black >= blue) // black is biggest?
+	{
+		tbrm = Color::BLACK;
+	}
+	else if (yellow >= black && yellow >= red && yellow >= blue) // yellow is biggest?
+	{
+		tbrm = Color::YELLOW;
+	}
+	else if (blue >= black && blue >= yellow && blue >= red) // blue is biggest?
+	{
+		tbrm = Color::BLUE;
+	}
+
+	//get all of those cubes
+	for (auto itor = cubes.begin(); itor != cubes.end(); /* no incr */ )
+	{
+		if ((*itor)->GetColor() == tbrm)
+		{
+			itor++; // if its the color to be deleted do nothing
+			continue;
+		}
+		else
+		{
+			m_Cubes.emplace_back(*itor);
+			cubes.erase(itor);
+		}
+	}
+
+	return cubes;
+}
+
 Color City::GetCityColor()
 {
 	if (IsaRedCity()) return Color::RED;

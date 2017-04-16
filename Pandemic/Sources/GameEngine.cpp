@@ -1265,7 +1265,7 @@ uint16_t GameEngine::ExecuteTreateDisease(const uint16_t & pos, const CityList::
 // ExecuteTreateDiseaseAsMedic --------------------------------------------------------------------
 void GameEngine::ExecuteTreateDiseaseAsMedic(City* city)
 {
-	std::vector<DiseaseCube*> cubes = city->RemoveAllCubes();
+	std::vector<DiseaseCube*> cubes = city->RemoveCubeAsMedic();
 	for each(DiseaseCube* dc in cubes)
 	{
 		m_Board.m_Cubes.PlaceCube(dc);
