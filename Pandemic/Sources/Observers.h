@@ -45,14 +45,9 @@ public:
 };
 
 // Player -----------------------------------------------------------------------------------------
-class PlayerSubject : public ISubject
+class PlayerSubject abstract : public ISubject
 {
 public:
-	PlayerSubject() : ISubject() {}
-	///Prevent Copy/Assignment
-	PlayerSubject(const PlayerSubject&) = delete;
-	void operator=(const PlayerSubject&) = delete;
-
 	struct PlayerCharacteristics
 	{
 		std::string m_Name;
@@ -68,7 +63,7 @@ public:
 	virtual PlayerCharacteristics GetCharacteristics() = 0;
 };
 
-class PlayerObserver : public IObserver
+class PlayerObserver final : public IObserver
 {
 public:
 	PlayerObserver(ISubject* sub) : IObserver(sub) {}
@@ -81,29 +76,19 @@ public:
 };
 
 // World --------------------------------------------------------------------------------------------
-class MapSubject : public ISubject
+class MapSubject abstract : public ISubject
 {
 public:
-	MapSubject() : ISubject() {}
-	///Prevent Copy/Assignment
-	MapSubject(const MapSubject&) = delete;
-	void operator=(const MapSubject&) = delete;
-
 	virtual City* GetCityWithID(const uint64_t& id) = 0;
 };
 
-class StationsSubject : public ISubject
+class StationsSubject abstract : public ISubject
 {
 public:
-	StationsSubject() : ISubject() {}
-	///Prevent Copy/Assignment
-	StationsSubject(const StationsSubject&) = delete;
-	void operator=(const StationsSubject&) = delete;
-
 	virtual bool IsaCenterIn(const uint64_t& id) = 0;
 };
 
-class WorldObserver : public IObserver
+class WorldObserver final : public IObserver
 {
 private:
 	ISubject* m_MapSub;
@@ -119,19 +104,14 @@ public:
 };
 
 // Cure -------------------------------------------------------------------------------------------
-class CureSubject : public ISubject
+class CureSubject abstract : public ISubject
 {
 public:
-	CureSubject() : ISubject() {}
-	///Prevent Copy/Assignment
-	CureSubject(const CureSubject&) = delete;
-	void operator=(const CureSubject&) = delete;
-
 	virtual bool IsCured(const Color& color) = 0;
 	virtual bool IsEradicated(const Color& color) = 0;
 };
 
-class CureObserver : public IObserver
+class CureObserver final : public IObserver
 {
 public:
 	CureObserver(ISubject* sub) : IObserver(sub) {}

@@ -178,6 +178,7 @@
     <ClInclude Include="Sources\InfectionLog.h" />
     <ClInclude Include="Sources\Markers.h" />
     <ClInclude Include="Sources\Observers.h" />
+    <ClInclude Include="Sources\Statistics.h" />
     <ClInclude Include="Sources\Tokens.h" />
     <ClInclude Include="Sources\Pandemic.h" />
     <ClInclude Include="Sources\Player.h" />
