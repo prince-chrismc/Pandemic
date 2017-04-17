@@ -127,4 +127,6 @@ class PlayersContainer final : public std::vector<Player*>
 public:
 	PlayersContainer() {}
 	~PlayersContainer() { for each(Player* joeur in *this) { delete joeur; joeur = nullptr; } }
+
+	void InputLoadedGame(std::vector<Player*> joeur) { (std::vector<Player*>)*this = joeur; }
 };

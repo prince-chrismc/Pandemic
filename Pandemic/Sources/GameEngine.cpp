@@ -2004,7 +2004,7 @@ void GameEngine::LoadGame()
 			gamers.back()->RegistarObserver(m_PlayersObservers.back());
 
 		}
-		m_Players = gamers; // input loaded values
+		m_Players.InputLoadedGame(gamers); // input loaded values
 	}
 
 	// Cures --------------------------------------------------------------------------------------
