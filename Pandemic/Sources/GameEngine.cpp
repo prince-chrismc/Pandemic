@@ -17,16 +17,6 @@ GameEngine::GameEngine() : m_Board(), m_Players(), m_PlayersObservers(), m_Log(n
 
 GameEngine::~GameEngine()
 {
-	for (size_t pos = 0; pos < m_Players.size(); pos += 1) // delete players
-	{
-		if (m_Players.at(pos) != nullptr)
-		{
-			delete m_Players.at(pos);
-			m_Players.at(pos) = nullptr;
-		}
-	}
-	m_Players.clear();
-
 	for each(PlayerObserver* obv in m_PlayersObservers) // delete players observers
 	{
 		if (obv != nullptr)

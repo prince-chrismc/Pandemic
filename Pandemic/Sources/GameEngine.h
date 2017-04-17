@@ -26,7 +26,7 @@ public:
 private:
 	Board m_Board;
 	InfectionLog* m_Log;
-	std::vector<Player*> m_Players;
+	PlayersContainer m_Players;
 	std::vector<PlayerObserver*> m_PlayersObservers;
 	std::string m_Filename;
 	bool m_PreGameComplete;

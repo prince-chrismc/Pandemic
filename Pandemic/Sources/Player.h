@@ -6,9 +6,9 @@
 
 #pragma once
 #include <iostream>
-#include "Observers.h"
 #include "Pandemic.h"
 #include "Cards.h"
+#include "Observers.h"
 
 class Pawn final //Object on board to represent player
 {
@@ -119,4 +119,12 @@ public:
 		Builder& ParsePlayer(std::string loaded);
 		Player* GetPlayer();
 	};
+};
+
+/// Container to allow for observation
+class PlayersContainer final : public std::vector<Player*>
+{
+public:
+	PlayersContainer() {}
+	~PlayersContainer() { for each(Player* joeur in *this) { delete joeur; joeur = nullptr; } }
 };
