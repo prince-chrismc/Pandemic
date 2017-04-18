@@ -351,13 +351,15 @@ void GameEngine::Outbreak(City* city, std::vector<City*> skip)
 	std::cout << "Outbreak Marker: " << m_Board.m_OutBreak.GetMarker() << std::endl;
 	CheckIfGameOver();
 
+	if (skip.size() == 0) skip.emplace_back(city); // record start city
+
 	for each(City* connected in city->GetNearByCities())
 	{
 		bool alreadyhit = false; // lets check if the connected city has already been hit in the chain
-		if (skip.size() > 0) // chainning is happening
+		if (skip.size() > 1) // chainning is happening
 			for each(City* skipped in skip)
 				if (connected->GetCityID() == skipped->GetCityID()) // compare current connected with alreay hit cities
-					alreadyhit = true;
+					alreadyhit = true; 
 
 		if(alreadyhit) continue; // if indeed a chainned city let skip it 
 
