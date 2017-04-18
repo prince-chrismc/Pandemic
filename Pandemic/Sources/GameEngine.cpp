@@ -1628,11 +1628,11 @@ uint16_t GameEngine::ExecuteCureDisease(const uint16_t & pos, const CityList::Ci
 	{
 		m_Board.m_Cures.CureDiscover(cc);
 		size_t k = 0;
-		for ( /* no init */; k < m_Players.at(pos)->m_Hand.size() && k < m_Players.at(pos)->GetNumOfCardToDiscoverCure(); k += 1)
+		for ( /* no init */; k < m_Players.at(pos)->GetNumOfCardToDiscoverCure(); k += 1)
 		{
-			if (PlayerCardFactory::IsaCityCard(m_Players.at(pos)->m_Hand.at(k)->GetNumID()))
-				if (dynamic_cast<CityCard*>(m_Players.at(pos)->m_Hand.at(k))->GetCityColor() == cc)
-					m_Board.m_PlayerDeck.DiscardCard(m_Players.at(pos)->RemoveCardAt((uint16_t)k));
+			if (PlayerCardFactory::IsaCityCard(m_Players.at(pos)->m_Hand.at(0)->GetNumID()))
+				if (dynamic_cast<CityCard*>(m_Players.at(pos)->m_Hand.at(0))->GetCityColor() == cc)
+					m_Board.m_PlayerDeck.DiscardCard(m_Players.at(pos)->RemoveCardAt((uint16_t)0));
 		}
 
 #if _DEBUG
@@ -2177,7 +2177,7 @@ void GameEngine::Initialize()
 				std::cout << "The file is in an irregular state please remove it manually." << std::endl; // warn if there was an issue
 		}
 	}
-	else if (selection == 1)
+	else if (selection == 0)
 	{
 		BoardSetup();			 //DO NOT TOUCH ORDER !
 		PlayersSetup();			 //DO NOT TOUCH ORDER !
