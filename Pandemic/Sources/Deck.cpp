@@ -65,6 +65,31 @@ InfectionDeck::InfectionDeck() : Deck(48)
 	std::shuffle(m_Deck.begin(), m_Deck.end(), g);
 }
 
+void InfectionDeck::ReduceDeck(std::vector<CityList::CityID> cardstokeep)
+{
+	for (auto itor = m_Deck.begin(); itor != m_Deck.end(); /* no incr */)
+	{
+		bool keep = false;
+		for each (CityList::CityID id in cardstokeep)
+		{
+			if ((*itor) == (id + InfectionCard::INFECTIONCARD_MIN))
+			{
+				keep = true;
+				break;
+			}
+		}
+		
+		if (!keep)
+		{
+			itor = m_Deck.erase(itor);
+		}
+		else
+		{
+			itor++;
+		}
+	}
+}
+
 InfectionCard* InfectionDeck::DrawCard()
 {
 	if (m_Deck.size() == 0) return nullptr; //for when deck is empty
@@ -228,6 +253,31 @@ PlayerDeck::PlayerDeck() : Deck(53), m_Difficulty(Difficulty::INVALID)
 	std::random_device rd;
 	std::mt19937 g(rd());
 	std::shuffle(m_Deck.begin(), m_Deck.end(), g);
+}
+
+void PlayerDeck::ReduceDeck(std::vector<CityList::CityID> cardstokeep)
+{
+	for (auto itor = m_Deck.begin(); itor != m_Deck.end(); /* no incr */)
+	{
+		bool keep = false;
+		for each (CityList::CityID id in cardstokeep)
+		{
+			if ((*itor) == (id + CityCard::CITYCARD_MIN))
+			{
+				keep = true;
+				break;
+			}
+		}
+
+		if (!keep)
+		{
+			itor = m_Deck.erase(itor);
+		}
+		else
+		{
+			itor++;
+		}
+	}
 }
 
 PlayerCard* PlayerDeck::DrawCard()

@@ -30,6 +30,7 @@ public:
 	void operator=(const InfectionDeck&) = delete;
 	
 	std::deque<InfectionCard::CardsList> GetDiscardPile() const { return m_Discard; }
+	void ReduceDeck(std::vector<CityList::CityID> cardstokeep);
 	InfectionCard* DrawCard();
 	InfectionCard* DrawCardForEpidemic();
 	void Intensify();
@@ -87,6 +88,7 @@ public:
 	void operator=(const PlayerDeck&) = delete;
 
 	std::deque<PlayerCard::CardsList> GetDiscardPile() { return m_Discard; }
+	void ReduceDeck(std::vector<CityList::CityID> cardstokeep);
 	bool IsDeckEmpty() { return (m_Deck.size() == 0); }
 	PlayerCard* DrawCard();
 	void DiscardCard(PlayerCard* pc);

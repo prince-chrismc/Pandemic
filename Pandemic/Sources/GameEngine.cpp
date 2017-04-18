@@ -143,7 +143,8 @@ void GameEngine::TurnSequence(const uint16_t & pos)
 	TurnActionsPhase(pos);
 	TurnDrawPhase(pos);
 	TurnInfectPhase();
-	m_StatsNotify.Notify(Priority::TURN);
+	if(!m_Board.m_Map.IsCostume())
+		m_StatsNotify.Notify(Priority::TURN);
 	SaveGame(); // auto save
 }
 // TurnSequence -----------------------------------------------------------------------------------
@@ -188,9 +189,9 @@ void GameEngine::TurnActionsPhase(const uint16_t & pos)
 
 		// execute thier selection
 		i += ExecuteMove(pos, moves.at(selection).first, moves.at(selection).second);
-		m_StatsNotify.Notify(Priority::ACTION);
+		if (!m_Board.m_Map.IsCostume()) m_StatsNotify.Notify(Priority::ACTION);
 	}
-	m_StatsNotify.Notify(Priority::PHASE);
+	if (!m_Board.m_Map.IsCostume()) m_StatsNotify.Notify(Priority::PHASE);
 
 }
 // TurnActionsPhase -------------------------------------------------------------------------------
@@ -221,9 +222,9 @@ void GameEngine::TurnDrawPhase(const uint16_t& pos)
 		{
 			m_Players.at(pos)->AddCard(pc); // no matter what draw card
 		}
-		m_StatsNotify.Notify(Priority::ACTION);
+		if (!m_Board.m_Map.IsCostume()) m_StatsNotify.Notify(Priority::ACTION);
 	}
-	m_StatsNotify.Notify(Priority::PHASE);
+	if (!m_Board.m_Map.IsCostume()) m_StatsNotify.Notify(Priority::PHASE);
 }
 // TurnDrawPhase ----------------------------------------------------------------------------------
 
@@ -240,9 +241,9 @@ void GameEngine::TurnInfectPhase()
 	{
 		InfectCity(); // do the obvious
 		CheckIfGameOver(); // check if game over .... these functions have good names xD
-		m_StatsNotify.Notify(Priority::ACTION);
+		if (!m_Board.m_Map.IsCostume()) m_StatsNotify.Notify(Priority::ACTION);
 	}
-	m_StatsNotify.Notify(Priority::PHASE);
+	if (!m_Board.m_Map.IsCostume()) m_StatsNotify.Notify(Priority::PHASE);
 }
 // TurnInfectPhase --------------------------------------------------------------------------------
 
@@ -1827,6 +1828,9 @@ void GameEngine::CheckIfGameWon()
 // SaveGame ---------------------------------------------------------------------------------------
 void GameEngine::SaveGame()
 {
+	if (m_Board.m_Map.IsCostume())
+		return;
+
 	if (!m_PreGameComplete) // prvent save if game wasnt even started
 	{
 		std::cout << "Game Not Initialized" << std::endl;
@@ -2152,8 +2156,8 @@ void GameEngine::LoadGame()
 // Initialize -------------------------------------------------------------------------------------
 void GameEngine::Initialize()
 {
-	std::cout << "Would you like to load a game? YES=1 NO=0" << std::endl; // promt for load option
-	uint16_t selection = GetUserInput(0, 1);
+	std::cout << "Would you like to load a game?\n- New=0\n- Load=1\n- Costume=2" << std::endl; // promt for load option
+	uint16_t selection = GetUserInput(0, 2);
 	if (selection == 1)
 	{
 		try
@@ -2173,8 +2177,24 @@ void GameEngine::Initialize()
 				std::cout << "The file is in an irregular state please remove it manually." << std::endl; // warn if there was an issue
 		}
 	}
-	else
+	else if (selection == 1)
 	{
+		BoardSetup();			 //DO NOT TOUCH ORDER !
+		PlayersSetup();			 //DO NOT TOUCH ORDER !
+		DifficultySetup();		 //DO NOT TOUCH ORDER !
+		m_PreGameComplete = true;
+	}
+	else if (selection == 2)
+	{
+		///Limits Game Functionality
+		std::cout << "\n\n--------------------------------------------------------------\n\n     THIS WILL REDUCE GAME FUNCTIONALITY! \n\n--------------------------------------------------------------\n\nPress 'enter' to continue or exit the game and pick another option\n(recommended: is to quit and not do this)";
+		std::cin.get();
+
+		m_Board.m_Map.UserDriverCostumization();
+		m_Board.m_InfecDeck.ReduceDeck(m_Board.m_Map.GetAllCitiesToKeep());
+		m_Board.m_PlayerDeck.ReduceDeck(m_Board.m_Map.GetAllCitiesToKeep());
+		m_Board.m_WorldObserver.PreventUpdate(true);
+
 		BoardSetup();			 //DO NOT TOUCH ORDER !
 		PlayersSetup();			 //DO NOT TOUCH ORDER !
 		DifficultySetup();		 //DO NOT TOUCH ORDER !

@@ -4,6 +4,8 @@
 
 void WorldObserver::Update()
 {
+	if (m_PreventUpdateDueToCostumeMap) return;
+
 	std::string alg = dynamic_cast<MapSubject*>(m_MapSub)->GetCityWithID(CityList::ALGIERS)->GetMapOutput();
 	std::string Atl = dynamic_cast<MapSubject*>(m_MapSub)->GetCityWithID(CityList::ATLANTA)->GetMapOutput();
 	std::string Bag = dynamic_cast<MapSubject*>(m_MapSub)->GetCityWithID(CityList::BAGHDAD)->GetMapOutput();

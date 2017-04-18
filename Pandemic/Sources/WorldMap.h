@@ -20,8 +20,11 @@ public:
 	WorldMap();
 	~WorldMap();
 
+	///For costumization
 	void UserDriverCostumization();
 	bool Validate();
+	bool IsCostume() { return m_Costumized; }
+	std::vector<CityList::CityID> GetAllCitiesToKeep();
 
 	///Prevent Copy/Assignment
 	WorldMap(const WorldMap&) = delete;

@@ -93,6 +93,7 @@ class WorldObserver final : public IObserver
 private:
 	ISubject* m_MapSub;
 	ISubject* m_StationsSub;
+	bool m_PreventUpdateDueToCostumeMap;
 public:
 	WorldObserver(StationsSubject* stations, MapSubject* map) : IObserver(nullptr), m_StationsSub(stations), m_MapSub(map) {}
 
@@ -101,6 +102,7 @@ public:
 	void operator=(const WorldObserver&) = delete;
 
 	void Update();
+	void PreventUpdate(bool prevent) { m_PreventUpdateDueToCostumeMap = prevent; }
 };
 
 // Cure -------------------------------------------------------------------------------------------

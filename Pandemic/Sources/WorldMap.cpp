@@ -700,6 +700,16 @@ bool WorldMap::Validate()
 	return true;
 }
 
+std::vector<CityList::CityID> WorldMap::GetAllCitiesToKeep()
+{
+	std::vector<CityList::CityID> keepers;
+	for each(City* city in m_Cities)
+	{
+		keepers.emplace_back(city->GetCityID());
+	}
+	return keepers;
+}
+
 bool ResearchStations::IsaCenterIn(const uint64_t & id)
 {
 	for each(ResearchCenter rc in m_Stations)
