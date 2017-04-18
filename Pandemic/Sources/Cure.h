@@ -37,7 +37,7 @@ class YellowCure final : public Cure { public: YellowCure() : Cure(Color::YELLOW
 class BlueCure final : public Cure { public: BlueCure() : Cure(Color::BLUE) {} };
 class BlackCure final : public Cure { public: BlackCure() : Cure(Color::BLACK) {} };
 
-class CureMakers final : public CureSubject
+class CureMarkers final : public CureSubject
 {
 private:
 	RedCure m_Red;
@@ -46,11 +46,11 @@ private:
 	BlackCure m_Black;
 
 public:
-	CureMakers() : m_Red(), m_Yellow(), m_Blue(), m_Black() {}
+	CureMarkers() : m_Red(), m_Yellow(), m_Blue(), m_Black() {}
 
 	///Prevent Copy/Assignment
-	CureMakers(const CureMakers&) = delete;
-	void operator=(const CureMakers&) = delete;
+	CureMarkers(const CureMarkers&) = delete;
+	void operator=(const CureMarkers&) = delete;
 
 	void CureDiscover(const Color& color);
 	void EradicateDisease(const Color& color);

@@ -1,7 +1,7 @@
 #include <sstream>
 #include "Cure.h"
 
-void CureMakers::CureDiscover(const Color & color)
+void CureMarkers::CureDiscover(const Color & color)
 {
 	switch (color)
 	{
@@ -21,7 +21,7 @@ void CureMakers::CureDiscover(const Color & color)
 	Notify();
 }
 
-void CureMakers::EradicateDisease(const Color& color)
+void CureMarkers::EradicateDisease(const Color& color)
 {
 	switch (color)
 	{
@@ -41,7 +41,7 @@ void CureMakers::EradicateDisease(const Color& color)
 	Notify();
 }
 
-bool CureMakers::IsCured(const Color& color)
+bool CureMarkers::IsCured(const Color& color)
 {
 	switch (color)
 	{
@@ -58,7 +58,7 @@ bool CureMakers::IsCured(const Color& color)
 	}
 }
 
-bool CureMakers::IsNotEradicated(const Color & color)
+bool CureMarkers::IsNotEradicated(const Color & color)
 {
 	switch (color)
 	{
@@ -75,7 +75,7 @@ bool CureMakers::IsNotEradicated(const Color & color)
 	}
 }
 
-bool CureMakers::IsEradicated(const Color & color)
+bool CureMarkers::IsEradicated(const Color & color)
 {
 	switch (color)
 	{
@@ -92,28 +92,28 @@ bool CureMakers::IsEradicated(const Color & color)
 	}
 }
 
-CureMakers::Builder & CureMakers::Builder::ParseRedCure(std::string loaded)
+CureMarkers::Builder & CureMarkers::Builder::ParseRedCure(std::string loaded)
 {
 	std::stringstream ss(loaded.at(0));
 	ss >> m_Red;
 	return *this;
 }
 
-CureMakers::Builder & CureMakers::Builder::ParseBlueCure(std::string loaded)
+CureMarkers::Builder & CureMarkers::Builder::ParseBlueCure(std::string loaded)
 {
 	std::stringstream ss(loaded.at(1));
 	ss >> m_Blue;
 	return *this;
 }
 
-CureMakers::Builder & CureMakers::Builder::ParseYellowCure(std::string loaded)
+CureMarkers::Builder & CureMarkers::Builder::ParseYellowCure(std::string loaded)
 {
 	std::stringstream ss(loaded.at(2));
 	ss >> m_Yellow;
 	return *this;
 }
 
-CureMakers::Builder & CureMakers::Builder::ParseBlackCure(std::string loaded)
+CureMarkers::Builder & CureMarkers::Builder::ParseBlackCure(std::string loaded)
 {
 	std::stringstream ss(loaded.at(3));
 	ss >> m_Black;
