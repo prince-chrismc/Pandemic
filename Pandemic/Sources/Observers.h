@@ -95,7 +95,7 @@ private:
 	ISubject* m_StationsSub;
 	bool m_PreventUpdateDueToCostumeMap;
 public:
-	WorldObserver(StationsSubject* stations, MapSubject* map) : IObserver(nullptr), m_StationsSub(stations), m_MapSub(map) {}
+	WorldObserver(StationsSubject* stations, MapSubject* map) : IObserver(nullptr), m_StationsSub(stations), m_MapSub(map), m_PreventUpdateDueToCostumeMap(false) {}
 
 	///Prevent Copy/Assignment
 	WorldObserver(const WorldObserver&) = delete;
