@@ -531,9 +531,6 @@ GameEngine::MovesPerCity GameEngine::CalculatePlayerOpt(const uint16_t & pos)
 
 	// Operations Expert --------------------------------------------------------------------------
 	/*
-	if(m_Players.at(pos)->GetRolID() == RoleList::OP && !IsRCin(m_Players.at(pos)->GetCityID()))
-		options.insert(std::make_pair(GameEngine::CONTIN, m_Players.at(pos)->GetCityID()))
-
 	foreach(CityList::CityID id in CalculateOperationsExpertRCtoanycity(pos)
 	{
 	options.insert(std::make_pair(GameEngine::OE TO ANY CITY, m_Players.at(pos)->GetCityID()))
@@ -641,6 +638,17 @@ std::vector<CityList::CityID> GameEngine::CalculateBuildResearchCenterFor(const 
 		}
 		return std::vector<CityList::CityID> { m_Players.at(pos)->GetCityID() };
 	}
+
+	if (m_Players.at(pos)->GetRoleID() == RoleList::OPERATIONS)
+	{
+		for each(ResearchCenter rc in m_Board.m_Centers.GetAllCenters())
+		{
+			if (m_Players.at(pos)->GetCityID() == rc.GetCityID())
+				return std::vector<CityList::CityID>();
+		}
+	return std::vector<CityList::CityID> { m_Players.at(pos)->GetCityID() };
+	}
+
 	return std::vector<CityList::CityID>();
 }
 // CalculateBuildResearchCenterFor ----------------------------------------------------------------
@@ -897,6 +905,26 @@ Color GameEngine::DetermineCureColor(const uint16_t& pos)
 }
 // DetermineCureColor -----------------------------------------------------------------------------
 
+// CalculateOperationsExpertMoveFromCenterFor -----------------------------------------------------
+std::vector<CityList::CityID> GameEngine::CalculateOperationsExpertMoveFromCenterFor(const uint16_t & pos)
+{
+	if (m_Players.at(pos)->GetRoleID() == RoleList::OPERATIONS)
+	{
+		if (m_Board.m_Centers.IsaCenterIn(m_Players.at(pos)->GetCityID()))
+		{
+			std::vector<CityList::CityID> cangoto;
+			for each(City* city in m_Board.m_Map.GetAllCities())
+			{
+				if (city->GetCityID() == m_Players.at(pos)->GetCityID()) continue;
+
+				cangoto.emplace_back(city->GetCityID());
+			}
+		}
+	}
+	return std::vector<CityList::CityID>();
+}
+// CalculateOperationsExpertMoveFromCenterFor -----------------------------------------------------
+
 // DeterminePlayerMoves ---------------------------------------------------------------------------
 GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & options)
 {
@@ -908,7 +936,6 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 	// if option exist (ie. count > 0)
 	// for that range (low --> high) inclusive
 	// index all options and print with cities info
-
 
 	// Quit ---------------------------------------------------------------------------------------
 	if (options.count(GameEngine::QUIT) > 0)
@@ -1193,12 +1220,11 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 	*/
 
 	// Operations Expert --------------------------------------------------------------------------
-	/*
-	if (options.count(GameEngine::GOVTGRANT) > 0)
+	if (options.count(GameEngine::OPERATIONS_MOVE_FROM_RESEARCH_CENTER) > 0)
 	{
-		std::cout << std::endl << itor++ << ". Government Grant" << std::endl;
-		auto low = options.lower_bound(GameEngine::GOVTGRANT);
-		auto high = options.upper_bound(GameEngine::GOVTGRANT);
+		std::cout << std::endl << itor++ << ". Move to any city" << std::endl;
+		auto low = options.lower_bound(GameEngine::OPERATIONS_MOVE_FROM_RESEARCH_CENTER);
+		auto high = options.upper_bound(GameEngine::OPERATIONS_MOVE_FROM_RESEARCH_CENTER);
 
 		for (auto it = low; it != high; it++)
 		{
@@ -1207,24 +1233,6 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 			std::cout << "  " << i << " - To " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
 		}
 	}
-	*/
-
-	// Operations Expert --------------------------------------------------------------------------
-	/*
-	if (options.count(GameEngine::GOVTGRANT) > 0)
-	{
-	std::cout << std::endl << itor++ << ". Government Grant" << std::endl;
-	auto low = options.lower_bound(GameEngine::GOVTGRANT);
-	auto high = options.upper_bound(GameEngine::GOVTGRANT);
-
-	for (auto it = low; it != high; it++)
-	{
-	moves.insert(std::make_pair(++i, *it));
-	City* city = m_Board.m_Map.GetCityWithID(it->second);
-	std::cout << "  " << i << " - To " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
-	}
-	}
-	*/
 
 	// Dispatcher ---------------------------------------------------------------------------------
 	/*
@@ -1279,6 +1287,8 @@ uint16_t GameEngine::ExecuteMove(const uint16_t& pos, const MoveOptions & opt, c
 		return ExecuteShareKnowledge(pos, cityID);
 	case CUREDISEASE:
 		return ExecuteCureDisease(pos, cityID);
+	case OPERATIONS_MOVE_FROM_RESEARCH_CENTER:
+		return ExecuteOperationsExpertMoveToAnyCity(pos, cityID);
 	case AIRLIFT:
 		return ExecuteAirLift(pos, cityID);
 	case RESILLIENT:
@@ -1667,6 +1677,19 @@ uint16_t GameEngine::ExecuteCureDisease(const uint16_t & pos, const CityList::Ci
 	return 1;
 }
 // ExecuteCureDisease -----------------------------------------------------------------------------
+
+uint16_t GameEngine::ExecuteOperationsExpertMoveToAnyCity(const uint16_t & pos, const CityList::CityID & cityID)
+{
+	std::stringstream ss;
+	ss << std::hex << cityID;								   // parse value to string
+	m_Players.at(pos)->ChangeCity(ss.str());				   // change players city
+
+	if (m_Players.at(pos)->GetRoleID() == RoleList::MEDIC)	   // if its the medic entering
+		if (m_Board.m_Cures.IsAnyCured())					   // check if next call is worth it
+			ExecuteMedicEnteredCity(cityID);				   // rm cubes of cured diseases
+
+	return 1;
+}
 
 // ExecuteAirLift ---------------------------------------------------------------------------------
 uint16_t GameEngine::ExecuteAirLift(const uint16_t& pos, const CityList::CityID& cityID)
@@ -2164,7 +2187,7 @@ void GameEngine::LoadGame()
 	}
 
 	CheckIfGameOver();
-	CheckIfGameWon("dunno u already one this game xD");
+	CheckIfGameWon();
 
 	m_PreGameComplete = true;
 }
