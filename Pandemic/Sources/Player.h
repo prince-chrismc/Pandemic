@@ -130,8 +130,6 @@ public:
 	PlayersContainer() {}
 	~PlayersContainer() { for each(Player* joeur in *this) { delete joeur; joeur = nullptr; } }
 
-	void InputLoadedGame(std::vector<Player*> joeur) { (std::vector<Player*>)*this = joeur; }
-
 	float GetAverageNumberOfCards();
 	uint16_t GetNumberOfPlayers() { return uint16_t(size()); }
 };

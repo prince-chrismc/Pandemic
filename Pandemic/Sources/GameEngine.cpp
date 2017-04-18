@@ -2044,7 +2044,6 @@ void GameEngine::LoadGame()
 		delete[] buffer;
 		buffer = nullptr;
 
-		std::vector<Player*> gamers;
 		for (uint16_t r = 0; r < 4; r += 1) // force limit to max players
 		{
 			size_t slash = players.find("/");
@@ -2053,13 +2052,11 @@ void GameEngine::LoadGame()
 			players = players.substr(slash + 2); // move forward
 
 			Player::Builder playerbuilder;
-			gamers.emplace_back(playerbuilder.ParsePlayer(play).GetPlayer()); // build and input loaded values
+			m_Players.emplace_back(playerbuilder.ParsePlayer(play).GetPlayer()); // build and input loaded values
 			
-			m_PlayersObservers.emplace_back(new PlayerObserver(gamers.back())); // handle observer
-			gamers.back()->RegistarObserver(m_PlayersObservers.back());
-
+			m_PlayersObservers.emplace_back(new PlayerObserver(m_Players.back())); // handle observer
+			m_Players.back()->RegistarObserver(m_PlayersObservers.back());
 		}
-		m_Players.InputLoadedGame(gamers); // input loaded values
 	}
 
 	// Cures --------------------------------------------------------------------------------------
