@@ -2069,7 +2069,7 @@ void GameEngine::LoadGame()
 		delete[] buffer;
 		buffer = nullptr;
 
-		m_Board.m_Cures.InputLoadedGame(CureMarkers::Builder::GetInstance().ParseCures(rate).GetRedCure(), CureMarkers::Builder::GetInstance().GetBlueCure(), CureMarkers::Builder::GetInstance().GetYellowCure(), CureMarkers::Builder::GetInstance().GetBlackCure()); // build and input loaded values
+		m_Board.m_Cures.InputLoadedGame(CureMarkers::Builder::GetInstance().GetRedCure(), CureMarkers::Builder::GetInstance().GetBlueCure(), CureMarkers::Builder::GetInstance().GetYellowCure(), CureMarkers::Builder::GetInstance().ParseCures(rate).GetBlackCure()); // build and input loaded values
 	}
 
 	// Infection Rate -----------------------------------------------------------------------------

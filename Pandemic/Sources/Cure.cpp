@@ -94,28 +94,32 @@ bool CureMarkers::IsEradicated(const Color & color)
 
 CureMarkers::Builder & CureMarkers::Builder::ParseRedCure(std::string loaded)
 {
-	std::stringstream ss(loaded.at(0));
+	std::stringstream ss;
+	ss << loaded.at(0);
 	ss >> m_Red;
 	return *this;
 }
 
 CureMarkers::Builder & CureMarkers::Builder::ParseBlueCure(std::string loaded)
 {
-	std::stringstream ss(loaded.at(1));
+	std::stringstream ss;
+	ss << loaded.at(1);
 	ss >> m_Blue;
 	return *this;
 }
 
 CureMarkers::Builder & CureMarkers::Builder::ParseYellowCure(std::string loaded)
 {
-	std::stringstream ss(loaded.at(2));
+	std::stringstream ss;
+	ss << loaded.at(2);
 	ss >> m_Yellow;
 	return *this;
 }
 
 CureMarkers::Builder & CureMarkers::Builder::ParseBlackCure(std::string loaded)
 {
-	std::stringstream ss(loaded.at(3));
+	std::stringstream ss;
+	ss << loaded.at(3);
 	ss >> m_Black;
 	return *this;
 }
