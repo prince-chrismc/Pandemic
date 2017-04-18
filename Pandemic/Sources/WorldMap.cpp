@@ -717,7 +717,7 @@ std::string ResearchStations::GetSaveOutput()
 	{
 		std::stringstream ss;
 		ss << std::hex << rc.GetCityID();
-		result += ss.str();
+		result += (ss.str() + "/");
 	}
 
 	return result;

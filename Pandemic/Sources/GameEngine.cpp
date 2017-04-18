@@ -2109,7 +2109,7 @@ void GameEngine::LoadGame()
 			size_t slash = stations.find("/");
 			if (slash == std::string::npos) break;
 			std::string city = stations.substr(0, slash); // grab stations saved output
-			stations = stations.substr(slash + 2); // move forward
+			stations = stations.substr(slash + 1); // move forward
 			std::stringstream ss(city);
 			uint64_t num = 0;
 			ss >> std::hex >> num; // parse to ID
