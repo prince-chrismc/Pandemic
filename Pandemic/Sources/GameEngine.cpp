@@ -1740,7 +1740,7 @@ uint16_t GameEngine::ExecuteForecast(const uint16_t & pos, const CityList::CityI
 		std::cout << "NOTE: Enter 0 as a selection to quit." << std::endl; // notify of quit option
 		std::cout << " - TOP - " << std::endl;
 		auto itor = forecast.crbegin(); 															// printing forecast relative to way it will be placed back
-		for (uint16_t a = (uint16_t)forecast.size(); itor != forecast.crend(); a -= 1, itor++)		// printing forecast relative to way it will be placed back
+		for (uint16_t a = 0; itor != forecast.crend(); a += 1, itor++)		// printing forecast relative to way it will be placed back
 		{																							// printing forecast relative to way it will be placed back
 			std::cout << a << ": " << (*itor)->GetCardInfo() << std::endl;							// printing forecast relative to way it will be placed back
 		}																							// printing forecast relative to way it will be placed back
