@@ -88,7 +88,7 @@ std::vector<DiseaseCube*> City::RemoveCubeAsMedic()
 		else
 		{
 			m_Cubes.emplace_back(*itor);
-			cubes.erase(itor);
+			itor = cubes.erase(itor);
 		}
 	}
 
