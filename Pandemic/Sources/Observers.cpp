@@ -177,23 +177,6 @@ void CureObserver::Update()
 		result += "Eradicated";
 	else if (dynamic_cast<CureSubject*>(m_Subject)->IsCured(Color::BLACK))
 		result += "Cured";
-
-	result += "Yellow Cure: ";
-	if (dynamic_cast<CureSubject*>(m_Subject)->IsEradicated(Color::YELLOW))
-		result += "Eradicated";
-	else if (dynamic_cast<CureSubject*>(m_Subject)->IsCured(Color::YELLOW))
-		result += "Cured";
-	else
-		result += "Undiscovered";
-	result += "\n";
-
-	result += "Black Cure: ";
-	if (dynamic_cast<CureSubject*>(m_Subject)->IsEradicated(Color::BLACK))
-		result += "Eradicated";
-	else if (dynamic_cast<CureSubject*>(m_Subject)->IsCured(Color::BLACK))
-		result += "Cured";
-	else
-		result += "Undiscovered";
 	result += "\n";
 
 	std::cout << result << std::endl;
