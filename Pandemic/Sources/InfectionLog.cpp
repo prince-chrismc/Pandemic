@@ -2,6 +2,10 @@
 #include <string>
 #include <sstream>
 #include "InfectionLog.h"
+#ifdef _DEBUG
+#include "Pandemic.h"
+#endif // _DEBUG
+
 
 void InfectionLog::Update()
 {
@@ -43,18 +47,21 @@ InfectionLog::Builder &InfectionLog::Builder::ParseLog(std::string loaded)
 		std::string entry(loaded.substr(0, slash));
 		loaded = loaded.substr(slash + 2);
 
-		size_t space = entry.find(" ");
+		size_t space = entry.find_last_of(" ");
 		std::stringstream ss(entry.substr(space + 1));
 		uint16_t num = 0;
 		ss >> std::hex >> num;
 		m_Log.emplace_back(std::make_pair(entry.substr(0, space), num));
 	}
-
 	return *this;
 }
 
 void InfectionLogNotifier::AddLatestInfection(std::string name, uint16_t cubes)
 {
+#ifdef _DEBUG
+	if (name.length() < 4) throw GameErrorException("Infection log received a name which is incorrect");
+	if (cubes > 3) throw GameErrorException("Infection log received a num of cubes which is in correct");
+#endif // _DEBUG
 	m_Latest = std::make_pair(name, cubes);
 	Notify();
 }
