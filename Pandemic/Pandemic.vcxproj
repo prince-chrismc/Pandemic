@@ -165,6 +165,7 @@
     <ClCompile Include="Sources\Markers.cpp" />
     <ClCompile Include="Sources\Observers.cpp" />
     <ClCompile Include="Sources\Player.cpp" />
+    <ClCompile Include="Sources\Statistics.cpp" />
     <ClCompile Include="Sources\Tokens.cpp" />
     <ClCompile Include="Sources\WorldMap.cpp" />
   </ItemGroup>

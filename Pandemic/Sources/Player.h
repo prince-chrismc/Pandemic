@@ -9,6 +9,7 @@
 #include "Pandemic.h"
 #include "Cards.h"
 #include "Observers.h"
+#include "Statistics.h"
 
 class Pawn final //Object on board to represent player
 {
@@ -88,6 +89,7 @@ public:
 	/// Get/Set City
 	CityList::CityID GetCityID();
 	void ChangeCity(const std::hexadecimal& id) { m_Role.m_Pawn.m_CityID = id; Notify(); }
+	const uint16_t GetNumberOfCards() { return uint16_t(m_Hand.size()); }
 
 	///utility
 	bool HasCurrentCityCard();
@@ -122,11 +124,14 @@ public:
 };
 
 /// Container to allow for observation
-class PlayersContainer final : public std::vector<Player*>
+class PlayersContainer final : public std::vector<Player*>, public PlayerStatisticsSubject
 {
 public:
 	PlayersContainer() {}
 	~PlayersContainer() { for each(Player* joeur in *this) { delete joeur; joeur = nullptr; } }
 
 	void InputLoadedGame(std::vector<Player*> joeur) { (std::vector<Player*>)*this = joeur; }
+
+	float GetAverageNumberOfCards();
+	uint16_t GetNumberOfPlayers() { return uint16_t(size()); }
 };

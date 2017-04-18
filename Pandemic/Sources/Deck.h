@@ -7,6 +7,7 @@
 #pragma once
 #include <deque>
 #include "Cards.h"
+#include "Statistics.h"
 
 class Deck abstract //Primative Definition
 {
@@ -15,7 +16,7 @@ protected:
 	Deck(const uint16_t& size) : m_Size(size) {}
 };
 
-class InfectionDeck : public Deck //InfectionCard Pool/Factory
+class InfectionDeck : public Deck , public InfectionDeckStatisticsSubject //InfectionCard Pool/Factory
 {
 private:
 	std::deque<InfectionCard::CardsList> m_Deck;
@@ -35,6 +36,7 @@ public:
 	void ResiliantPopulation(const InfectionCard::CardsList& id);
 	std::deque<InfectionCard*> GetForecast();
 	void SetForecast(std::deque<InfectionCard*> top);
+	uint16_t GetNumberOfCardRemaining() { return uint16_t(m_Deck.size()); }
 	std::string GetSaveOutput();  //FilePrint
 	void InputLoadedGame(std::deque<InfectionCard::CardsList> deck, std::deque<InfectionCard::CardsList> discard);
 
@@ -62,7 +64,7 @@ public:
 	};
 };
 
-class PlayerDeck final : public Deck, private PlayerCardFactory //PlayerCards Pool/Abstract Factory
+class PlayerDeck final : public Deck, private PlayerCardFactory, public PlayerDeckStatisticsSubject //PlayerCards Pool/Abstract Factory
 {
 private:
 	enum class Difficulty
@@ -89,6 +91,7 @@ public:
 	PlayerCard* DrawCard();
 	void DiscardCard(PlayerCard* pc);
 	void IncreaseDifficulty(const uint16_t& dif);
+	uint16_t GetNumberOfCardRemaining() { return uint16_t(m_Deck.size()); }
 	std::string GetSaveOutput();  //FilePrint
 	void InputLoadedGame(std::deque<PlayerCard::CardsList> deck, std::deque<PlayerCard::CardsList> discard);
 

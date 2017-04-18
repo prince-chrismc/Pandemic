@@ -71,6 +71,7 @@ InfectionCard* InfectionDeck::DrawCard()
 
 	InfectionCard::CardsList nextID = m_Deck.front();
 	m_Deck.pop_front();
+	Notify(Priority::MINOR);
 	m_Discard.emplace_front(nextID);
 	return new InfectionCard(nextID);
 }
@@ -81,6 +82,7 @@ InfectionCard* InfectionDeck::DrawCardForEpidemic()
 
 	InfectionCard::CardsList nextID = m_Deck.back();
 	m_Deck.pop_back();
+	Notify(Priority::MINOR);
 	m_Discard.emplace_front(nextID);
 	return new InfectionCard(nextID);
 }
@@ -234,6 +236,7 @@ PlayerCard* PlayerDeck::DrawCard()
 
 	PlayerCard::CardsList nextID = m_Deck.front();
 	m_Deck.pop_front();
+	Notify(Priority::MINOR);
 	return PlayerCardFactory::MakeCard(nextID);
 }
 

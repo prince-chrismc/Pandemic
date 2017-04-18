@@ -379,6 +379,28 @@ std::string WorldMap::GetSaveOutput()
 	return ss.str();
 }
 
+uint16_t WorldMap::GetNumberOfInfectedCities()
+{
+	uint16_t counter = 0;
+	for each(City* city in m_Cities)
+	{
+		if (city->GetNumberOfCubes() > 0) counter += 1;
+	}
+	return counter;
+}
+
+uint16_t WorldMap::GetNumberOfCubeOnBoard()
+{
+	uint16_t counter = 0;
+	for each(City* city in m_Cities)
+	{
+		counter += city->GetNumberOfCubes();
+	}
+	return counter;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// This function resticts game functionality and should be avoided.
 void WorldMap::UserDriverCostumization()
 {
 	std::cout << " WARNING: THIS WILL RESTRICT GAME FUNCTIONALITY " << std::endl << "YES=1 NO=0 --> Do you wish to precced? ";

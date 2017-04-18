@@ -28,6 +28,8 @@ private:
 	InfectionLog* m_Log;
 	PlayersContainer m_Players;
 	std::vector<PlayerObserver*> m_PlayersObservers;
+	IStatistics* m_GameStats;
+	StatisticsNotify m_StatsNotify;
 	std::string m_Filename;
 	bool m_PreGameComplete;
 	bool m_SkipNextInfectionPhase;
@@ -74,15 +76,17 @@ protected:
 		REFCARD = 0x0A0UL,
 		PEAK_PLAYER_DISCARD,
 		PEAK_INFECTION_DISCARD,
-		/*
 
+		/// Role Specials
+		/*
 			CONTIN_PLANNER_DRAW_EVENT,
 			DISPATCH_MOVE_OTHERS_PAWN,
 			OPERATIONS_BUILD_RESEARCH_CENTER,
 			OPERATIONS_MOVE_FROM_RESEARCH_CENTER,
-
-			TODO: MORE TO COME
 		*/
+
+		/// Settings control
+		SETTINGS_FREQ = 0xAAAUL,
 
 		MAX = 0xFFFUL
 	};
@@ -110,6 +114,7 @@ protected:
 			PlayerMoves DeterminePlayerMoves(const MovesPerCity& options);
 			uint16_t ExecuteMove(const uint16_t& pos, const MoveOptions& opt, const CityList::CityID& cityID);
 				uint16_t ExecuteQuit(const uint16_t& pos, const CityList::CityID& cityID);
+				uint16_t ExecuteChangeFrequency(const uint16_t& pos, const CityList::CityID& cityID);
 				uint16_t ExecuteViewRefCard(const uint16_t& pos, const CityList::CityID& cityID);
 				uint16_t ExecutePeakInfectionDiscard(const uint16_t& pos, const CityList::CityID& cityID);
 				uint16_t ExecutePeakPlayerDiscard(const uint16_t& pos, const CityList::CityID& cityID);

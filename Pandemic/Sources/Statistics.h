@@ -5,30 +5,40 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 #pragma once
-#include "Observers.h"
+#include <vector>
+#include <ctime>
 
 enum class Priority { INVALID = 0x00UL, MINOR = 0x10UL, ACTION = 0x21UL, PHASE = 0x26UL, TURN = 0x2CUL, MAJOR = 0xFFUL};
 
-// Subjects -------------------------------------------------------------------------------------
-class StatisticsObserver abstract : public  IObserver
+// Observers --------------------------------------------------------------------------------------
+class StatisticsObserver abstract
 {
 public:
-	StatisticsObserver() : IObserver(nullptr) {}
-	virtual void Update(const Priority& p) = 0;
+	virtual bool Update(const Priority& p) = 0;
 };
 
-class StatisticsSubject abstract : public ISubject
+class StatisticsSubject
+{
+protected:
+	std::vector<StatisticsObserver*> m_Observers;
+
+public:
+	StatisticsSubject() : m_Observers() {}
+	void Notify(const Priority& p) { for each(StatisticsObserver* obv in m_Observers) { if (obv == nullptr) continue; obv->Update(p); } }
+	virtual void RegistarObserver(StatisticsObserver* obv) { m_Observers.emplace_back(obv); }
+};
+
+class StatisticsNotify final : public StatisticsSubject 
 {
 public:
-	void Notify(const Priority& p) { for each(StatisticsObserver* obv in m_observers) { if (obv == nullptr) continue; obv->Update(p); } }
+	StatisticsNotify() : StatisticsSubject() {}
 };
-
-class StatisticsNotify final : public StatisticsSubject {};
 
 class PlayerStatisticsSubject abstract : public StatisticsSubject
 {
 public:
 	virtual float GetAverageNumberOfCards() = 0;
+	virtual uint16_t GetNumberOfPlayers() = 0;
 };
 
 class WorldMapStatisticsSubject abstract : public StatisticsSubject
@@ -38,7 +48,7 @@ public:
 	virtual uint16_t GetNumberOfCubeOnBoard() = 0;
 };
 
-class ResearchStationsStatisticsSubject abstract : public StatisticsSubject
+class ResearchStatisticsSubject abstract : public StatisticsSubject
 {
 public:
 	virtual uint16_t GetNumberOfUnusedCenters() = 0;
@@ -56,36 +66,45 @@ public:
 	virtual uint16_t GetNumberOfCardRemaining() = 0;
 };
 
-// Decorators -------------------------------------------------------------------------------------
-class IGameStatsDecorator abstract
+// Display Settings -------------------------------------------------------------------------------
+class IGameStatsDisplay abstract
 {
 public:
 	virtual bool IsPriorityHighEnough(const Priority& p) = 0;
 };
 
-class GameStatsPerAction final : public IGameStatsDecorator
+class GameStatsPerAction final : public IGameStatsDisplay
 {
 public:
-	bool IsPriorityHighEnough(const Priority& p) { return p >= Priority::ACTION; }
+	bool IsPriorityHighEnough(const Priority& p) { return p == Priority::ACTION; }
 };
 
-class GameStatsPerPhase final : public IGameStatsDecorator
+class GameStatsPerPhase final : public IGameStatsDisplay
 {
 public:
-	bool IsPriorityHighEnough(const Priority& p) { return p >= Priority::PHASE; }
+	bool IsPriorityHighEnough(const Priority& p) { return p == Priority::PHASE; }
 };
 
-class GameStatsPerTurn final : public IGameStatsDecorator
+class GameStatsPerTurn final : public IGameStatsDisplay
 {
 public:
-	bool IsPriorityHighEnough(const Priority& p) { return p >= Priority::TURN; }
+	bool IsPriorityHighEnough(const Priority& p) { return p == Priority::TURN; }
 };
 
-// Observer 
-class GameStatistics final : public StatisticsObserver
+// Decorator --------------------------------------------------------------------------------------
+/// basid decorator interface
+class IStatistics abstract : public StatisticsObserver
+{
+public:
+	virtual bool Print() = 0;
+	virtual void ChangeFrequency(IGameStatsDisplay* deco) = 0;
+};
+
+/// main object
+class GameStatistics final : public IStatistics
 {
 private:
-	IGameStatsDecorator* m_Decorator;
+	IGameStatsDisplay* m_Display;
 	StatisticsSubject* m_Notifier; // main one that will call with varrying priorities
 	StatisticsSubject* m_PlayersContainer;
 	StatisticsSubject* m_WorldMap;
@@ -93,10 +112,11 @@ private:
 	StatisticsSubject* m_PlayerDeck;
 	StatisticsSubject* m_InfectionDeck;
 
-	void Print() { std::cout << GameStatistics::Statistics::Builder::GetInstance().InputCardsPerPlayer(dynamic_cast<PlayerStatisticsSubject*>(m_PlayersContainer)->GetAverageNumberOfCards()).InputCubesOnTheBoard(dynamic_cast<WorldMapStatisticsSubject*>(m_WorldMap)->GetNumberOfCubeOnBoard()).InputNumInfectedCities(dynamic_cast<WorldMapStatisticsSubject*>(m_WorldMap)->GetNumberOfInfectedCities()).InputResearchCentersNotUsed(dynamic_cast<ResearchStationsStatisticsSubject*>(m_ResearchStations)->GetNumberOfUnusedCenters()).InputPlayerCardsLeft(dynamic_cast<PlayerDeckStatisticsSubject*>(m_PlayerDeck)->GetNumberOfCardRemaining()).InputInfectionCardsLeft(dynamic_cast<InfectionDeckStatisticsSubject*>(m_InfectionDeck)->GetNumberOfCardRemaining()).GetStatistics().GetPrintOutput() << std::endl; }
+protected:
+	virtual bool Print();
 
 public:
-	class Statistics final
+	class Statistics
 	{
 	private:
 		float    m_CardsPerPlayer;
@@ -108,9 +128,10 @@ public:
 
 	public:
 		Statistics(float cardsper, uint16_t infectedcities, uint16_t cubesplaced, uint16_t rcunused, uint16_t pcardsleft, uint16_t icardsleft) : m_CardsPerPlayer(cardsper), m_NumInfectedCities(infectedcities), m_CubesOnTheBoard(cubesplaced), m_ResearchCentersNotUsed(rcunused), m_PlayerCardsLeft(pcardsleft), m_InfectionCardsLeft(icardsleft) {}
-		std::string GetPrintOutput() { std::string result = "Game Statistics:\n - Cards/Player: " + std::to_string(m_CardsPerPlayer) + "\n - Number of Infected Cities: " + std::to_string(m_NumInfectedCities) + "\n - Number of cubes on the board: " + std::to_string(m_CubesOnTheBoard) + "\n - Reseach Stations Left to Play: " + std::to_string(m_ResearchCentersNotUsed) + "\n - Player Cards Left: " + std::to_string(m_PlayerCardsLeft) + "\n - Infection Cards Left: " + std::to_string(m_InfectionCardsLeft); }
 
-		class Builder final
+		std::string GetPrintOutput() { return "Game Statistics:\n - Cards/Player: " + std::to_string(m_CardsPerPlayer) + "\n - Number of Infected Cities: " + std::to_string(m_NumInfectedCities) + "\n - Number of cubes on the board: " + std::to_string(m_CubesOnTheBoard) + "\n - Reseach Stations Left to Play: " + std::to_string(m_ResearchCentersNotUsed) + "\n - Player Cards Left: " + std::to_string(m_PlayerCardsLeft) + "\n - Infection Cards Left: " + std::to_string(m_InfectionCardsLeft); }
+
+		class Builder
 		{
 		private:
 			float    m_CardsPerPlayer;
@@ -120,7 +141,8 @@ public:
 			uint16_t m_PlayerCardsLeft;
 			uint16_t m_InfectionCardsLeft;
 
-			Builder() : m_CardsPerPlayer(0.0), m_NumInfectedCities(0), m_CubesOnTheBoard(0), m_ResearchCentersNotUsed(0), m_PlayerCardsLeft(0), m_InfectionCardsLeft(0) {}
+		protected:
+			Builder() : m_CardsPerPlayer(0.0f), m_NumInfectedCities(0), m_CubesOnTheBoard(0), m_ResearchCentersNotUsed(0), m_PlayerCardsLeft(0), m_InfectionCardsLeft(0) {}
 
 		public:
 			///Prevent Copy/Assignment
@@ -139,10 +161,79 @@ public:
 		};
 	};
 
-	GameStatistics(StatisticsSubject* playerscontainer, StatisticsSubject* worldmap, StatisticsSubject* stations, StatisticsSubject* playerdeck, StatisticsSubject* infectiondeck, StatisticsSubject* notifier) : m_PlayersContainer(playerscontainer), m_WorldMap(worldmap), m_ResearchStations(stations), m_PlayerDeck(playerdeck), m_InfectionDeck(infectiondeck), m_Notifier(notifier), m_Decorator(nullptr) {}
-	~GameStatistics() { if (m_Decorator != nullptr) delete m_Decorator; }
+	GameStatistics(StatisticsSubject* playerscontainer, StatisticsSubject* worldmap, StatisticsSubject* stations, StatisticsSubject* playerdeck, StatisticsSubject* infectiondeck, StatisticsSubject* notifier, IGameStatsDisplay* display) : m_PlayersContainer(playerscontainer), m_WorldMap(worldmap), m_ResearchStations(stations), m_PlayerDeck(playerdeck), m_InfectionDeck(infectiondeck), m_Notifier(notifier), m_Display(display) {}
+	~GameStatistics() { if (m_Display != nullptr) delete m_Display; }
 
-	void ChangeFrequency(IGameStatsDecorator* deco) { if (m_Decorator != nullptr) delete m_Decorator; m_Decorator = deco; }
+	///Prevent Copy/Assignment
+	GameStatistics(const GameStatistics&) = delete;
+	void operator=(const GameStatistics&) = delete;
 
-	void Update(const Priority& p) { if(m_Decorator != nullptr) if (m_Decorator->IsPriorityHighEnough(p)) Print(); }
+	void ChangeFrequency(IGameStatsDisplay* deco);
+	uint16_t GetNumberOfInfectedCities() { return dynamic_cast<WorldMapStatisticsSubject*>(m_WorldMap)->GetNumberOfInfectedCities(); }
+
+	bool Update(const Priority& p) { if (m_Display != nullptr) if (m_Display->IsPriorityHighEnough(p)) return Print(); return false; }
+};
+
+
+class GameStatisticsDecorator : public IStatistics
+{
+protected:
+	IStatistics* m_Stats;
+
+public:
+	GameStatisticsDecorator(IStatistics* stats) : m_Stats(stats) {}
+
+	virtual bool Print() = 0;
+	bool Update(const Priority& p) { if (m_Stats->Update(p)) return Print(); return false; }
+	void ChangeFrequency(IGameStatsDisplay* deco) { m_Stats->ChangeFrequency(deco); }
+};
+
+class GameStatisticsExtended : public GameStatisticsDecorator
+{
+public:
+	GameStatisticsExtended(IStatistics* stats) : GameStatisticsDecorator(stats) {}
+
+	class Statistics
+	{
+	private:
+		float m_InfectedCitiesPercentage;
+
+	public:
+		Statistics(uint16_t infectedcities) : m_InfectedCitiesPercentage(infectedcities / (float)48.0 * (float)100.0) {}
+
+		std::string GetPrintOutput() { return "\n - Percent of cities infected: " + std::to_string(m_InfectedCitiesPercentage); }
+		
+		class Builder
+		{
+		private:
+			uint16_t m_NumInfectedCities;
+
+			Builder() : m_NumInfectedCities(0) {}
+
+		public:
+			///Prevent Copy/Assignment
+			Builder(const Builder&) = delete;
+			void operator=(const Builder&) = delete;
+
+			static Builder& GetInstance() { static Builder builder; return builder; }
+
+			Builder& InputNumInfectedCities(uint16_t infectedcities) { m_NumInfectedCities = infectedcities; return *this; }
+
+			Statistics GetStatistics() { return Statistics(m_NumInfectedCities); }
+		};
+	};
+
+	bool Print();
+};
+
+class GameStatisticsClocked : public GameStatisticsDecorator
+{
+private:
+	const clock_t m_CurrentSessionStartTime = clock();
+public:
+	GameStatisticsClocked(IStatistics* stats) : GameStatisticsDecorator(stats) {}
+
+	std::string GetPrintOutput();
+
+	bool Print();
 };

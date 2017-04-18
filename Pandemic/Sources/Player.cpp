@@ -203,3 +203,13 @@ Player* Player::Builder::GetPlayer()
 
 	return joeur;
 }
+
+float PlayersContainer::GetAverageNumberOfCards()
+{
+	float counter = 0;
+	for each(Player* joeur in *this)
+	{
+		counter += joeur->GetNumberOfCards();
+	}
+	return (counter / (float)size());
+}
