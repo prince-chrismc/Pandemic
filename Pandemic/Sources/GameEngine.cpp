@@ -6,12 +6,12 @@
 #include "GameEngine.h"
 namespace bfs = boost::filesystem;
 
-GameEngine::GameEngine() : m_Board(), m_Players(), m_PlayersObservers(), m_Log(new InfectionLog()), m_StatsNotify(), m_GameStats(new GameStatisticsClocked(new GameStatisticsExtended(new GameStatistics(&m_Players, &m_Board.m_Map, &m_Board.m_Centers, &m_Board.m_PlayerDeck, &m_Board.m_InfecDeck, &m_StatsNotify, new GameStatsPerAction())))), m_Filename(MakeFileName()), m_PreGameComplete(false), m_SkipNextInfectionPhase(false), m_TurnCounter(0)
+GameEngine::GameEngine() : m_Board(), m_Players(), m_PlayersObservers(), m_LogNotifier(), m_Log(&m_LogNotifier), m_StatsNotify(), m_GameStats(new GameStatisticsClocked(new GameStatisticsExtended(new GameStatistics(&m_Players, &m_Board.m_Map, &m_Board.m_Centers, &m_Board.m_PlayerDeck, &m_Board.m_InfecDeck, &m_StatsNotify, new GameStatsPerAction())))), m_Filename(MakeFileName()), m_PreGameComplete(false), m_SkipNextInfectionPhase(false), m_TurnCounter(0)
 {
 	// print basic game opening message
 	std::cout << "\n               -------------- PANDEMIC -------------\nDo you have what it takes to save humanity? As skilled members of a disease - fighting team, you must\nkeep four deadly diseases at bay while discovering their cures.\nYou and your teammates will travel across the globe, treating infections while finding resources for\ncures. You must work together, using your individual strengths, to succeed.The clock is ticking as\noutbreaks and epidemics fuel the spreading plagues.\nCan you find all four cures in time? The fate of humanity is in your hands!\n\n" << std::endl;
 
-	RegistarObserver(m_Log); // to notify on infections
+	m_LogNotifier.RegistarObserver(&m_Log); // to notify on infections
 	m_Players.RegistarObserver(m_GameStats);
 	m_Board.m_Map.WorldMapStatisticsSubject::RegistarObserver(m_GameStats);
 	m_Board.m_Centers.ResearchStatisticsSubject::RegistarObserver(m_GameStats);
@@ -31,8 +31,6 @@ GameEngine::~GameEngine()
 		}
 	}
 	m_PlayersObservers.clear();
-
-	delete m_Log; m_Log = nullptr;
 }
 
 // MakeFileName -----------------------------------------------------------------------------------
@@ -292,7 +290,7 @@ void GameEngine::InfectCity(const uint16_t& cubesToAdd)
 		if (city->GetNumberOfCubes(city->GetCityColor()) == 3) // if city has 3
 		{
 			if(cubesActuallyAdded > 0) 
-				Notify(city->GetCityName(), cubesActuallyAdded); // if cubes were added notify infect log
+				m_LogNotifier.AddLatestInfection(city->GetCityName(), cubesActuallyAdded); // if cubes were added notify infect log
 
 			Outbreak(city); // outbreak occures!!!
 			return;
@@ -305,7 +303,7 @@ void GameEngine::InfectCity(const uint16_t& cubesToAdd)
 		CheckIfGameOver();
 	}
 
-	Notify(city->GetCityName(), cubesActuallyAdded); // record in log
+	m_LogNotifier.AddLatestInfection(city->GetCityName(), cubesActuallyAdded); // record in log
 }
 // InfectCity -------------------------------------------------------------------------------------
 
@@ -372,7 +370,7 @@ void GameEngine::Outbreak(City* city, std::vector<City*> skip)
 		else
 		{
 			connected->AddCube(m_Board.m_Cubes.TakeCube(city->GetCityColor())); // let's add a cube baby
-			Notify(connected->GetCityName()); // record in log
+			m_LogNotifier.AddLatestInfection(connected->GetCityName(), 1); // record in log
 		}
 	CheckIfGameOver();
 	}
@@ -404,7 +402,7 @@ void GameEngine::Epidemic()
 			if (city->GetNumberOfCubes(citycolor) == 3) // let have ab outbreak!
 			{
 				nooutbreak = false;
-				Notify(city->GetCityName(), i); // record in log
+				m_LogNotifier.AddLatestInfection(city->GetCityName(), i); // record in log
 				Outbreak(city);
 				break;
 			}
@@ -412,7 +410,7 @@ void GameEngine::Epidemic()
 			city->AddCube(m_Board.m_Cubes.TakeCube(citycolor)); // add a cube
 			CheckIfGameOver();
 		}
-		if(nooutbreak) Notify(city->GetCityName(), 3); // if no outbreak occured update log
+		if(nooutbreak) m_LogNotifier.AddLatestInfection(city->GetCityName(), 3); // if no outbreak occured update log
 
 	}
 	delete ic; ic = nullptr;
@@ -1869,7 +1867,7 @@ void GameEngine::SaveGame()
 	myfile << m_Board.m_Centers.GetSaveOutput() << "\n";
 
 	// Infection Log ------------------------------------------------------------------------------
-	myfile << m_Log->GetSaveOutput() << "\n";
+	myfile << m_Log.GetSaveOutput() << "\n";
 
 	// Turn Counter -------------------------------------------------------------------------------
 	myfile << std::to_string(m_TurnCounter) << "\n";
@@ -2131,7 +2129,7 @@ void GameEngine::LoadGame()
 		delete[] buffer;
 		buffer = nullptr;
 
-		m_Log->InputLoadedGame(InfectionLog::Builder::GetInstance().ParseLog(log).GetLog()); // build and input loaded values
+		m_Log.InputLoadedGame(InfectionLog::Builder::GetInstance().ParseLog(log).GetLog()); // build and input loaded values
 	}
 
 	// Turn Counter -------------------------------------------------------------------------------
@@ -2150,17 +2148,6 @@ void GameEngine::LoadGame()
 	m_PreGameComplete = true;
 }
 // LoadGame ---------------------------------------------------------------------------------------
-
-// Notify -----------------------------------------------------------------------------------------
-void GameEngine::Notify(std::string name, uint16_t cubes)
-{
-	for each(InfectionLog* obv in m_Observers)
-	{
-		if (obv == nullptr) continue;
-		obv->Update(name, cubes); // custom because a member of a class can not have a pointer to the object it is within
-	}
-}
-// Notify -----------------------------------------------------------------------------------------
 
 // Initialize -------------------------------------------------------------------------------------
 void GameEngine::Initialize()

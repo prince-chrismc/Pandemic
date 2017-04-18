@@ -5,6 +5,8 @@
 
 void InfectionLog::Update()
 {
+	m_Log.emplace_back(dynamic_cast<InfectionLogNotifier*>(m_Subject)->GetLatestInfection());
+
 	if (m_Log.size() >= 10) //Such that Initial setup is skipped
 	{
 		std::cout << std::endl << "Infection log updated..." << std::endl;
@@ -32,12 +34,6 @@ void InfectionLog::InputLoadedGame(std::vector<std::pair<std::string, uint16_t>>
 	m_Log = log;
 }
 
-void InfectionLog::Update(std::string name, uint16_t cubes)
-{
-	m_Log.emplace_back(std::make_pair(name, cubes));
-	Update();
-}
-
 InfectionLog::Builder &InfectionLog::Builder::ParseLog(std::string loaded)
 {
 	for (uint16_t e = 0; e < 99; e += 1)
@@ -55,4 +51,10 @@ InfectionLog::Builder &InfectionLog::Builder::ParseLog(std::string loaded)
 	}
 
 	return *this;
+}
+
+void InfectionLogNotifier::AddLatestInfection(std::string name, uint16_t cubes)
+{
+	m_Latest = std::make_pair(name, cubes);
+	Notify();
 }

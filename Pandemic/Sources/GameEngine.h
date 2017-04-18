@@ -10,7 +10,7 @@
 #include "Player.h"
 #include "InfectionLog.h"
 
-class GameEngine final : private ISubject
+class GameEngine final
 {
 public:
 	GameEngine();
@@ -25,7 +25,8 @@ public:
 
 private:
 	Board m_Board;
-	InfectionLog* m_Log;
+	InfectionLog m_Log;
+	InfectionLogNotifier m_LogNotifier;
 	PlayersContainer m_Players;
 	std::vector<PlayerObserver*> m_PlayersObservers;
 	IStatistics* m_GameStats;
@@ -46,9 +47,6 @@ protected:
 	
 	void SaveGame();
 	void LoadGame();
-
-	/// Subject to the InfectionLog
-	void Notify(std::string name, uint16_t cubes = 1);
 
 	// game play ----------------------------------------------------------------------------------
 	enum MoveOptions

@@ -12,12 +12,17 @@ class InfectionLog final : public IObserver
 private:
 	std::vector<std::pair<std::string, uint16_t>> m_Log;
 
-	void Update(); // custom because a member of a class can not have a pointer to the object it is within
 
 public:
-	InfectionLog() : IObserver(nullptr), m_Log() {}
+	InfectionLog(ISubject* sub) : IObserver(sub), m_Log() {}
 
-	void Update(std::string name, uint16_t cubes); // custom because a member of a class can not have a pointer to the object it is within
+	///Prevent Copy/Assignment
+	InfectionLog(const InfectionLog&) = delete;
+	void operator=(const InfectionLog&) = delete;
+
+	void Update();
+
+	///Save/Load
 	std::string GetSaveOutput();
 	void InputLoadedGame(std::vector<std::pair<std::string, uint16_t>> log);
 
@@ -37,4 +42,20 @@ public:
 		Builder& ParseLog(std::string loaded);
 		std::vector<std::pair<std::string, uint16_t>> GetLog() { return m_Log; }
 	};
+};
+
+class InfectionLogNotifier final : public ISubject
+{
+private:
+	std::pair<std::string, uint16_t> m_Latest;
+
+public:
+	InfectionLogNotifier() : ISubject() {}
+
+	///Prevent Copy/Assignment
+	InfectionLogNotifier(const InfectionLogNotifier&) = delete;
+	void operator=(const InfectionLogNotifier&) = delete;
+
+	void AddLatestInfection(std::string name, uint16_t cubes);
+	std::pair<std::string, uint16_t> GetLatestInfection() { return m_Latest; }
 };
