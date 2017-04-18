@@ -102,6 +102,7 @@ protected:
 				std::vector<CityList::CityID> CalculateCharterFlightsFor(const uint16_t& pos);
 				std::vector<CityList::CityID> CalculateShuttleFlightsFor(const uint16_t& pos);
 				std::vector<CityList::CityID> CalculateShareKnowlegdeFor(const uint16_t& pos);
+				std::vector<CityList::CityID> CalculateBuildResearchCenterFor(const uint16_t& pos);
 				std::vector<CityList::CityID> CalculateDiscoverCureFor(const uint16_t& pos);
 					Color DetermineCureColor(const uint16_t& pos);
 				std::vector<CityList::CityID> CalculateReseilientPopFor(const uint16_t& pos);

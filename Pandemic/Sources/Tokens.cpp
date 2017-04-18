@@ -50,13 +50,14 @@ bool City::Validates()
 std::vector<DiseaseCube*> City::RemoveCubeAsMedic()
 {
 	std::vector<DiseaseCube*> cubes = m_Cubes; // get all cubes
-	m_Cubes.clear(); //empty to refill laterz
 
 	//count colors
 	uint16_t red = GetNumberOfCubes(Color::RED);
 	uint16_t black = GetNumberOfCubes(Color::BLACK);
 	uint16_t yellow = GetNumberOfCubes(Color::YELLOW);
 	uint16_t blue = GetNumberOfCubes(Color::BLUE);
+
+	m_Cubes.clear(); //empty to refill laterz
 
 	//determing highest
 	Color tbrm = Color::INVALID;

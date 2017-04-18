@@ -474,9 +474,9 @@ GameEngine::MovesPerCity GameEngine::CalculatePlayerOpt(const uint16_t & pos)
 	}
 
 	// Build Research Center ----------------------------------------------------------------------
-	if (m_Players.at(pos)->HasCurrentCityCard())
+	for each (CityList::CityID id in CalculateBuildResearchCenterFor(pos))
 	{
-		options.insert(std::make_pair(GameEngine::BUILDRC, m_Players.at(pos)->GetCityID()));
+		options.insert(std::make_pair(GameEngine::BUILDRC, id));
 	}
 
 	// Share Knowledge --------–-------------------------------------------------------------------
@@ -628,6 +628,22 @@ std::vector<CityList::CityID> GameEngine::CalculateShuttleFlightsFor(const uint1
 	return flights;
 }
 // CalculateShuttleFlightsFor ---------------------------------------------------------------------
+
+// CalculateBuildResearchCenterFor ----------------------------------------------------------------
+std::vector<CityList::CityID> GameEngine::CalculateBuildResearchCenterFor(const uint16_t & pos)
+{
+	if (m_Players.at(pos)->HasCurrentCityCard())
+	{
+		for each(ResearchCenter rc in m_Board.m_Centers.GetAllCenters())
+		{
+			if (m_Players.at(pos)->GetCityID() == rc.GetCityID())
+				return std::vector<CityList::CityID>();
+		}
+		return std::vector<CityList::CityID> { m_Players.at(pos)->GetCityID() };
+	}
+	return std::vector<CityList::CityID>();
+}
+// CalculateBuildResearchCenterFor ----------------------------------------------------------------
 
 // CalculateShareKnowlegdeFor ---------------------------------------------------------------------
 std::vector<CityList::CityID> GameEngine::CalculateShareKnowlegdeFor(const uint16_t& pos)
@@ -904,7 +920,7 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 		for (auto it = low; it != high; it++)
 		{
 			moves.insert(std::make_pair(++i, *it));
-			std::cout << "  " << i << " - Quit Game and Auto Save" << std::endl;
+			std::cout << "  " << i << " - Quit Game (lose current turn progress)" << std::endl;
 		}
 	}
 
@@ -1288,7 +1304,6 @@ uint16_t GameEngine::ExecuteQuit(const uint16_t & pos, const CityList::CityID & 
 	uint16_t selection = GetUserInput(0, 1);
 	if (selection == 1) // if yes do it
 	{
-		SaveGame();
 		throw GameQuitException();
 	}
 	return 0;
@@ -2149,6 +2164,8 @@ void GameEngine::LoadGame()
 	}
 
 	CheckIfGameOver();
+	CheckIfGameWon("dunno u already one this game xD");
+
 	m_PreGameComplete = true;
 }
 // LoadGame ---------------------------------------------------------------------------------------
@@ -2175,6 +2192,10 @@ void GameEngine::Initialize()
 				std::cout << "It has been removed for you." << std::endl;
 			else
 				std::cout << "The file is in an irregular state please remove it manually." << std::endl; // warn if there was an issue
+		}
+		catch (const GameWonException& e)
+		{
+			std::cout << "\n\n ---- Congradulations! ----\n  You won due to: " << e.what() << std::endl; // you won =)
 		}
 	}
 	else if (selection == 0)
