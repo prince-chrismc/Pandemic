@@ -31,17 +31,17 @@ public:
 class ISubject
 {
 protected:
-	std::vector<IObserver*> m_observers;
+	std::vector<IObserver*> m_Observers;
 
 public:
-	ISubject() : m_observers() {}
+	ISubject() : m_Observers() {}
 
 	///Prevent Copy/Assignment
 	ISubject(const ISubject&) = delete;
 	void operator=(const ISubject&) = delete;
 
-	void RegistarObserver(IObserver* obv) { m_observers.emplace_back(obv); }
-	virtual void Notify() { for each(IObserver* obv in m_observers) { if (obv == nullptr) continue; obv->Update(); } }
+	void RegistarObserver(IObserver* obv) { m_Observers.emplace_back(obv); }
+	virtual void Notify() { for each(IObserver* obv in m_Observers) { if (obv == nullptr) continue; obv->Update(); } }
 };
 
 // Player -----------------------------------------------------------------------------------------
@@ -94,7 +94,7 @@ private:
 	ISubject* m_MapSub;
 	ISubject* m_StationsSub;
 public:
-	WorldObserver(ISubject* stations, ISubject* map) : IObserver(nullptr), m_StationsSub(stations), m_MapSub(map) {}
+	WorldObserver(StationsSubject* stations, MapSubject* map) : IObserver(nullptr), m_StationsSub(stations), m_MapSub(map) {}
 
 	///Prevent Copy/Assignment
 	WorldObserver(const WorldObserver&) = delete;

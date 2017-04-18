@@ -137,7 +137,7 @@ void WorldObserver::Update()
 		"  |                                                                                                        " << Syd << "         |\n" <<
 		"  |                                                                                                                          |\n" <<
 		"  ----------------------------------------------------------------------------------------------------------------------------\n" <<
-		"  * = Research Center\t\t[ red, blue, yellow, black ]\n" << "  Paris  - " << Par << "\tMilan   - " << Mil << "\n";
+		"  * = Research Center\t\t[ red, blue, yellow, black ]\n" << "  Paris  - " << Par << "\tMilan   - " << Mil << "\n\n";
 	std::cout << ss.str();
 }
 
