@@ -143,5 +143,57 @@ void WorldObserver::Update()
 
 void CureObserver::Update()
 {
-	std::cout << "Red Cure: " << std::string(dynamic_cast<CureSubject*>(m_Subject)->IsCured(Color::RED) ? "Cured" : "" + dynamic_cast<CureSubject*>(m_Subject)->IsEradicated(Color::RED) ? "Eradicated" : "") << std::endl <<  "Blue Cure: " << std::string(dynamic_cast<CureSubject*>(m_Subject)->IsCured(Color::BLUE) ? "Cured" : "" + dynamic_cast<CureSubject*>(m_Subject)->IsEradicated(Color::BLUE) ? "Eradicated" : "") << std::endl << "Yellow Cure: " << std::string(dynamic_cast<CureSubject*>(m_Subject)->IsCured(Color::YELLOW) ? "Cured" : "" + dynamic_cast<CureSubject*>(m_Subject)->IsEradicated(Color::YELLOW) ? "Eradicated" : "") << std::endl << "Black Cure: " << std::string(dynamic_cast<CureSubject*>(m_Subject)->IsCured(Color::BLACK) ? "Cured" : "" + dynamic_cast<CureSubject*>(m_Subject)->IsEradicated(Color::BLACK) ? "Eradicated" : "") << std::endl;
+	std::string result = "";
+	
+	result += "Red Cure: ";
+	if (dynamic_cast<CureSubject*>(m_Subject)->IsEradicated(Color::RED))
+		result += "Eradicated\n";
+	else if (dynamic_cast<CureSubject*>(m_Subject)->IsCured(Color::RED))
+		result += "Cured\n";
+	else
+		result += "Undiscovered\n";
+
+	result += "Blue Cure: ";
+	if (dynamic_cast<CureSubject*>(m_Subject)->IsEradicated(Color::BLUE))
+		result += "Eradicated\n";
+	else if (dynamic_cast<CureSubject*>(m_Subject)->IsCured(Color::BLUE))
+		result += "Cured\n";
+	else
+		result += "Undiscovered\n";
+
+	result += "Yellow Cure: ";
+	if (dynamic_cast<CureSubject*>(m_Subject)->IsEradicated(Color::YELLOW))
+		result += "Eradicated";
+	else if (dynamic_cast<CureSubject*>(m_Subject)->IsCured(Color::YELLOW))
+		result += "Cured";
+	else
+		result += "Undiscovered";
+	result += "\n";
+
+	result += "Black Cure: ";
+	if (dynamic_cast<CureSubject*>(m_Subject)->IsEradicated(Color::BLACK))
+		result += "Eradicated";
+	else if (dynamic_cast<CureSubject*>(m_Subject)->IsCured(Color::BLACK))
+		result += "Cured";
+
+	result += "Yellow Cure: ";
+	if (dynamic_cast<CureSubject*>(m_Subject)->IsEradicated(Color::YELLOW))
+		result += "Eradicated";
+	else if (dynamic_cast<CureSubject*>(m_Subject)->IsCured(Color::YELLOW))
+		result += "Cured";
+	else
+		result += "Undiscovered";
+	result += "\n";
+
+	result += "Black Cure: ";
+	if (dynamic_cast<CureSubject*>(m_Subject)->IsEradicated(Color::BLACK))
+		result += "Eradicated";
+	else if (dynamic_cast<CureSubject*>(m_Subject)->IsCured(Color::BLACK))
+		result += "Cured";
+	else
+		result += "Undiscovered";
+	result += "\n";
+
+	std::cout << result << std::endl;
 }
+
