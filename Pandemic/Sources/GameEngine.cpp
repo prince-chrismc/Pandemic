@@ -1486,6 +1486,7 @@ const Color GameEngine::ExecuteTreateDiseaseAsMedic(City* city)
 const Color GameEngine::ExecuteTreateDiseaseForCured(City* city, const Color& color)
 {
 	std::vector<DiseaseCube*> cubes = city->RemoveCubeForCured(color); // rm all cubes of that color
+	if (cubes.size() == 0) return color; // if no other color is rm, just return
 	const Color removed = cubes.at(0)->GetColor(); // get the color 
 	for each(DiseaseCube* dc in cubes)
 	{

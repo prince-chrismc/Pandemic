@@ -99,21 +99,19 @@ std::vector<DiseaseCube*> City::RemoveCubeAsMedic(const Color& color)
 {
 	std::vector<DiseaseCube*> cubes; // will be all the cubes of the corresponding color
 
-	for (auto itor = cubes.begin(); itor != cubes.end(); /* no incr */)
+	for (auto itor = m_Cubes.begin(); itor != m_Cubes.end(); /* no incr */)
 	{
 		if ((*itor)->GetColor() == color)
 		{
 			cubes.emplace_back(*itor);
-			m_Cubes.erase(itor);
+			itor = m_Cubes.erase(itor);
 		}
 		else
 		{
 			itor++; // if its not the color to be deleted do nothing
 			continue;
-			
 		}
 	}
-
 	return cubes;
 }
 
