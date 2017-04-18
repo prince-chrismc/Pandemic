@@ -1,7 +1,7 @@
 // Pandemic.cpp : Defines the entry point for the console application.
 //
 
-#if _WIN32
+#ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include "windows.h"  
 #endif // _WIN32
@@ -12,7 +12,7 @@ void PrintOpening();
 
 int main()
 {
-#if _WIN32
+#ifdef _WIN32
 	SetConsoleTitle(L"Pandemic board Game by Chris McArthur");
 #endif // _WIN32
 
