@@ -1,18 +1,21 @@
 // Pandemic.cpp : Defines the entry point for the console application.
 //
 
+#if _WIN32
 #define WIN32_LEAN_AND_MEAN
-#include "windows.h"
+#include "windows.h"  
+#endif // _WIN32
 
-#include <ctime>
-#include <iostream>
 #include "Sources\GameEngine.h"
 
 void PrintOpening();
 
 int main()
 {
+#if _WIN32
 	SetConsoleTitle(L"Pandemic board Game by Chris McArthur");
+#endif // _WIN32
+
 	PrintOpening(); // Generic Welcome Message
 
 	GameEngine Game; // New Game Board
