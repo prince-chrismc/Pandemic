@@ -280,6 +280,19 @@ void PlayerDeck::ReduceDeck(std::vector<CityList::CityID> cardstokeep)
 	}
 }
 
+PlayerCard* PlayerDeck::RemoveFromDiscard(const PlayerCard::CardsList & id)
+{
+	for (auto itor = m_Discard.begin(); itor != m_Discard.end(); /* no incr */)
+	{
+		if (*itor == id)
+		{
+			itor = m_Discard.erase(itor);
+			return MakeCard(id);
+		}
+	}
+	return nullptr;
+}
+
 PlayerCard* PlayerDeck::DrawCard()
 {
 	if (m_Deck.size() == 0) return nullptr; //for when deck is empty

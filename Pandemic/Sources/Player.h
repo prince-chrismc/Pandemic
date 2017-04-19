@@ -66,6 +66,7 @@ class Player final : public PlayerSubject //The Almighty Player
 private:
 	const std::string m_Name;
 	std::vector<PlayerCard*> m_Hand;
+	PlayerCard* m_PlannersEventCard;
 	Role m_Role;
 	ReferenceCard m_RefCard;
 
@@ -73,7 +74,7 @@ protected:
 	bool ValidateHand() { return (m_Hand.size() <= 7); }
 
 public:
-	Player(const std::string& name, RoleCard* card) : m_Name(name), m_Role(card), m_RefCard() {}
+	Player(const std::string& name, RoleCard* card) : m_Name(name), m_Role(card), m_RefCard(), m_PlannersEventCard(nullptr) {}
 	~Player();
 
 	///Prevent Copy/Assignment
@@ -96,6 +97,11 @@ public:
 	RoleList::Roles GetRoleID() { return (RoleList::Roles)m_Role.m_Card->GetNumID(); }
 	uint16_t GetNumOfCardToDiscoverCure();
 
+	bool HasExtraCard() { return (m_PlannersEventCard != nullptr) && (GetRoleID() == RoleList::CONTIGENCY); }
+	void AddExtraCard(PlayerCard* extra) {if (HasExtraCard()) { delete m_PlannersEventCard; m_PlannersEventCard = nullptr; } m_PlannersEventCard = extra; }
+	PlayerCard* GetExtraCard() { if (HasExtraCard()) return m_PlannersEventCard; else return nullptr; }
+	void RemoveExtraCard() { delete m_PlannersEventCard; m_PlannersEventCard = nullptr; }
+
 	PlayerCharacteristics GetCharacteristics();
 	void PrintRefCard();
 
@@ -106,6 +112,7 @@ public:
 	private:
 		std::string m_Name;
 		std::vector<PlayerCard*> m_Hand;
+		PlayerCard* m_PlannersEventCard;
 		RoleList::Roles m_RoleID;
 		std::hexadecimal m_CityID;
 

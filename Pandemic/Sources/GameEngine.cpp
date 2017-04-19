@@ -522,12 +522,13 @@ GameEngine::MovesPerCity GameEngine::CalculatePlayerOpt(const uint16_t & pos)
 	}
 
 	// Contingency Planer -------------------------------------------------------------------------
-	/*
-	if(m_Players.at(pos)->GetRolID() == RoleList::CONTI..)
+	for each (CityList::CityID id in CalculateContingencyPlannerExtraEventCardFor(pos))
 	{
-	options.insert(std::make_pair(GameEngine::CONTIN, m_Players.at(pos)->GetCityID()))
+		if(m_Players.at(pos)->HasExtraCard())
+			options.insert(std::make_pair(GameEngine::CONTINGENCY_PLANNER_USE_EVENT, id));
+		else
+			options.insert(std::make_pair(GameEngine::CONTINGENCY_PLANNER_DRAW_EVENT, id));
 	}
-	*/
 
 	// Operations Expert --------------------------------------------------------------------------
 	/*
@@ -925,6 +926,23 @@ std::vector<CityList::CityID> GameEngine::CalculateOperationsExpertMoveFromCente
 }
 // CalculateOperationsExpertMoveFromCenterFor -----------------------------------------------------
 
+// CalculateContingencyPlannerExtraEventCardFor ---------------------------------------------------
+std::vector<CityList::CityID> GameEngine::CalculateContingencyPlannerExtraEventCardFor(const uint16_t & pos)
+{
+	if (m_Players.at(pos)->GetRoleID() == RoleList::CONTIGENCY)
+	{
+		if (m_Players.at(pos)->HasExtraCard())
+			return std::vector<CityList::CityID> { m_Players.at(pos)->GetCityID() };
+
+		for each(PlayerCard::CardsList id in m_Board.m_PlayerDeck.GetDiscardPile())
+		{
+			if (PlayerCardFactory::IsaEventCard(id)) return std::vector<CityList::CityID> { m_Players.at(pos)->GetCityID() };
+		}
+	}
+	return std::vector<CityList::CityID>();
+}
+// CalculateContingencyPlannerExtraEventCardFor ---------------------------------------------------
+
 // DeterminePlayerMoves ---------------------------------------------------------------------------
 GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & options)
 {
@@ -1201,28 +1219,10 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 		}
 	}
 
-
-	// Contingency Planer -------------------------------------------------------------------------
-	/*
-	if (options.count(GameEngine::GOVTGRANT) > 0)
-	{
-		std::cout << std::endl << itor++ << ". Government Grant" << std::endl;
-		auto low = options.lower_bound(GameEngine::GOVTGRANT);
-		auto high = options.upper_bound(GameEngine::GOVTGRANT);
-
-		for (auto it = low; it != high; it++)
-		{
-			moves.insert(std::make_pair(++i, *it));
-			City* city = m_Board.m_Map.GetCityWithID(it->second);
-			std::cout << "  " << i << " - To " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
-		}
-	}
-	*/
-
 	// Operations Expert --------------------------------------------------------------------------
 	if (options.count(GameEngine::OPERATIONS_MOVE_FROM_RESEARCH_CENTER) > 0)
 	{
-		std::cout << std::endl << itor++ << ". Move to any city" << std::endl;
+		std::cout << std::endl << itor++ << ". Move to Any City" << std::endl;
 		auto low = options.lower_bound(GameEngine::OPERATIONS_MOVE_FROM_RESEARCH_CENTER);
 		auto high = options.upper_bound(GameEngine::OPERATIONS_MOVE_FROM_RESEARCH_CENTER);
 
@@ -1231,6 +1231,36 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 			moves.insert(std::make_pair(++i, *it));
 			City* city = m_Board.m_Map.GetCityWithID(it->second);
 			std::cout << "  " << i << " - To " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
+		}
+	}
+
+	// Contingency Planer Draw --------------------------------------------------------------------
+	if (options.count(GameEngine::CONTINGENCY_PLANNER_DRAW_EVENT) > 0)
+	{
+		std::cout << std::endl << itor++ << ". Draw Extra Event Card" << std::endl;
+		auto low = options.lower_bound(GameEngine::CONTINGENCY_PLANNER_DRAW_EVENT);
+		auto high = options.upper_bound(GameEngine::CONTINGENCY_PLANNER_DRAW_EVENT);
+
+		for (auto it = low; it != high; it++)
+		{
+			moves.insert(std::make_pair(++i, *it));
+			City* city = m_Board.m_Map.GetCityWithID(it->second);
+			std::cout << "  " << i << " - From " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
+		}
+	}
+
+	// Contingency Planer Use ---------------------------------------------------------------------
+	if (options.count(GameEngine::CONTINGENCY_PLANNER_USE_EVENT) > 0)
+	{
+		std::cout << std::endl << itor++ << ". Use Extra Event Card" << std::endl;
+		auto low = options.lower_bound(GameEngine::CONTINGENCY_PLANNER_USE_EVENT);
+		auto high = options.upper_bound(GameEngine::CONTINGENCY_PLANNER_USE_EVENT);
+
+		for (auto it = low; it != high; it++)
+		{
+			moves.insert(std::make_pair(++i, *it));
+			City* city = m_Board.m_Map.GetCityWithID(it->second);
+			std::cout << "  " << i << " - From " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
 		}
 	}
 
@@ -1289,6 +1319,10 @@ uint16_t GameEngine::ExecuteMove(const uint16_t& pos, const MoveOptions & opt, c
 		return ExecuteCureDisease(pos, cityID);
 	case OPERATIONS_MOVE_FROM_RESEARCH_CENTER:
 		return ExecuteOperationsExpertMoveToAnyCity(pos, cityID);
+	case CONTINGENCY_PLANNER_DRAW_EVENT:
+		return ExecutePlannerDrawEventCard(pos, cityID);
+	case CONTINGENCY_PLANNER_USE_EVENT:
+		return ExecutePlannerUseEventCard(pos, cityID);
 	case AIRLIFT:
 		return ExecuteAirLift(pos, cityID);
 	case RESILLIENT:
@@ -1678,6 +1712,7 @@ uint16_t GameEngine::ExecuteCureDisease(const uint16_t & pos, const CityList::Ci
 }
 // ExecuteCureDisease -----------------------------------------------------------------------------
 
+// ExecuteOperationsExpertMoveToAnyCity -----------------------------------------------------------
 uint16_t GameEngine::ExecuteOperationsExpertMoveToAnyCity(const uint16_t & pos, const CityList::CityID & cityID)
 {
 	std::stringstream ss;
@@ -1690,12 +1725,63 @@ uint16_t GameEngine::ExecuteOperationsExpertMoveToAnyCity(const uint16_t & pos, 
 
 	return 1;
 }
+// ExecuteOperationsExpertMoveToAnyCity -----------------------------------------------------------
+
+// ExecutePlannerDrawEventCard --------------------------------------------------------------------
+uint16_t GameEngine::ExecutePlannerDrawEventCard(const uint16_t & pos, const CityList::CityID & cityID)
+{
+	cityID; // unused, keept for normalization
+	uint16_t counter = 0;
+	std::vector<PlayerCard::CardsList> eventcards;
+	for each(PlayerCard::CardsList id in m_Board.m_PlayerDeck.GetDiscardPile()) // outta all the discards
+	{
+		if (PlayerCardFactory::IsaEventCard(id)) // if its an event card
+		{
+			eventcards.emplace_back(id);
+			std::cout << counter++ << ": " << Card::GetCardName(id) << std::endl; // lets print it
+		}
+	}
+	uint16_t selection = GetUserInput(0, counter - 1); // let user pick one
+
+	m_Players.at(pos)->AddExtraCard(m_Board.m_PlayerDeck.RemoveFromDiscard(eventcards.at(selection))); // remove selected card and give it to the player
+
+	return 1;
+}
+// ExecutePlannerDrawEventCard --------------------------------------------------------------------
+
+// ExecutePlannerUseEventCard ---------------------------------------------------------------------
+uint16_t GameEngine::ExecutePlannerUseEventCard(const uint16_t & pos, const CityList::CityID & cityID)
+{
+	switch (m_Players.at(pos)->GetExtraCard()->GetNumID()) // get the cards id
+	{
+	case EventCard::AIRLIFT: // performe the coresponding action
+		ExecuteAirLift(pos, cityID);
+		break;
+	case EventCard::RESILLIENT:
+		ExecuteResillentPopulation(pos, cityID);
+		break;
+	case EventCard::FORECAST:
+		ExecuteForecast(pos, cityID);
+		break;
+	case EventCard::QUIETNIGHT:
+		ExecuteQuietNight(pos, cityID);
+		break;
+	case EventCard::GOVTGRANT:
+		ExecuteGovernmentGrant(pos, cityID);
+		break;
+	default:
+		break;
+	}
+	m_Players.at(pos)->RemoveExtraCard(); // remove the card from the game
+
+	return 1;
+}
+// ExecutePlannerUseEventCard ---------------------------------------------------------------------
 
 // ExecuteAirLift ---------------------------------------------------------------------------------
 uint16_t GameEngine::ExecuteAirLift(const uint16_t& pos, const CityList::CityID& cityID)
 {
 	cityID; // unused, keept for normalization
-
 	for (size_t l = 0; l < m_Players.at(pos)->m_Hand.size(); l += 1) // lets remove the the air lift card
 	{
 		if (PlayerCardFactory::IsaEventCard(m_Players.at(pos)->m_Hand.at(l)->GetNumID()))

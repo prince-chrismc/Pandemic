@@ -90,6 +90,7 @@ public:
 	std::deque<PlayerCard::CardsList> GetDiscardPile() { return m_Discard; }
 	void ReduceDeck(std::vector<CityList::CityID> cardstokeep);
 	bool IsDeckEmpty() { return (m_Deck.size() == 0); }
+	PlayerCard* RemoveFromDiscard(const PlayerCard::CardsList& id);
 	PlayerCard* DrawCard();
 	void DiscardCard(PlayerCard* pc);
 	void IncreaseDifficulty(const uint16_t& dif);

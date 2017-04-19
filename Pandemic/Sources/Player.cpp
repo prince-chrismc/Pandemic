@@ -61,12 +61,16 @@ Player::~Player()
 	}
 	m_Hand.resize(0);
 	m_Hand.clear();
+
+	delete m_PlannersEventCard;
+	m_PlannersEventCard = nullptr;
 }
 
 PlayerCard* Player::RemoveCardAt(const uint16_t& pos)
 {
 	PlayerCard* pc = m_Hand.at(pos);
 	m_Hand.erase(m_Hand.begin() + pos);
+	Notify();
 	return pc;
 }
 
@@ -79,7 +83,6 @@ PlayerCard* Player::RemoveCard(const CityList::CityID& id)
 		{
 			if ((pc->GetNumID() - CityCard::CITYCARD_MIN) == id)
 			{
-				Notify();
 				return RemoveCardAt(counter);
 			}
 		}
@@ -142,7 +145,16 @@ void Player::PrintRefCard()
 
 std::string Player::GetSaveOutput()
 {
-	std::string result = m_Name + " " + m_Role.m_roleID + " " + m_Role.m_Pawn.m_CityID + " ";
+	std::string result = m_Name + " " + m_Role.m_roleID;
+	
+	if (HasExtraCard())
+	{
+		std::stringstream ss(".");
+		ss << std::hex << m_PlannersEventCard->GetNumID();
+		result += ss.str();
+	}
+	
+	result += " " + m_Role.m_Pawn.m_CityID + " ";
 
 	for each (PlayerCard* pc in m_Hand)
 	{
@@ -179,6 +191,16 @@ Player::Builder& Player::Builder::ParsePlayer(std::string loaded)
 
 	space = loaded.find(" ");
 	std::hexadecimal id = loaded.substr(0, space); // get players role id
+	if (id.find(".") != std::string::npos) // role id contains an extra card
+	{
+		size_t dot = id.find(".");
+		std::hexadecimal extra = id.substr(0, dot);
+		id = id.substr(dot + 1);
+		uint64_t cardnum;
+		std::stringstream(extra) >> std::hex >> cardnum;
+		m_PlannersEventCard = PlayerCardFactory::MakeCard(cardnum);
+	}
+
 	loaded = loaded.substr(space + 1);
 	std::stringstream ss(id);
 	uint64_t roleid;
