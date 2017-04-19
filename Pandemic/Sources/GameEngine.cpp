@@ -943,6 +943,17 @@ std::vector<CityList::CityID> GameEngine::CalculateContingencyPlannerExtraEventC
 }
 // CalculateContingencyPlannerExtraEventCardFor ---------------------------------------------------
 
+// CalculateDispatcherPawnToPawnFor ---------------------------------------------------------------
+std::vector<CityList::CityID> GameEngine::CalculateDispatcherPawnToPawnFor(const uint16_t & pos)
+{
+	if (m_Players.at(pos)->GetRoleID() == RoleList::DISPATCHER)
+	{
+		return std::vector<CityList::CityID> { m_Players.at(pos)->GetCityID() };
+	}
+	return std::vector<CityList::CityID>();
+}
+// CalculateDispatcherPawnToPawnFor ---------------------------------------------------------------
+
 // DeterminePlayerMoves ---------------------------------------------------------------------------
 GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & options)
 {
@@ -1144,7 +1155,7 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 	}
 
 
-	// EventCard Airlift---------------------------------------------------------------------------
+	// EventCard Airlift --------------------------------------------------------------------------
 	if (options.count(GameEngine::AIRLIFT) > 0)
 	{
 		std::cout << std::endl << itor++ << ". Airlift" << std::endl;
@@ -1265,21 +1276,19 @@ GameEngine::PlayerMoves GameEngine::DeterminePlayerMoves(const MovesPerCity & op
 	}
 
 	// Dispatcher ---------------------------------------------------------------------------------
-	/*
-	if (options.count(GameEngine::GOVTGRANT) > 0)
+	if (options.count(GameEngine::DISPATCHER_MOVE_PAWN_TO_PAWN) > 0)
 	{
-		std::cout << std::endl << itor++ << ". Government Grant" << std::endl;
-		auto low = options.lower_bound(GameEngine::GOVTGRANT);
-		auto high = options.upper_bound(GameEngine::GOVTGRANT);
+		std::cout << std::endl << itor++ << ". Move Pawn to Pawn" << std::endl;
+		auto low = options.lower_bound(GameEngine::DISPATCHER_MOVE_PAWN_TO_PAWN);
+		auto high = options.upper_bound(GameEngine::DISPATCHER_MOVE_PAWN_TO_PAWN);
 
 		for (auto it = low; it != high; it++)
 		{
 			moves.insert(std::make_pair(++i, *it));
 			City* city = m_Board.m_Map.GetCityWithID(it->second);
-			std::cout << "  " << i << " - To " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
+			std::cout << "  " << i << " - From " << city->GetCityName() << " containing " << city->GetNumberOfCubes() << " disease cubes." << std::endl;
 		}
 	}
-	*/
 
 	return moves;
 }
@@ -1323,6 +1332,8 @@ uint16_t GameEngine::ExecuteMove(const uint16_t& pos, const MoveOptions & opt, c
 		return ExecutePlannerDrawEventCard(pos, cityID);
 	case CONTINGENCY_PLANNER_USE_EVENT:
 		return ExecutePlannerUseEventCard(pos, cityID);
+	case DISPATCHER_MOVE_PAWN_TO_PAWN:
+		return ExecuteDispatcherPawnToPawn(pos, cityID);
 	case AIRLIFT:
 		return ExecuteAirLift(pos, cityID);
 	case RESILLIENT:
@@ -1778,6 +1789,47 @@ uint16_t GameEngine::ExecutePlannerUseEventCard(const uint16_t & pos, const City
 	return 1;
 }
 // ExecutePlannerUseEventCard ---------------------------------------------------------------------
+
+// ExecuteDispatcherPawnToPawn --------------------------------------------------------------------
+uint16_t GameEngine::ExecuteDispatcherPawnToPawn(const uint16_t & pos, const CityList::CityID & cityID)
+{
+	pos; // unused, keept for normalization
+	cityID; // unused, keept for normalization
+
+
+	std::map<uint16_t, std::pair<uint16_t, uint16_t>> indexPlayerPosToPlayerPos; // long name explains it
+
+	// let find all the pairs (bidirectional)
+	uint16_t counter = 0, i = 0;
+	for each(Player* joeur in m_Players) 
+	{
+		uint16_t j = 0;
+		for each (Player* gamer in m_Players)
+		{
+			if (joeur == gamer) continue; // skip same
+
+			std::cout << counter << ": Move " << m_Players.at(i)->GetName() << "(" << m_Board.m_Map.GetCityWithID(m_Players.at(i)->GetCityID()) << ") to " << m_Players.at(j)->GetName() << "(" << m_Board.m_Map.GetCityWithID(m_Players.at(j)->GetCityID()) << ")" << std::endl; // print options
+
+			indexPlayerPosToPlayerPos.emplace(counter++, std::make_pair(i, j)); // store options
+			j += 1;
+		}
+		i += 1;
+	}
+	uint16_t selection = GetUserInput(0, (uint16_t)indexPlayerPosToPlayerPos.size() - 1);
+
+	std::pair<uint16_t, uint16_t> choosen = indexPlayerPosToPlayerPos.at(selection); // get selected pair
+
+	std::stringstream ss; 
+	ss << std::hex << m_Players.at(choosen.second)->GetCityID(); // convert second players city id to hex
+	m_Players.at(choosen.first)->ChangeCity(ss.str()); // do the change
+
+	if (m_Players.at(choosen.first)->GetRoleID() == RoleList::MEDIC) // if player moved was the medic
+		if (m_Board.m_Cures.IsAnyCured()) // check if worth the next call
+			ExecuteMedicEnteredCity(m_Players.at(choosen.second)->GetCityID()); // remove all cubes of cured diseases
+
+	return 1;
+}
+// ExecuteDispatcherPawnToPawn --------------------------------------------------------------------
 
 // ExecuteAirLift ---------------------------------------------------------------------------------
 uint16_t GameEngine::ExecuteAirLift(const uint16_t& pos, const CityList::CityID& cityID)

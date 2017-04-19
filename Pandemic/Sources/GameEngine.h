@@ -79,7 +79,7 @@ protected:
 		OPERATIONS_MOVE_FROM_RESEARCH_CENTER = 0xC00UL,
 		CONTINGENCY_PLANNER_DRAW_EVENT,
 		CONTINGENCY_PLANNER_USE_EVENT,
-		DISPATCH_MOVE_OTHERS_PAWN, // todo
+		DISPATCHER_MOVE_PAWN_TO_PAWN,
 
 		/// Settings control
 		SETTINGS_FREQ = 0xAAAUL,
@@ -105,6 +105,7 @@ protected:
 					Color DetermineCureColor(const uint16_t& pos);
 				std::vector<CityList::CityID> CalculateOperationsExpertMoveFromCenterFor(const uint16_t& pos);
 				std::vector<CityList::CityID> CalculateContingencyPlannerExtraEventCardFor(const uint16_t& pos);
+				std::vector<CityList::CityID> CalculateDispatcherPawnToPawnFor(const uint16_t& pos);
 				std::vector<CityList::CityID> CalculateReseilientPopFor(const uint16_t& pos);
 				std::vector<CityList::CityID> CalculateAirliftFor(const uint16_t& pos);
 				std::vector<CityList::CityID> CalculateForecastFor(const uint16_t& pos);
@@ -133,6 +134,7 @@ protected:
 				uint16_t ExecuteOperationsExpertMoveToAnyCity(const uint16_t& pos, const CityList::CityID& cityID);
 				uint16_t ExecutePlannerDrawEventCard(const uint16_t& pos, const CityList::CityID& cityID);
 				uint16_t ExecutePlannerUseEventCard(const uint16_t& pos, const CityList::CityID& cityID);
+				uint16_t ExecuteDispatcherPawnToPawn(const uint16_t& pos, const CityList::CityID& cityID);
 				uint16_t ExecuteAirLift(const uint16_t& pos, const CityList::CityID& cityID);
 				uint16_t ExecuteResillentPopulation(const uint16_t& pos, const CityList::CityID& cityID);
 				uint16_t ExecuteForecast(const uint16_t& pos, const CityList::CityID& cityID);
