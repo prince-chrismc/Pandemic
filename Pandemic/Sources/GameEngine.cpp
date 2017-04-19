@@ -1733,6 +1733,7 @@ uint16_t GameEngine::ExecutePlannerDrawEventCard(const uint16_t & pos, const Cit
 	cityID; // unused, keept for normalization
 	uint16_t counter = 0;
 	std::vector<PlayerCard::CardsList> eventcards;
+	std::cout << "Which event card would you like to draw?" << std::endl;
 	for each(PlayerCard::CardsList id in m_Board.m_PlayerDeck.GetDiscardPile()) // outta all the discards
 	{
 		if (PlayerCardFactory::IsaEventCard(id)) // if its an event card
