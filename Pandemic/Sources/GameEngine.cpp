@@ -2,9 +2,10 @@
 #include <algorithm> //std::shuffle
 #include <random> //std::mt19937
 #include <iostream> //std::cout
-#include "boost\filesystem.hpp" //dir
+#include <filesystem> //dir
+#include <fstream>
 #include "GameEngine.h"
-namespace bfs = boost::filesystem;
+namespace bfs = std::experimental::filesystem;
 
 GameEngine::GameEngine() : m_Board(), m_Players(), m_PlayersObservers(), m_LogNotifier(), m_Log(&m_LogNotifier), m_StatsNotify(), m_GameStats(new GameStatisticsClocked(new GameStatisticsExtended(new GameStatistics(&m_Players, &m_Board.m_Map, &m_Board.m_Centers, &m_Board.m_PlayerDeck, &m_Board.m_InfecDeck, &m_StatsNotify, new GameStatsPerAction())))), m_Filename(MakeFileName()), m_PreGameComplete(false), m_SkipNextInfectionPhase(false), m_TurnCounter(0)
 {
@@ -2122,7 +2123,7 @@ void GameEngine::LoadGame()
 
 
 	// Read Selected Save Game File ---------------------------------------------------------------
-	bfs::ifstream load;
+	std::ifstream load;
 	load.open(files.at(selection).path()); // open correct file
 
 	char* buffer = new char[512];
